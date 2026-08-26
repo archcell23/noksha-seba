@@ -1,0 +1,11 @@
+{
+  "name": "noksha-seba",
+  "version": "1.0.0",
+  "private": true,
+  "description": "নকশা সেবা — online architecture, structural, electrical, plumbing and interior consultation booking site. Static HTML/CSS/JS, no build step or dependencies required.",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx --yes serve ."
+  },
+  "license": "UNLICENSED"
+}
