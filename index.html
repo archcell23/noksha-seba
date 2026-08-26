@@ -69,12 +69,14 @@ h1,h2,h3{font-family:var(--serif);font-weight:700;line-height:1.28;letter-spacin
 /* ---------- top bar ---------- */
 .topbar{position:sticky;top:0;z-index:40;background:rgba(251,251,248,.9);backdrop-filter:blur(10px);
   border-bottom:1px solid var(--line)}
-.topbar .wrap{display:flex;align-items:center;justify-content:space-between;height:58px}
+.topbar-row1{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px 16px;min-height:58px;padding-top:10px;padding-bottom:10px}
+.topbar-row2{display:none}
 .brand{display:flex;align-items:center;gap:11px;font-family:var(--sans)}
 .brand .mk{width:42px;height:42px;border-radius:13px;position:relative;flex:none;
   background:linear-gradient(135deg,var(--green),var(--green-dark));box-shadow:0 6px 16px -7px rgba(21,128,61,.6)}
 .brand .mk::before{content:"";position:absolute;inset:10px;border:1.5px solid #fff;border-radius:3px;opacity:.95}
 .brand .mk::after{content:"";position:absolute;left:10px;right:10px;top:50%;height:1.5px;background:#fff;opacity:.95}
+#brandLogoImg{height:42px;width:auto;max-width:220px;border-radius:8px;object-fit:contain;flex:none}
 .brand-txt{display:flex;flex-direction:column;line-height:1.24}
 .brand-txt b{font-size:18.5px;font-weight:700;color:var(--ink)}
 .brand-txt small{font-size:11px;color:var(--grey);font-weight:500}
@@ -82,17 +84,20 @@ h1,h2,h3{font-family:var(--serif);font-weight:700;line-height:1.28;letter-spacin
 @media(max-width:759px){.brand-txt small{display:none}}
 .nav-desk{display:none}
 .top-cta{display:none}
-.right{display:flex;align-items:center;gap:14px}
+.right{display:flex;align-items:center;flex-wrap:wrap;justify-content:flex-end;gap:10px 14px}
 .fontctl{display:flex;align-items:center;gap:2px;background:var(--field);border:1px solid var(--line2);border-radius:20px;padding:3px;flex:none}
 .fontctl button{width:28px;height:28px;border-radius:50%;font-weight:700;color:var(--graphite);display:grid;place-items:center;line-height:1}
 .fontctl button.on{background:var(--green);color:#fff}
+.searchbtn{display:flex;width:36px;height:36px;border-radius:50%;background:var(--field);color:var(--graphite);align-items:center;justify-content:center;flex:none}
+.searchbtn:hover{background:var(--green-tint);color:var(--green-dark)}
 .langctl{display:flex;align-items:center;gap:2px;background:var(--field);border:1px solid var(--line2);border-radius:20px;padding:3px;flex:none}
 .langctl button{padding:5px 11px;border-radius:16px;font-weight:700;font-size:12px;color:var(--graphite);white-space:nowrap}
 .langctl button.on{background:var(--green);color:#fff}
 
 /* ---------- buttons ---------- */
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-weight:600;font-size:15.5px;
-  padding:13px 20px;border-radius:var(--r-s);transition:transform .08s ease, background .15s;min-height:48px;width:100%}
+  padding:13px 20px;border-radius:var(--r-s);transition:transform .08s ease, background .15s;min-height:48px;width:100%;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .btn:active{transform:translateY(1px)}
 .btn-ink{background:var(--green);color:#fff}
 .btn-ink:hover{background:var(--green-dark)}
@@ -225,6 +230,19 @@ h1,h2,h3{font-family:var(--serif);font-weight:700;line-height:1.28;letter-spacin
 .faq summary::after{content:"+";font-size:22px;color:var(--grey);font-weight:400;transition:.2s}
 .faq details[open] summary::after{transform:rotate(45deg)}
 .faq p{padding:0 2px 18px;color:var(--graphite);font-size:14.5px}
+
+/* ---------- reviews ---------- */
+.reviews-grid{display:grid;grid-template-columns:1fr;gap:16px;margin-top:22px}
+.review{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:22px}
+.review-top{display:flex;justify-content:space-between;align-items:flex-start}
+.review .stars{color:#F5A623;font-size:15px;letter-spacing:2px}
+.review-quote-mark{font-family:var(--serif);font-size:40px;color:var(--green-tint);line-height:.6;font-weight:700}
+.review-text{color:var(--graphite);font-size:14.5px;font-style:italic;line-height:1.7;margin-top:14px}
+.review-who{display:flex;align-items:center;gap:12px;margin-top:18px;padding-top:16px;border-top:1px solid var(--line)}
+.review-av{width:40px;height:40px;border-radius:50%;background:var(--green);color:#fff;display:grid;place-items:center;
+  font-weight:700;font-size:13px;flex:none;font-family:var(--serif)}
+.review-who b{font-size:14.5px;font-family:var(--sans);display:block}
+.review-who span{color:var(--grey);font-size:12.5px}
 
 /* ---------- final cta ---------- */
 .finalcta{background:linear-gradient(135deg,var(--green-deep),#052E16);color:var(--paper);border-radius:22px;padding:34px 24px;margin-top:8px;text-align:center}
@@ -386,9 +404,14 @@ footer .fine{margin-top:14px;font-size:12px;color:var(--faint)}
 @media(min-width:760px){
   body{padding-bottom:0}
   .botnav,.fab{display:none}
-  .nav-desk{display:flex;gap:26px;font-size:14.5px;font-weight:500}
-  .nav-desk a{color:var(--graphite)} .nav-desk a:hover{color:var(--green-dark)}
-  .top-cta{display:inline-flex;width:auto;padding:10px 18px;min-height:auto}
+  .topbar-row1{padding-bottom:6px}
+  .topbar-row2{display:block;padding-top:0;padding-bottom:10px}
+  .nav-desk{display:flex;width:100%;flex-wrap:nowrap;overflow-x:auto;white-space:nowrap;gap:20px;font-size:13.5px;font-weight:500;scrollbar-width:thin;padding-bottom:2px}
+  .nav-desk a{flex:none}
+  .nav-desk::-webkit-scrollbar{height:3px}
+  .nav-desk::-webkit-scrollbar-thumb{background:var(--line2);border-radius:4px}
+  .nav-desk a{color:var(--graphite);white-space:nowrap} .nav-desk a:hover{color:var(--green-dark)}
+  .top-cta{display:inline-flex;width:auto;padding:10px 18px;min-height:auto;white-space:nowrap;flex:none}
   .hero{padding-top:54px}
   .hero .actions{flex-direction:row;max-width:440px}
   .svc-grid{grid-template-columns:1fr 1fr}
@@ -396,12 +419,14 @@ footer .fine{margin-top:14px;font-size:12px;color:var(--faint)}
   .pkgs{grid-template-columns:repeat(3,1fr)}
   .trust{grid-template-columns:repeat(4,1fr)}
   .people{grid-template-columns:repeat(3,1fr)}
+  .reviews-grid{grid-template-columns:repeat(3,1fr)}
   .pickgrid.two-col{grid-template-columns:1fr 1fr}
   .flowstep{padding:30px}
   footer .wrap{display:flex;justify-content:space-between;gap:30px}
   .modal{align-items:center}
   .sheet{border-radius:18px}
 }
+@media(max-width:759px){.hide-mobile{display:none!important}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto}}
 </style>
 </head>
@@ -409,19 +434,16 @@ footer .fine{margin-top:14px;font-size:12px;color:var(--faint)}
 
 <!-- ================= TOP BAR ================= -->
 <header class="topbar">
-  <div class="wrap">
+  <div class="wrap topbar-row1">
     <a class="brand" href="#/" onclick="go('home')">
       <span class="mk"></span>
+      <img id="brandLogoImg" class="hidden" alt="">
       <span class="brand-txt"><b>নকশা সেবা</b><small data-i18n="brandTag">স্থপতি ও প্রকৌশলীর অনলাইন পরামর্শ</small><em id="clockLine"></em></span>
     </a>
     <div class="right">
-      <nav class="nav-desk">
-        <a data-i18n="navHome" onclick="go('home')">হোম</a>
-        <a data-i18n="navHow" onclick="go('home');jump('how')">কীভাবে কাজ করে</a>
-        <a data-i18n="navFees" onclick="go('home');jump('pkgs')">পরামর্শ ফি</a>
-        <a data-i18n="navFaq" onclick="go('home');jump('faq')">প্রশ্নোত্তর</a>
-        <a data-i18n="navDash" onclick="go('dashboard')">আমার প্রকল্প</a>
-      </nav>
+      <button class="searchbtn" onclick="openSearch()" aria-label="Search / খুঁজুন">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+      </button>
       <div class="langctl" role="group" aria-label="Language / ভাষা">
         <button type="button" data-lang="bn" onclick="setLang('bn')">বাং</button>
         <button type="button" data-lang="en" onclick="setLang('en')">EN</button>
@@ -433,6 +455,9 @@ footer .fine{margin-top:14px;font-size:12px;color:var(--faint)}
       </div>
       <button class="btn btn-ink top-cta" data-i18n="bookBtn" onclick="startBooking()">পরামর্শ বুক করুন</button>
     </div>
+  </div>
+  <div class="wrap topbar-row2">
+    <nav class="nav-desk" id="navDesk"></nav>
   </div>
 </header>
 
@@ -514,6 +539,14 @@ footer .fine{margin-top:14px;font-size:12px;color:var(--faint)}
     <div class="pkgs" id="pkgCards"></div>
   </div>
 
+  <!-- PROJECTS -->
+  <div class="section wrap" id="projects">
+    <div class="dim left"><span class="tick"></span><span data-i18n="projectsEyebrow">প্রকল্পসমূহ</span></div>
+    <h2 data-i18n="projectsHeading">যেসব ধরনের প্রকল্পে আমরা পরামর্শ দিই</h2>
+    <p class="lead" data-i18n="projectsLead">এখনো এখানে সম্পন্ন প্রকল্পের গ্যালারি যোগ হয়নি — নিচে আমরা যেসব ধরনের প্রকল্পে নিয়মিত পরামর্শ দিই তার তালিকা।</p>
+    <div class="chips" id="projectChips" style="margin-top:18px"></div>
+  </div>
+
   <!-- TRUST -->
   <div class="section wrap">
     <div class="dim left"><span class="tick"></span><span data-i18n="eyebrowWhy">কেন নকশা সেবা</span></div>
@@ -521,11 +554,20 @@ footer .fine{margin-top:14px;font-size:12px;color:var(--faint)}
     <div class="trust" id="trustGrid"></div>
   </div>
 
-  <!-- CONSULTANTS -->
-  <div class="section wrap">
-    <div class="dim left"><span class="tick"></span><span data-i18n="eyebrowTeam">বিশেষজ্ঞ দল</span></div>
-    <h2 data-i18n="teamHeading">যাঁদের পরামর্শ পাবেন</h2>
-    <div class="people" id="teamGrid"></div>
+  <!-- ABOUT + CONSULTANTS -->
+  <div class="section wrap" id="about">
+    <div class="dim left"><span class="tick"></span><span data-i18n="aboutEyebrow">আমাদের সম্পর্কে</span></div>
+    <h2 data-i18n="aboutHeading">পরিচিতি হোন আমাদের সাথে</h2>
+    <p class="lead" data-i18n="aboutBody" style="max-width:52em">নকশা সেবা বাংলাদেশের অভিজ্ঞ স্থপতি ও প্রকৌশলীদের একটি অনলাইন পরামর্শ প্ল্যাটফর্ম। আমরা BNBC (বাংলাদেশ ন্যাশনাল বিল্ডিং কোড) অনুসরণ করে স্থাপত্য, ইন্টেরিয়র, স্ট্রাকচারাল, ইলেকট্রিক্যাল ও প্লাম্বিং বিষয়ে সরাসরি WhatsApp বা Zoom-এ পরামর্শ দিই — যাতে বাংলাদেশের যেকোনো প্রান্ত থেকেই মানুষ নির্ভরযোগ্য প্রকৌশল মতামত পেতে পারেন।</p>
+    <h3 style="font-size:16.5px;font-family:var(--sans);font-weight:700;margin-top:26px" data-i18n="teamHeading">যাঁদের পরামর্শ পাবেন</h3>
+    <div class="people" id="teamGrid" style="margin-top:14px"></div>
+  </div>
+
+  <!-- RESEARCH -->
+  <div class="section wrap" id="research">
+    <div class="dim left"><span class="tick"></span><span data-i18n="researchEyebrow">গবেষণা ও কোড</span></div>
+    <h2 data-i18n="researchHeading">BNBC ও প্রকৌশল নির্দেশনা অনুসরণ করে পরামর্শ</h2>
+    <p class="lead" data-i18n="researchBody" style="max-width:52em">আমাদের পরামর্শ বাংলাদেশ ন্যাশনাল বিল্ডিং কোড (BNBC)-এর কাঠামোগত নিরাপত্তা, ভূমিকম্প সহনশীলতা, অগ্নি নিরাপত্তা ও লোড-ভারবহন সংক্রান্ত নীতিমালার আলোকে দেওয়া হয়। এখানে এখনো কোনো প্রকাশিত গবেষণাপত্র যোগ করা হয়নি।</p>
   </div>
 
   <!-- FAQ -->
@@ -533,6 +575,13 @@ footer .fine{margin-top:14px;font-size:12px;color:var(--faint)}
     <div class="dim left"><span class="tick"></span><span data-i18n="navFaq">প্রশ্নোত্তর</span></div>
     <h2 data-i18n="faqHeading">সাধারণ জিজ্ঞাসা</h2>
     <div class="faq" id="faqList"></div>
+  </div>
+
+  <!-- REVIEWS -->
+  <div class="section wrap hidden" id="reviewsSection">
+    <div class="dim left"><span class="tick"></span><span data-i18n="reviewsEyebrow">গ্রাহক মতামত</span></div>
+    <h2 data-i18n="reviewsHeading">যাঁরা আমাদের সেবা নিয়েছেন</h2>
+    <div class="reviews-grid" id="reviewsGrid"></div>
   </div>
 
   <!-- FINAL CTA -->
@@ -552,7 +601,7 @@ footer .fine{margin-top:14px;font-size:12px;color:var(--faint)}
     <div class="wrap">
       <div>
         <div class="brand"><span class="mk"></span>নকশা সেবা</div>
-        <div data-i18n="footerTag">আপনার নির্মাণ সমস্যার পেশাদার সমাধান, এখন হাতের মুঠোয়।</div>
+        <div id="footerTagText" data-i18n="footerTag">আপনার নির্মাণ সমস্যার পেশাদার সমাধান, এখন হাতের মুঠোয়।</div>
         <div class="flinks">
           <a data-i18n="linkPrivacy" onclick="go('policy')">গোপনীয়তা নীতি</a>
           <a data-i18n="linkTerms" onclick="go('policy')">সেবার শর্তাবলি</a>
@@ -654,8 +703,25 @@ function bi(o){if(o==null)return'';if(typeof o==='string')return o;return o[LANG
 const I18N={
   bookBtn:{bn:"পরামর্শ বুক করুন",en:"Book a Consultation"},
   brandTag:{bn:"স্থপতি ও প্রকৌশলীর অনলাইন পরামর্শ",en:"Online consultation with architects & engineers"},
-  navHome:{bn:"হোম",en:"Home"}, navHow:{bn:"কীভাবে কাজ করে",en:"How it works"},
-  navFees:{bn:"পরামর্শ ফি",en:"Fees"}, navFaq:{bn:"প্রশ্নোত্তর",en:"FAQ"}, navDash:{bn:"আমার প্রকল্প",en:"My Bookings"},
+  navHome:{bn:"হোম",en:"Home"}, navAbout:{bn:"আমাদের সম্পর্কে",en:"About Us"}, navServices:{bn:"আমাদের সেবাসমূহ",en:"Our Services"},
+  navProjects:{bn:"প্রকল্পসমূহ",en:"Projects"}, navHow:{bn:"কীভাবে কাজ করে",en:"How it works"},
+  navFees:{bn:"পরামর্শ ফি",en:"Fees"}, navResearch:{bn:"গবেষণা",en:"Research"}, navResources:{bn:"রিসোর্স",en:"Resources"},
+  navFaq:{bn:"প্রশ্নোত্তর",en:"FAQ"}, navDash:{bn:"আমার প্রকল্প",en:"My Bookings"},
+  aboutEyebrow:{bn:"আমাদের সম্পর্কে",en:"About Us"},
+  aboutHeading:{bn:"পরিচিতি হোন আমাদের সাথে",en:"Get to know us"},
+  aboutBody:{bn:"নকশা সেবা বাংলাদেশের অভিজ্ঞ স্থপতি ও প্রকৌশলীদের একটি অনলাইন পরামর্শ প্ল্যাটফর্ম। আমরা BNBC (বাংলাদেশ ন্যাশনাল বিল্ডিং কোড) অনুসরণ করে স্থাপত্য, ইন্টেরিয়র, স্ট্রাকচারাল, ইলেকট্রিক্যাল ও প্লাম্বিং বিষয়ে সরাসরি WhatsApp বা Zoom-এ পরামর্শ দিই — যাতে বাংলাদেশের যেকোনো প্রান্ত থেকেই মানুষ নির্ভরযোগ্য প্রকৌশল মতামত পেতে পারেন।",en:"Noksha Seba is an online consultation platform for experienced Bangladeshi architects and engineers. We advise on architecture, interior, structural, electrical and plumbing matters — following the BNBC (Bangladesh National Building Code) — over WhatsApp or Zoom, so anyone anywhere in Bangladesh can get a reliable engineering opinion."},
+  projectsEyebrow:{bn:"প্রকল্পসমূহ",en:"Projects"},
+  projectsHeading:{bn:"যেসব ধরনের প্রকল্পে আমরা পরামর্শ দিই",en:"Types of projects we advise on"},
+  projectsLead:{bn:"এখনো এখানে সম্পন্ন প্রকল্পের গ্যালারি যোগ হয়নি — নিচে আমরা যেসব ধরনের প্রকল্পে নিয়মিত পরামর্শ দিই তার তালিকা।",en:"A completed-projects gallery isn't added here yet — below are the project types we regularly advise on."},
+  researchEyebrow:{bn:"গবেষণা ও কোড",en:"Research & Codes"},
+  researchHeading:{bn:"BNBC ও প্রকৌশল নির্দেশনা অনুসরণ করে পরামর্শ",en:"Guidance grounded in the BNBC & engineering codes"},
+  researchBody:{bn:"আমাদের পরামর্শ বাংলাদেশ ন্যাশনাল বিল্ডিং কোড (BNBC)-এর কাঠামোগত নিরাপত্তা, ভূমিকম্প সহনশীলতা, অগ্নি নিরাপত্তা ও লোড-ভারবহন সংক্রান্ত নীতিমালার আলোকে দেওয়া হয়। এখানে এখনো কোনো প্রকাশিত গবেষণাপত্র যোগ করা হয়নি।",en:"Our advice is grounded in the Bangladesh National Building Code (BNBC)'s provisions on structural safety, earthquake resilience, fire safety, and load-bearing standards. No published research papers are added here yet."},
+  searchTitle:{bn:"সাইটে খুঁজুন",en:"Search the site"},
+  searchPlaceholder:{bn:"সেবা, প্রশ্নোত্তর বা তথ্য খুঁজুন...",en:"Search services, FAQ, or info..."},
+  searchNoResult:{bn:"কোনো ফলাফল পাওয়া যায়নি।",en:"No results found."},
+  searchHint:{bn:"টাইপ করা শুরু করুন...",en:"Start typing..."},
+  reviewsEyebrow:{bn:"গ্রাহক মতামত",en:"Client Reviews"},
+  reviewsHeading:{bn:"যাঁরা আমাদের সেবা নিয়েছেন",en:"What our clients say"},
   heroTitle:{bn:"আপনার নির্মাণ স্বপ্নের",en:"The right plan for"},
   waBtn:{bn:"WhatsApp-এ কথা বলুন",en:"Chat on WhatsApp"},
   waBtn2:{bn:"WhatsApp-এ যোগাযোগ করুন",en:"Contact on WhatsApp"},
@@ -863,12 +929,40 @@ const DEF_FAQ=[
   {q:{bn:"সময় পরিবর্তন করা যাবে কি?",en:"Can I reschedule?"},a:{bn:"হ্যাঁ, মিটিংয়ের নির্ধারিত সময়ের যথেষ্ট আগে ড্যাশবোর্ড থেকে সময় পরিবর্তন করা যায়।",en:"Yes, you can reschedule from your dashboard with sufficient advance notice before the meeting time."}},
   {q:{bn:"Zoom ব্যবহার না জানলে কী করব?",en:"What if I don't know how to use Zoom?"},a:{bn:"চিন্তার কিছু নেই — WhatsApp-এ কল করেও পরামর্শ নেওয়া যায়। Zoom লিংকে শুধু ট্যাপ করলেই মিটিং শুরু হয়।",en:"No problem — you can also consult over a WhatsApp call. For Zoom, just tap the link to join the meeting."}}
 ];
+const DEF_REVIEWS=[];
+const DEF_NAV=[
+  {key:'home',tkey:'navHome',action:"go('home')"},
+  {key:'about',tkey:'navAbout',action:"go('home');jump('about')"},
+  {key:'services',tkey:'navServices',action:"go('home');jump('services')"},
+  {key:'projects',tkey:'navProjects',action:"go('home');jump('projects')"},
+  {key:'how',tkey:'navHow',action:"go('home');jump('how')"},
+  {key:'fees',tkey:'navFees',action:"go('home');jump('pkgs')"},
+  {key:'research',tkey:'navResearch',action:"go('home');jump('research')"},
+  {key:'resources',tkey:'navResources',action:"go('home');jump('faq')"},
+  {key:'faq',tkey:'navFaq',action:"go('home');jump('faq')"},
+  {key:'dashboard',tkey:'navDash',action:"go('dashboard')"}
+];
+const DEF_SITE={logoUrl:'',logoSize:42,faviconUrl:'',footerDesc:{bn:"আপনার নির্মাণ সমস্যার পেশাদার সমাধান, এখন হাতের মুঠোয়।",en:"Professional solutions for your construction problems, now in your hand."}};
+const LOGO_PRESETS=[[32,'S'],[42,'M'],[52,'L'],[64,'XL'],[80,'2XL']];
+const SECTION_LIST=[
+  {id:'services',tkey:'eyebrowServices'},{id:'how',tkey:'eyebrowProcess'},{id:'pkgs',tkey:'eyebrowFees'},
+  {id:'projects',tkey:'projectsEyebrow'},{id:'about',tkey:'aboutEyebrow'},{id:'research',tkey:'researchEyebrow'},{id:'faq',tkey:'navFaq'}
+];
+function navOrderData(){
+  const saved=store.get('ns_nav_order',null);
+  const allKeys=DEF_NAV.map(x=>x.key);
+  if(!saved)return allKeys;
+  return saved.filter(k=>allKeys.includes(k)).concat(allKeys.filter(k=>!saved.includes(k)));
+}
+function siteSettingsData(){return store.get('ns_site',DEF_SITE)}
+function mobileVisData(){return store.get('ns_mobile_vis',{})}
 function contactData(){return store.get('ns_contact',DEF_CONTACT)}
 function heroData(){return store.get('ns_hero',DEF_HERO)}
 function servicesData(){return store.get('ns_services',DEF_SERVICES)}
 function trustDataGet(){return store.get('ns_trust',DEF_TRUST)}
 function teamData(){return store.get('ns_team',DEF_TEAM)}
 function faqDataGet(){return store.get('ns_faq',DEF_FAQ)}
+function reviewsData(){return store.get('ns_reviews',DEF_REVIEWS)}
 function SVC(){const d=servicesData();const o={};Object.keys(DEF_SERVICES).forEach(k=>o[k]=bi((d[k]||DEF_SERVICES[k]).title));return o}
 const PKGS=[
   {id:"quick",name:{bn:"দ্রুত পরামর্শ",en:"Quick Consultation"},dur:{bn:"২০ মিনিট",en:"20 minutes"},
@@ -878,6 +972,9 @@ const PKGS=[
   {id:"project",name:{bn:"প্রকল্প পরামর্শ",en:"Project Consultation"},dur:{bn:"৬০–৯০ মিনিট",en:"60–90 minutes"},
    feat:[{bn:"নতুন ভবন",en:"New building"},{bn:"জটিল renovation",en:"Complex renovation"},{bn:"স্থাপত্য+স্ট্রাকচার+MEP সমন্বয়",en:"Architecture+Structure+MEP coordination"},{bn:"multidisciplinary পরামর্শ",en:"Multidisciplinary consultation"}]}
 ];
+function pkgDurData(){return store.get('ns_pkg_dur',{})}
+function pkgDur(pk){return pkgDurData()[pk.id]||pk.dur}
+function setPkgDur(id,lang,v){const d=JSON.parse(JSON.stringify(pkgDurData()));const pk=PKGS.find(x=>x.id===id);if(!d[id])d[id]=JSON.parse(JSON.stringify(pk.dur));d[id][lang]=v;store.set('ns_pkg_dur',d);renderPkgCards();showToast(t('savedToast'))}
 const DIVS={
  "ঢাকা":["ঢাকা","গাজীপুর","নারায়ণগঞ্জ","টাঙ্গাইল","নরসিংদী","মুন্সিগঞ্জ","মানিকগঞ্জ","কিশোরগঞ্জ","ফরিদপুর","গোপালগঞ্জ","মাদারীপুর","শরীয়তপুর","রাজবাড়ী"],
  "চট্টগ্রাম":["চট্টগ্রাম","কক্সবাজার","বান্দরবান","রাঙামাটি","খাগড়াছড়ি","ফেনী","নোয়াখালী","লক্ষ্মীপুর","কুমিল্লা","চাঁদপুর","ব্রাহ্মণবাড়িয়া"],
@@ -1002,6 +1099,20 @@ function renderTeam(){
 function renderFaqList(){
   $("#faqList").innerHTML=faqDataGet().map(x=>`<details><summary>${esc(bi(x.q))}</summary><p>${esc(bi(x.a))}</p></details>`).join('');
 }
+function renderReviews(){
+  const sec=$("#reviewsSection"),grid=$("#reviewsGrid");if(!sec||!grid)return;
+  const arr=reviewsData();
+  if(!arr.length){sec.classList.add('hidden');return}
+  sec.classList.remove('hidden');
+  grid.innerHTML=arr.map(r=>{
+    const st=Math.max(1,Math.min(5,+r.stars||5));
+    return `<div class="review">
+      <div class="review-top"><span class="stars">${'★'.repeat(st)}${'☆'.repeat(5-st)}</span><span class="review-quote-mark">"</span></div>
+      <p class="review-text">${esc(bi(r.quote))}</p>
+      <div class="review-who"><span class="review-av">${esc(bi(r.avatar))}</span><div><b>${esc(bi(r.name))}</b><span>${esc(bi(r.title))}</span></div></div>
+    </div>`;
+  }).join('');
+}
 function renderContactPoints(){
   const c=contactData();
   const heroCall=$("#heroCallLink"),ctaCall=$("#ctaCallLink"),foot=$("#footerContact");
@@ -1009,8 +1120,34 @@ function renderContactPoints(){
   if(ctaCall)ctaCall.href="tel:"+c.call;
   if(foot)foot.innerHTML=`WhatsApp: ${fmtPhone(c.wa)}<br>${LANG==='bn'?'ই-মেইল':'Email'}: ${esc(c.email)}<br>${LANG==='bn'?'রেফারেন্স':'Reference'}: ${esc(c.ref)}`;
 }
+function renderProjectChips(){
+  const el=$("#projectChips");if(!el)return;
+  el.innerHTML=PTYPES.map(pt=>`<span class="chip">${esc(bi(pt))}</span>`).join('');
+}
+function renderNavDesk(){
+  const byKey=Object.fromEntries(DEF_NAV.map(x=>[x.key,x]));
+  $("#navDesk").innerHTML=navOrderData().map(k=>{const item=byKey[k];if(!item)return'';
+    return `<a onclick="${item.action}">${esc(t(item.tkey))}</a>`}).join('');
+}
+function renderSiteSettingsPublic(){
+  const s=siteSettingsData();
+  const mk=$(".brand .mk"),img=$("#brandLogoImg");
+  if(s.logoUrl){if(mk)mk.classList.add('hidden');if(img){img.src=s.logoUrl;img.style.height=(s.logoSize||42)+'px';img.classList.remove('hidden')}}
+  else{if(mk)mk.classList.remove('hidden');if(img)img.classList.add('hidden')}
+  if(s.faviconUrl){
+    let fav=$("#faviconLink");
+    if(!fav){fav=document.createElement('link');fav.id='faviconLink';fav.rel='icon';document.head.appendChild(fav)}
+    fav.href=s.faviconUrl;
+  }
+  const footTag=$("#footerTagText");if(footTag)footTag.textContent=bi(s.footerDesc);
+}
+function applyMobileVis(){
+  const vis=mobileVisData();
+  SECTION_LIST.forEach(s=>{const el=document.getElementById(s.id);if(el)el.classList.toggle('hide-mobile',vis[s.id]===false)});
+}
 function renderSiteContent(){
-  renderHeroBadges();renderServices();renderTrust();renderTeam();renderFaqList();renderContactPoints();
+  renderHeroBadges();renderServices();renderTrust();renderTeam();renderFaqList();renderReviews();renderContactPoints();renderProjectChips();
+  renderNavDesk();renderSiteSettingsPublic();applyMobileVis();
 }
 
 /* ---------- land unit help ---------- */
@@ -1023,6 +1160,37 @@ function unitHelp(){
     <p style="color:var(--grey);font-size:13px;margin-top:12px">${t('unitHelpNote')}</p>
     <button class="btn btn-ink" style="margin-top:16px" onclick="closeModal()">${t('gotIt')}</button>`);
 }
+
+/* ---------- search ---------- */
+function searchIndex(){
+  const idx=[];
+  const d=servicesData();
+  Object.keys(DEF_SERVICES).forEach(k=>{const s=d[k]||DEF_SERVICES[k];
+    idx.push({title:bi(s.title),sub:bi(s.desc),go:()=>{closeModal();go('home');jump('services')}})});
+  PKGS.forEach(pk=>idx.push({title:bi(pk.name),sub:bi(pkgDur(pk))+" · "+taka(prices()[pk.id]),go:()=>{closeModal();go('home');jump('pkgs')}}));
+  teamData().forEach(x=>idx.push({title:bi(x.t),sub:bi(x.s),go:()=>{closeModal();go('home');jump('about')}}));
+  faqDataGet().forEach(x=>idx.push({title:bi(x.q),sub:bi(x.a),go:()=>{closeModal();go('home');jump('faq')}}));
+  return idx;
+}
+function openSearch(){
+  openModal(`<h3>${t('searchTitle')}</h3>
+    <div class="field" style="margin-top:14px"><input id="searchInput" oninput="runSearch(this.value)" placeholder="${t('searchPlaceholder')}" autocomplete="off"></div>
+    <div id="searchResults" style="margin-top:6px"><p style="color:var(--grey);font-size:13px;padding:10px 2px">${t('searchHint')}</p></div>`);
+  setTimeout(()=>{const el=$("#searchInput");if(el)el.focus()},60);
+}
+function runSearch(q){
+  const el=$("#searchResults");if(!el)return;
+  q=(q||"").trim().toLowerCase();
+  if(!q){el.innerHTML=`<p style="color:var(--grey);font-size:13px;padding:10px 2px">${t('searchHint')}</p>`;return}
+  const results=searchIndex().filter(x=>(x.title+" "+x.sub).toLowerCase().includes(q));
+  window._searchResults=results;
+  if(!results.length){el.innerHTML=`<p style="color:var(--grey);font-size:13px;padding:10px 2px">${t('searchNoResult')}</p>`;return}
+  el.innerHTML=results.slice(0,8).map((r,i)=>`<button style="display:block;width:100%;text-align:left;padding:12px 4px;border-top:1px solid var(--line)" onclick="searchGo(${i})">
+    <b style="font-size:14.5px">${esc(r.title)}</b>
+    <div style="color:var(--grey);font-size:12.5px;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(r.sub)}</div>
+  </button>`).join('');
+}
+function searchGo(i){const r=(window._searchResults||[])[i];if(r)r.go()}
 
 /* ---------- router ---------- */
 let current="home";
@@ -1046,7 +1214,7 @@ function renderPkgCards(){
   $("#pkgCards").innerHTML=PKGS.map(pk=>`
     <div class="pkg ${pk.pop?'pop':''}">
       ${pk.pop?`<span class="badge">${t('pkgPopular')}</span>`:''}
-      <div class="dur">${bi(pk.dur)}</div>
+      <div class="dur">${bi(pkgDur(pk))}</div>
       <h3>${bi(pk.name)}</h3>
       <div class="price">${taka(p[pk.id])}<small>${t('pkgPerSession')}</small></div>
       <ul>${pk.feat.map(f=>`<li>${bi(f)}</li>`).join('')}</ul>
@@ -1126,7 +1294,7 @@ function renderFlow(){
       <div class="pickgrid" style="margin-top:14px">${PKGS.map(pk=>`
         <button class="pick ${D.package===pk.id?'on':''}" onclick="setField('package','${pk.id}');renderFlow()">
           <span class="ic">${pk.pop?'★':'●'}</span>
-          <span><b>${bi(pk.name)}</b><span>${bi(pk.dur)}</span></span>
+          <span><b>${bi(pk.name)}</b><span>${bi(pkgDur(pk))}</span></span>
           <span class="rt">${taka(p[pk.id])}</span></button>`).join('')}</div>
       <div class="flow-actions"><button class="back-min" onclick="prev()">${t('prevStep')}</button>
         <button class="btn btn-ink" onclick="next()" ${D.package?'':'disabled style=opacity:.4'}>${t('nextStep')}</button></div>
@@ -1213,7 +1381,7 @@ function renderFlow(){
       <h2>${t('step7Title')}</h2>
       <div class="summary" style="margin-top:14px">
         <div class="r"><span>${t('sumService')}</span><b>${SVC()[D.service]||'-'}</b></div>
-        <div class="r"><span>${t('sumPackage')}</span><b>${bi(pk.name)} · ${bi(pk.dur)}</b></div>
+        <div class="r"><span>${t('sumPackage')}</span><b>${bi(pk.name)} · ${bi(pkgDur(pk))}</b></div>
         <div class="r"><span>${t('sumDate')}</span><b>${D.dateLabel||'-'}</b></div>
         <div class="r"><span>${t('sumTime')}</span><b>${D.time||'-'}</b></div>
         <div class="r"><span>${t('sumMode')}</span><b>${modeLabel(D.mode)}</b></div>
@@ -1410,8 +1578,9 @@ function dl(name,text,mime){const b=new Blob([text],{type:mime});const a=documen
 
 /* admin */
 const ADM_TABS=[
-  ['dash','ড্যাশবোর্ড'],['hero','হিরো সেকশন'],['services','সেবাসমূহ'],['pkgs','প্যাকেজ ও মূল্য'],
-  ['slots','সময়সূচি'],['team','পরামর্শক দল'],['trust','বিশ্বাসযোগ্যতা'],['faq','প্রশ্নোত্তর'],
+  ['dash','ড্যাশবোর্ড'],['site','সাইট সেটিংস'],['menu','মেনু অর্ডার'],['mobile','মোবাইল ভিউ'],
+  ['hero','হিরো সেকশন'],['services','সেবাসমূহ'],['pkgs','প্যাকেজ ও মূল্য'],
+  ['slots','সময়সূচি'],['team','পরামর্শক দল'],['trust','বিশ্বাসযোগ্যতা'],['faq','প্রশ্নোত্তর'],['reviews','গ্রাহক মতামত'],
   ['contact','যোগাযোগ তথ্য'],['bookings','বুকিং তালিকা']
 ];
 let _adm=false,_admTab='dash';
@@ -1434,8 +1603,8 @@ function renderAdmin(){
     <button class="btn btn-line" style="margin-top:16px" onclick="admLogout()">লগআউট</button>`;
 }
 function admPanelHTML(tab){
-  return {dash:admDash,hero:admHero,services:admServices,pkgs:admPkgs,slots:admSlots,
-    team:admTeam,trust:admTrust,faq:admFaq,contact:admContact,bookings:admBookings}[tab]();
+  return {dash:admDash,site:admSite,menu:admMenu,mobile:admMobileVis,hero:admHero,services:admServices,pkgs:admPkgs,slots:admSlots,
+    team:admTeam,trust:admTrust,faq:admFaq,reviews:admReviews,contact:admContact,bookings:admBookings}[tab]();
 }
 
 /* dashboard overview */
@@ -1445,16 +1614,149 @@ function admDash(){
   const active=all.filter(b=>b.status!=='done').length;
   const weekAgo=Date.now()-7*24*3600*1000;
   const week=all.filter(b=>b.created>=weekAgo).length;
+  const QUICK=[
+    ['hero','হিরো সেকশন','হোমপেজের ব্যাজ ও রোটেটিং স্লাইড'],
+    ['services','সেবাসমূহ',toBn(Object.keys(DEF_SERVICES).length)+'টি সেবা পরিচালনা করুন'],
+    ['pkgs','প্যাকেজ ও মূল্য',toBn(PKGS.length)+'টি প্যাকেজের ফি ও সময়কাল'],
+    ['team','পরামর্শক দল',toBn(teamData().length)+'জন সদস্য'],
+    ['trust','বিশ্বাসযোগ্যতা',toBn(trustDataGet().length)+'টি পয়েন্ট'],
+    ['faq','প্রশ্নোত্তর',toBn(faqDataGet().length)+'টি প্রশ্ন'],
+    ['reviews','গ্রাহক মতামত',toBn(reviewsData().length)+'টি মতামত']
+  ];
   return `<div class="adm-stats">
       <div class="stat"><b>${toBn(all.length)}</b><span>মোট বুকিং</span></div>
       <div class="stat"><b>${toBn(week)}</b><span>এই সপ্তাহে</span></div>
       <div class="stat"><b>${toBn(active)}</b><span>সক্রিয়</span></div>
       <div class="stat"><b>${toBn(done)}</b><span>সম্পন্ন</span></div>
     </div>
+    <div class="adm-stats" style="grid-template-columns:repeat(2,1fr);margin-top:10px">
+      <div class="stat"><b>${toBn(Object.keys(DEF_SERVICES).length)}</b><span>সেবা</span></div>
+      <div class="stat"><b>${toBn(PKGS.length)}</b><span>প্যাকেজ</span></div>
+      <div class="stat"><b>${toBn(teamData().length)}</b><span>টিম সদস্য</span></div>
+      <div class="stat"><b>${toBn(faqDataGet().length)}</b><span>প্রশ্নোত্তর</span></div>
+    </div>
     <div class="dcard" style="margin-top:16px"><b>সাম্প্রতিক বুকিং</b>
       ${all.length?all.slice(0,5).map(b=>`<div style="border-top:1px solid var(--line);padding:10px 0;font-size:13.5px">
         <b>${b.id}</b> · ${esc(b.serviceName)}<br><span style="color:var(--grey)">${esc(b.name)} · ${b.dateLabel} ${b.time}</span></div>`).join(''):'<p style="color:var(--grey);font-size:13px;margin-top:8px">কোনো বুকিং নেই।</p>'}
+    </div>
+    <div class="dcard" style="margin-top:16px"><b>কনটেন্ট সেকশন</b>
+      <div style="display:grid;gap:8px;margin-top:10px">
+        ${QUICK.map(([k,label,sub])=>`<button style="display:flex;justify-content:space-between;align-items:center;width:100%;text-align:left;background:var(--field);border-radius:10px;padding:12px 14px" onclick="admGo('${k}')">
+          <span><b style="font-size:14px">${label}</b><div style="color:var(--grey);font-size:12px;margin-top:2px">${sub}</div></span>
+          <span style="color:var(--grey)">→</span>
+        </button>`).join('')}
+      </div>
     </div>`;
+}
+
+/* site settings */
+function admSite(){
+  const s=siteSettingsData();
+  return `<div class="dcard"><b>ব্র্যান্ড / লোগো</b>
+    <p style="color:var(--grey);font-size:12px;margin-top:6px">কম্পিউটার থেকে ছবি আপলোড করুন অথবা একটি ইমেজ URL দিন। খালি রাখলে ডিফল্ট আইকন দেখাবে।</p>
+    ${imageField('লোগো ইমেজ',s.logoUrl,'logoUrl')}
+    ${s.logoUrl?logoSizeField(s.logoSize||42):''}
+    ${imageField('ফেভিকন (ব্রাউজার ট্যাব আইকন)',s.faviconUrl,'faviconUrl')}
+  </div>
+  <div class="dcard" style="margin-top:14px"><b>ফুটার বিবরণ</b>
+    ${biField('ফুটার টেক্সট',s.footerDesc,lang=>`setSiteField('footerDesc','${lang}',this.value)`,true)}
+  </div>`;
+}
+function logoSizeField(size){
+  return `<div class="field">
+    <label>লোগোর আকার <span class="opt" id="logoSizeLabel">${toBn(size)}px</span></label>
+    <input type="range" min="24" max="88" value="${size}" oninput="logoSizePreview(this.value)" onchange="setLogoSize(this.value)" style="width:100%;accent-color:var(--green)">
+    <div class="row-btns" style="margin-top:8px;flex-wrap:wrap">
+      ${LOGO_PRESETS.map(([px,label])=>`<button class="btn ${+size===px?'btn-ink':'btn-line'} btn-sm inline" style="flex:1;min-width:56px" onclick="setLogoSize(${px})">${label}</button>`).join('')}
+    </div>
+  </div>`;
+}
+function logoSizePreview(px){
+  const lbl=$("#logoSizeLabel");if(lbl)lbl.textContent=toBn(px)+'px';
+  const img=$("#brandLogoImg");if(img)img.style.height=px+'px';
+}
+function setLogoSize(px){
+  px=+px;
+  const s=JSON.parse(JSON.stringify(siteSettingsData()));s.logoSize=px;
+  store.set('ns_site',s);renderSiteSettingsPublic();renderAdmin();showToast(t('savedToast'));
+}
+function imageField(label,val,field){
+  if(val){
+    return `<div class="field"><label>${label}</label>
+      <div style="display:flex;align-items:center;gap:12px;background:var(--field);border-radius:10px;padding:10px">
+        <img src="${esc(val)}" style="max-width:80px;height:44px;border-radius:8px;object-fit:contain;background:#fff;flex:none">
+        <span style="flex:1;font-size:12.5px;color:var(--grey)">ছবি সেট করা আছে</span>
+        <button class="btn btn-ghost" style="color:var(--clay);width:auto;padding:8px" onclick="clearSiteImage('${field}')">সরান</button>
+      </div>
+    </div>`;
+  }
+  return `<div class="field"><label>${label}</label>
+    <div class="row-btns">
+      <label class="btn btn-line btn-sm inline" style="cursor:pointer">কম্পিউটার থেকে আপলোড
+        <input type="file" accept="image/*" style="display:none" onchange="uploadSiteImage('${field}',this.files[0])">
+      </label>
+    </div>
+    <input style="margin-top:8px" onchange="setSiteField('${field}',this.value)" placeholder="অথবা ছবির URL পেস্ট করুন">
+  </div>`;
+}
+function uploadSiteImage(field,file){
+  if(!file)return;
+  if(!file.type.startsWith('image/')){openModal(`<h3>শুধু ছবি ফাইল</h3><p style="color:var(--graphite);margin-top:10px">অনুগ্রহ করে JPG, PNG বা WEBP ফরম্যাটের একটি ছবি বেছে নিন।</p><button class="btn btn-ink" style="margin-top:16px" onclick="closeModal()">${t('okBtn')}</button>`);return}
+  if(file.size>400*1024){openModal(`<h3>ছবিটি অনেক বড়</h3><p style="color:var(--graphite);margin-top:10px">অনুগ্রহ করে ৪০০ কিলোবাইটের ছোট একটি ছবি বেছে নিন (লোগো/ফেভিকনের জন্য ছোট, অপ্টিমাইজড ছবিই যথেষ্ট)।</p><button class="btn btn-ink" style="margin-top:16px" onclick="closeModal()">${t('okBtn')}</button>`);return}
+  const reader=new FileReader();
+  reader.onload=()=>{setSiteField(field,reader.result)};
+  reader.readAsDataURL(file);
+}
+function clearSiteImage(field){setSiteField(field,'')}
+function setSiteField(f,a,b){
+  const s=JSON.parse(JSON.stringify(siteSettingsData()));
+  if(f==='footerDesc')s.footerDesc[a]=b; else s[f]=a;
+  store.set('ns_site',s);renderSiteSettingsPublic();renderAdmin();showToast(t('savedToast'));
+}
+
+/* menu order */
+function admMenu(){
+  const order=navOrderData();
+  const byKey=Object.fromEntries(DEF_NAV.map(x=>[x.key,x]));
+  return `<div class="dcard"><b>হেডার মেনুর ক্রম</b>
+    <p style="color:var(--grey);font-size:12px;margin-top:6px">↑ / ↓ বাটন দিয়ে মেনুর ক্রম ঠিক করুন — সঙ্গে সঙ্গে হোমপেজে প্রতিফলিত হবে।</p>
+    <div style="margin-top:12px;display:grid;gap:8px">
+      ${order.map((k,i)=>{const item=byKey[k];if(!item)return'';
+        return `<div style="display:flex;align-items:center;gap:10px;background:var(--field);border-radius:10px;padding:10px 12px">
+          <span style="flex:1;font-weight:600;font-size:14px">${esc(t(item.tkey))}</span>
+          <button style="width:32px;height:32px;border-radius:8px;background:var(--panel);border:1px solid var(--line2);font-weight:700;${i===0?'opacity:.3;pointer-events:none':''}" onclick="moveNav(${i},-1)" aria-label="উপরে সরান">↑</button>
+          <button style="width:32px;height:32px;border-radius:8px;background:var(--panel);border:1px solid var(--line2);font-weight:700;${i===order.length-1?'opacity:.3;pointer-events:none':''}" onclick="moveNav(${i},1)" aria-label="নিচে সরান">↓</button>
+        </div>`;}).join('')}
+    </div>
+    <button class="btn btn-line" style="margin-top:16px" onclick="resetNavOrder()">ডিফল্ট ক্রমে ফিরুন</button>
+  </div>`;
+}
+function moveNav(i,dir){
+  const order=navOrderData().slice();const j=i+dir;if(j<0||j>=order.length)return;
+  [order[i],order[j]]=[order[j],order[i]];
+  store.set('ns_nav_order',order);renderNavDesk();renderAdmin();
+}
+function resetNavOrder(){store.set('ns_nav_order',DEF_NAV.map(x=>x.key));renderNavDesk();renderAdmin()}
+
+/* mobile section visibility */
+function admMobileVis(){
+  const vis=mobileVisData();
+  return `<div class="dcard"><b>মোবাইলে সেকশন দেখানো/লুকানো</b>
+    <p style="color:var(--grey);font-size:12px;margin-top:6px">মোবাইল ভিউতে যেসব সেকশন দেখাতে চান না, বন্ধ করে দিন। ডেস্কটপে সবসময় দেখা যাবে।</p>
+    <div style="margin-top:12px;display:grid;gap:8px">
+      ${SECTION_LIST.map(s=>{const on=vis[s.id]!==false;
+        return `<div style="display:flex;align-items:center;justify-content:space-between;background:var(--field);border-radius:10px;padding:10px 14px">
+          <span style="font-weight:600;font-size:14px">${esc(t(s.tkey))}</span>
+          <label style="display:inline-flex;align-items:center;gap:8px;font-size:12.5px;color:var(--grey)">
+            <input type="checkbox" style="width:18px;height:18px;accent-color:var(--green)" ${on?'checked':''} onchange="setMobileVis('${s.id}',this.checked)">
+          </label>
+        </div>`;}).join('')}
+    </div>
+  </div>`;
+}
+function setMobileVis(id,checked){
+  const vis=JSON.parse(JSON.stringify(mobileVisData()));vis[id]=checked;
+  store.set('ns_mobile_vis',vis);applyMobileVis();
 }
 
 /* hero editor */
@@ -1469,9 +1771,13 @@ function biField(label,val,callFor,multiline){
 }
 function admHero(){
   const h=heroData();
-  return `<div class="dcard"><b>হিরো ব্যাজ</b>
+  return `<div class="dcard"><b>হিরো ব্যাজ (${toBn(h.badges.length)})</b>
     <p style="color:var(--grey);font-size:12px;margin-top:6px">হোমপেজের উপরের অংশে দেখানো ছোট ব্যাজগুলো।</p>
-    ${h.badges.map((b,i)=>biField('ব্যাজ '+toBn(i+1),b,lang=>`setHeroBadge(${i},'${lang}',this.value)`)).join('')}
+    ${h.badges.map((b,i)=>`<div style="border-top:1px solid var(--line);padding-top:14px;margin-top:14px">
+      ${biField('ব্যাজ '+toBn(i+1),b,lang=>`setHeroBadge(${i},'${lang}',this.value)`)}
+      <button class="btn btn-ghost" style="color:var(--clay);margin-top:6px" onclick="removeHeroBadge(${i})">মুছে ফেলুন</button>
+    </div>`).join('')}
+    <button class="btn btn-line" style="margin-top:16px" onclick="addHeroBadge()">+ নতুন ব্যাজ যোগ করুন</button>
   </div>
   <div class="dcard" style="margin-top:14px"><b>হিরো রোটেটিং স্লাইড</b>
     <p style="color:var(--grey);font-size:12px;margin-top:6px">হেডলাইন ও সাবটেক্সট প্রতি কয়েক সেকেন্ড পরপর পালাক্রমে দেখানো হয়।</p>
@@ -1482,6 +1788,8 @@ function admHero(){
   </div>`;
 }
 function setHeroBadge(i,lang,v){const h=JSON.parse(JSON.stringify(heroData()));h.badges[i][lang]=v;store.set('ns_hero',h);renderHeroBadges();showToast(t('savedToast'))}
+function addHeroBadge(){const h=JSON.parse(JSON.stringify(heroData()));h.badges.push({bn:'🔧 নতুন ব্যাজ',en:'🔧 New badge'});store.set('ns_hero',h);renderHeroBadges();renderAdmin()}
+function removeHeroBadge(i){const h=JSON.parse(JSON.stringify(heroData()));h.badges.splice(i,1);store.set('ns_hero',h);renderHeroBadges();renderAdmin()}
 function setHeroSlideField(i,field,lang,v){const h=JSON.parse(JSON.stringify(heroData()));h.slides[i][field][lang]=v;store.set('ns_hero',h);clearInterval(heroT);startHeroCarousel();showToast(t('savedToast'))}
 
 /* services editor */
@@ -1554,6 +1862,31 @@ function setFaqField(i,f,lang,v){const a=JSON.parse(JSON.stringify(faqDataGet())
 function addFaqItem(){const a=JSON.parse(JSON.stringify(faqDataGet()));a.push({q:{bn:'নতুন প্রশ্ন লিখুন',en:'Enter new question'},a:{bn:'উত্তর লিখুন',en:'Enter answer'}});store.set('ns_faq',a);renderFaqList();renderAdmin()}
 function removeFaqItem(i){const a=JSON.parse(JSON.stringify(faqDataGet()));a.splice(i,1);store.set('ns_faq',a);renderFaqList();renderAdmin()}
 
+/* reviews editor */
+function admReviews(){
+  const arr=reviewsData();
+  return `<div class="dcard"><b>গ্রাহক মতামত (${toBn(arr.length)})</b>
+    <p style="color:var(--grey);font-size:12px;margin-top:6px">শুধু প্রকৃত গ্রাহকের কাছ থেকে পাওয়া মতামত যোগ করুন — কাল্পনিক নাম বা রিভিউ লিখবেন না। কোনো মতামত না থাকলে এই সেকশনটি হোমপেজে দেখানো হবে না।</p>
+    ${arr.length?arr.map((x,i)=>`<div style="border-top:1px solid var(--line);padding-top:14px;margin-top:14px">
+      <div class="field"><label>রেটিং (১–৫)</label><input type="number" min="1" max="5" value="${x.stars||5}" onchange="setReviewStars(${i},this.value)" style="max-width:100px"></div>
+      ${biField('মতামত',x.quote,lang=>`setReviewField(${i},'quote','${lang}',this.value)`,true)}
+      ${biField('নাম',x.name,lang=>`setReviewField(${i},'name','${lang}',this.value)`)}
+      ${biField('পদবি / প্রতিষ্ঠান',x.title,lang=>`setReviewField(${i},'title','${lang}',this.value)`)}
+      ${biField('সংক্ষিপ্ত আদ্যক্ষর',x.avatar,lang=>`setReviewField(${i},'avatar','${lang}',this.value)`)}
+      <button class="btn btn-ghost" style="color:var(--clay);margin-top:6px" onclick="removeReview(${i})">মুছে ফেলুন</button>
+    </div>`).join(''):'<p style="color:var(--grey);font-size:13px;margin-top:10px">এখনো কোনো মতামত যোগ করা হয়নি।</p>'}
+    <button class="btn btn-line" style="margin-top:16px" onclick="addReview()">+ নতুন মতামত যোগ করুন</button>
+  </div>`;
+}
+function setReviewField(i,f,lang,v){const a=JSON.parse(JSON.stringify(reviewsData()));a[i][f][lang]=v;store.set('ns_reviews',a);renderReviews();showToast(t('savedToast'))}
+function setReviewStars(i,v){const a=JSON.parse(JSON.stringify(reviewsData()));a[i].stars=Math.max(1,Math.min(5,+v||5));store.set('ns_reviews',a);renderReviews();showToast(t('savedToast'))}
+function addReview(){
+  const a=JSON.parse(JSON.stringify(reviewsData()));
+  a.push({stars:5,quote:{bn:"গ্রাহকের প্রকৃত মতামত এখানে লিখুন",en:"Write the client's real quote here"},name:{bn:"নাম",en:"Name"},title:{bn:"পদবি / প্রতিষ্ঠান",en:"Title / organization"},avatar:{bn:"??",en:"??"}});
+  store.set('ns_reviews',a);renderReviews();renderAdmin();
+}
+function removeReview(i){const a=JSON.parse(JSON.stringify(reviewsData()));a.splice(i,1);store.set('ns_reviews',a);renderReviews();renderAdmin()}
+
 /* contact editor */
 function admContact(){
   const c=contactData();
@@ -1575,18 +1908,27 @@ function setContactField(f,v){
 /* packages / slots / bookings */
 function admPkgs(){
   const p=prices();
-  return `<div class="dcard"><b>পরামর্শ ফি (সম্পাদনযোগ্য)</b>
-    ${PKGS.map(pk=>`<div class="adm-price"><b>${pk.name.bn} <span style="color:var(--grey);font-weight:400;font-size:12px">(${pk.dur.bn})</span></b>
-      <span>৳</span><input type="number" value="${p[pk.id]}" onchange="setPrice('${pk.id}',this.value)"></div>`).join('')}
+  return `<div class="dcard"><b>পরামর্শ ফি ও সময়কাল (সম্পাদনযোগ্য)</b>
+    ${PKGS.map(pk=>`<div style="border-top:1px solid var(--line);padding-top:14px;margin-top:14px">
+      <b>${pk.name.bn}</b>
+      ${biField('সময়কাল',pkgDur(pk),lang=>`setPkgDur('${pk.id}','${lang}',this.value)`)}
+      <div class="adm-price" style="border-bottom:none;padding-bottom:0"><b style="flex:1;font-weight:400;color:var(--grey);font-size:13px">ফি</b>
+        <span>৳</span><input type="number" value="${p[pk.id]}" onchange="setPrice('${pk.id}',this.value)"></div>
+    </div>`).join('')}
     <p style="color:var(--grey);font-size:12px;margin-top:10px">পরিবর্তন সঙ্গে সঙ্গে হোমপেজ ও বুকিংয়ে প্রতিফলিত হবে।</p>
   </div>`;
 }
 function admSlots(){
   const sl=slotsCfg();
-  return `<div class="dcard"><b>সময়ের স্লট (availability)</b>
-    <div class="field"><input id="admSlots" value="${sl.join(', ')}" placeholder="10:00 AM, 11:30 AM, ..."></div>
-    <button class="btn btn-line btn-sm inline" onclick="saveSlots()">স্লট সংরক্ষণ</button>
-    <p style="color:var(--grey);font-size:12px;margin-top:8px">কমা দিয়ে আলাদা করুন। ইতিমধ্যে বুক করা স্লট স্বয়ংক্রিয়ভাবে ব্লক হয়।</p>
+  return `<div class="dcard"><b>সময়ের স্লট (${toBn(sl.length)})</b>
+    <p style="color:var(--grey);font-size:12px;margin-top:6px">প্রতিটি সময় আলাদাভাবে সম্পাদনা করুন। ইতিমধ্যে বুক করা স্লট হোমপেজে স্বয়ংক্রিয়ভাবে ব্লক হয়ে যায়।</p>
+    <div style="margin-top:10px;display:grid;gap:9px">
+      ${sl.map((s,i)=>`<div style="display:flex;gap:8px;align-items:center">
+        <input style="flex:1;background:var(--field);border:1.5px solid transparent;border-radius:10px;padding:12px 13px;font-weight:600" value="${esc(s)}" onchange="setSlot(${i},this.value)" placeholder="যেমন: 10:00 AM">
+        <button style="flex:none;width:40px;height:40px;border-radius:10px;background:var(--field);color:var(--clay);font-size:16px" onclick="removeSlot(${i})" aria-label="স্লট মুছুন">✕</button>
+      </div>`).join('')}
+    </div>
+    <button class="btn btn-line" style="margin-top:16px" onclick="addSlot()">+ নতুন স্লট যোগ করুন</button>
   </div>`;
 }
 function admBookings(){
@@ -1607,7 +1949,9 @@ function setBookingStatus(id,status){
   b.status=status;store.set('ns_bookings',all);renderAdmin();
 }
 function setPrice(id,v){const p=store.get('ns_prices',{});p[id]=Math.max(0,parseInt(v)||0);store.set('ns_prices',p);renderPkgCards()}
-function saveSlots(){const arr=$("#admSlots").value.split(',').map(s=>s.trim()).filter(Boolean);store.set('ns_slots',arr.length?arr:SLOT_TIMES.slice());openModal(`<h3>স্লট সংরক্ষিত</h3><p style="margin-top:8px">নতুন সময়ের স্লট সংরক্ষণ করা হয়েছে।</p><button class="btn btn-ink" style="margin-top:14px" onclick="closeModal()">ঠিক আছে</button>`)}
+function setSlot(i,v){const arr=slotsCfg().slice();v=v.trim();arr[i]=v||arr[i];store.set('ns_slots',arr);renderAdmin();showToast(t('savedToast'))}
+function addSlot(){const arr=slotsCfg().slice();arr.push('12:00 PM');store.set('ns_slots',arr);renderAdmin()}
+function removeSlot(i){const arr=slotsCfg().slice();arr.splice(i,1);store.set('ns_slots',arr.length?arr:SLOT_TIMES.slice());renderAdmin()}
 
 /* modal */
 function openModal(html){$("#sheet").innerHTML=html;$("#modal").classList.add("on")}
