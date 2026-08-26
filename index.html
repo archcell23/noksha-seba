@@ -1,0 +1,1635 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#16A34A">
+<title>নকশা সেবা — আপনার নির্মাণ সমস্যার পেশাদার সমাধান</title>
+<meta name="description" content="স্থাপত্য, ইন্টেরিয়র, স্ট্রাকচার, ইলেকট্রিক্যাল ও প্লাম্বিং বিষয়ে অভিজ্ঞ স্থপতি ও প্রকৌশলীর অনলাইন পরামর্শ — বাংলাদেশের যেকোনো স্থান থেকে।">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#FFFFFF; --panel:#FFFFFF; --ink:#111827; --graphite:#374151; --grey:#6B7280;
+  --faint:#9CA3AF; --line:#E5E7EB; --line2:#D1D5DB; --field:#F0FDF4;
+  --green:#16A34A; --green-dark:#15803D; --green-deep:#14532D; --green-tint:#DCFCE7; --green-tint2:#BBF7D0;
+  --blue:#15803D;            /* legacy name, repointed to brand green */
+  --clay:#DC2626;            /* emergency / signal — sparing, red alert only */
+  --wa:#25D366; --ok:#16A34A; --warn:#D97706;
+  --r:18px; --r-s:12px;
+  --sp:clamp(16px,4.5vw,22px);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-ms-high-contrast-adjust: ';iuytrr
+'
+';8jl79kh6j5h74g3f52ad[poiy|][poiuyrry][opouipoitutee\][poiuyte\][poiuyterry\][poiuytr\]
+';ljkjf7h6g5sfdsw[\p]o[ipuoyih;
+;l'k;jlhkgjh
+o'i;pulykjturhg]';  --serif:'Hind Siliguri',system-ui,'Noto Sans Bengali',sans-serif;
+  --sans:'Hind Siliguri',system-ui,'Noto Sans Bengali',sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);background:var(--paper);color:var(--ink);font-size:16px;line-height:1.62;
+  overflow-x:hidden;padding-bottom:64px}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+input,select,textarea{font-family:inherit;font-size:16px;color:var(--ink)}
+h1,h2,h3{font-family:var(--serif);font-weight:700;line-height:1.28;letter-spacing:-.01em}
+.wrap{width:100%;max-width:1080px;margin:0 auto;padding-left:var(--sp);padding-right:var(--sp)}
+.hidden{display:none!important}
+
+/* ---------- dimension-line signature ---------- */
+.dim{display:flex;align-items:center;gap:10px;color:var(--grey);font-size:12.5px;letter-spacing:.14em;
+  text-transform:uppercase;font-weight:600;margin-bottom:14px}
+.dim::before,.dim::after{content:"";height:1px;background:var(--line2);flex:1;position:relative}
+.dim.left::before{display:none}
+.dim::before{max-width:14px}
+.dim .tick{width:1px;height:9px;background:var(--line2)}
+
+/* ---------- top bar ---------- */
+.topbar{position:sticky;top:0;z-index:40;background:rgba(251,251,248,.9);backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--line)}
+.topbar .wrap{display:flex;align-items:center;justify-content:space-between;height:58px}
+.brand{display:flex;align-items:center;gap:11px;font-family:var(--sans)}
+.brand .mk{width:42px;height:42px;border-radius:13px;position:relative;flex:none;
+  background:linear-gradient(135deg,var(--green),var(--green-dark));box-shadow:0 6px 16px -7px rgba(21,128,61,.6)}
+.brand .mk::before{content:"";position:absolute;inset:10px;border:1.5px solid #fff;border-radius:3px;opacity:.95}
+.brand .mk::after{content:"";position:absolute;left:10px;right:10px;top:50%;height:1.5px;background:#fff;opacity:.95}
+.brand-txt{display:flex;flex-direction:column;line-height:1.24}
+.brand-txt b{font-size:18.5px;font-weight:700;color:var(--ink)}
+.brand-txt small{font-size:11px;color:var(--grey);font-weight:500}
+.brand-txt em{font-style:normal;font-size:10.5px;color:var(--green-dark);font-weight:600;margin-top:2px;letter-spacing:.01em}
+@media(max-width:759px){.brand-txt small{display:none}}
+.nav-desk{display:none}
+.top-cta{display:none}
+.right{display:flex;align-items:center;gap:14px}
+.fontctl{display:flex;align-items:center;gap:2px;background:var(--field);border:1px solid var(--line2);border-radius:20px;padding:3px;flex:none}
+.fontctl button{width:28px;height:28px;border-radius:50%;font-weight:700;color:var(--graphite);display:grid;place-items:center;line-height:1}
+.fontctl button.on{background:var(--green);color:#fff}
+.langctl{display:flex;align-items:center;gap:2px;background:var(--field);border:1px solid var(--line2);border-radius:20px;padding:3px;flex:none}
+.langctl button{padding:5px 11px;border-radius:16px;font-weight:700;font-size:12px;color:var(--graphite);white-space:nowrap}
+.langctl button.on{background:var(--green);color:#fff}
+
+/* ---------- buttons ---------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-weight:600;font-size:15.5px;
+  padding:13px 20px;border-radius:var(--r-s);transition:transform .08s ease, background .15s;min-height:48px;width:100%}
+.btn:active{transform:translateY(1px)}
+.btn-ink{background:var(--green);color:#fff}
+.btn-ink:hover{background:var(--green-dark)}
+.btn-line{background:var(--panel);color:var(--ink);border:1.5px solid var(--line2)}
+.btn-line:hover{border-color:var(--green)}
+.btn-wa{background:var(--wa);color:#fff}
+.btn-clay{background:var(--clay);color:#fff}
+.btn-ghost{background:transparent;color:var(--ink);text-decoration:underline;text-underline-offset:4px;min-height:auto;padding:8px 0;width:auto}
+.btn-sm{padding:10px 16px;font-size:14px;min-height:42px;width:auto}
+.btn.inline{width:auto}
+.btn:focus-visible{outline:2.5px solid var(--blue);outline-offset:2px}
+.row-btns{display:flex;gap:10px}
+.row-btns .btn{flex:1}
+
+/* ---------- hero ---------- */
+.hero{position:relative;overflow:hidden;padding:56px 0 0;text-align:center;color:#fff;
+  background:linear-gradient(160deg,#0D3A20 0%,#14532D 42%,#1F6B3D 75%,#2F8A52 100%)}
+.hero::before{content:"";position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(55% 40% at 12% 88%,rgba(255,255,255,.09),transparent 70%),
+             radial-gradient(48% 34% at 88% 10%,rgba(255,255,255,.12),transparent 70%),
+             radial-gradient(70% 45% at 50% 105%,rgba(0,0,0,.28),transparent 70%)}
+.hero-in{position:relative;z-index:2;padding-bottom:64px}
+.hero-badges{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:24px}
+.hbadge{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.13);backdrop-filter:blur(6px);
+  border:1px solid rgba(255,255,255,.24);color:#fff;font-size:13px;font-weight:600;padding:8px 16px;border-radius:30px}
+.hero h1{font-size:clamp(29px,7.6vw,48px);letter-spacing:-.02em;font-weight:800;line-height:1.24;color:#fff}
+.hero h1 .accent{display:block;margin-top:4px;color:var(--green-tint2)}
+.hero p.sub{color:rgba(255,255,255,.85);font-size:16.5px;margin:18px auto 0;max-width:34em}
+.hero .actions{display:flex;flex-direction:column;gap:11px;margin:28px auto 0;max-width:340px}
+.hero .btn-ink{box-shadow:0 10px 24px -10px rgba(0,0,0,.45)}
+.btn-outline-invert{background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.5)}
+.btn-outline-invert:hover{border-color:#fff;background:rgba(255,255,255,.08)}
+.hero-call{margin-top:16px}
+.hero-call a{color:#fff;font-weight:600;font-size:13.5px;text-decoration:underline;text-underline-offset:3px;opacity:.9}
+.hero .assure{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:24px;justify-content:center;color:rgba(255,255,255,.78);font-size:13.5px}
+.hero .assure span{display:inline-flex;align-items:center;gap:6px}
+.hero .assure i{width:5px;height:5px;border-radius:50%;background:var(--green-tint2);display:inline-block}
+.hero-dots{display:flex;gap:8px;justify-content:center;margin-top:36px}
+.hero-dots button{width:8px;height:8px;padding:0;border-radius:50%;background:rgba(255,255,255,.35);transition:.2s}
+.hero-dots button.on{background:#fff;width:22px;border-radius:5px}
+.scrolldown{display:flex;flex-direction:column;align-items:center;gap:5px;margin:30px auto 0;color:rgba(255,255,255,.7);
+  font-size:12px;font-weight:600;letter-spacing:.05em;background:none}
+.hero-wave{position:absolute;left:0;right:0;bottom:-1px;line-height:0;z-index:1}
+.hero-wave svg{width:100%;height:56px;display:block}
+@media(min-width:760px){.hero{padding-top:70px}.hero-wave svg{height:80px}}
+
+/* ---------- section frame ---------- */
+.section{padding:38px 0;border-top:1px solid var(--line)}
+.section h2{font-size:clamp(23px,6vw,34px)}
+.section .lead{color:var(--graphite);margin-top:8px;max-width:38em}
+
+/* ---------- service cards ---------- */
+.svc-grid{display:grid;grid-template-columns:1fr;gap:12px;margin-top:20px}
+.svc{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:20px;
+  display:flex;gap:15px;align-items:flex-start;transition:border-color .15s, transform .1s;text-align:right}
+.svc:hover{border-color:var(--green-tint2);transform:translateY(-2px);box-shadow:var(--shadow)}
+.svc .ic{width:46px;height:46px;border-radius:12px;background:var(--green-tint);display:grid;place-items:center;flex:none}
+.svc .ic svg{width:24px;height:24px;stroke:var(--green-dark);fill:none;stroke-width:1.6}
+.svc h3{font-size:19px;font-family:var(--sans);font-weight:700}
+.svc p{color:var(--grey);font-size:14px;margin-top:5px}
+.svc .go{margin-top:11px;font-weight:600;font-size:14px;color:var(--green-dark);display:inline-flex;gap:6px;align-items:center}
+
+.helpcard{margin-top:14px;background:var(--field);border:1px dashed var(--line2);border-radius:var(--r);
+  padding:18px 20px;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+.helpcard b{font-family:var(--serif)}
+
+/* ---------- problem chips ---------- */
+.chips{display:flex;flex-wrap:wrap;gap:9px;margin-top:20px}
+.chip{background:var(--panel);border:1px solid var(--line2);border-radius:40px;padding:11px 17px;font-size:14.5px;
+  font-weight:500;transition:.12s}
+.chip:hover{border-color:var(--green)}
+.chip.on{background:var(--green);color:#fff;border-color:var(--green)}
+.reco{margin-top:18px;background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--green);
+  border-radius:var(--r);padding:18px 20px}
+.reco b{font-family:var(--serif);font-size:18px;color:var(--green-deep)}
+
+/* ---------- steps (how it works) ---------- */
+.steps{display:grid;gap:2px;margin-top:22px;background:var(--line);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.step{background:var(--paper);padding:20px;display:flex;gap:16px;align-items:flex-start}
+.step .n{font-family:var(--serif);font-weight:700;font-size:15px;color:#fff;background:var(--green);
+  width:30px;height:30px;border-radius:9px;display:grid;place-items:center;flex:none}
+.step h3{font-size:16.5px;font-family:var(--sans);font-weight:700}
+.step p{color:var(--grey);font-size:14px;margin-top:3px}
+
+/* ---------- packages ---------- */
+.pkgs{display:grid;grid-template-columns:1fr;gap:14px;margin-top:22px}
+.pkg{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:22px;position:relative;display:flex;flex-direction:column}
+.pkg.pop{border:1.5px solid var(--green);box-shadow:0 1px 0 rgba(22,163,74,.06),0 14px 30px -18px rgba(22,163,74,.45)}
+.pkg .badge{position:absolute;top:-11px;right:18px;background:var(--green-dark);color:#fff;font-size:11.5px;font-weight:600;
+  letter-spacing:.04em;padding:4px 12px;border-radius:20px}
+.pkg .dur{color:var(--grey);font-size:13px;letter-spacing:.1em;text-transform:uppercase;font-weight:600}
+.pkg h3{font-size:22px;margin-top:4px}
+.pkg .price{font-family:var(--serif);font-size:34px;font-weight:700;margin:12px 0 2px}
+.pkg .price small{font-size:15px;color:var(--grey);font-weight:400;font-family:var(--sans)}
+.pkg ul{list-style:none;margin:14px 0 20px;display:grid;gap:8px}
+.pkg li{font-size:14.5px;color:var(--graphite);display:flex;gap:9px;align-items:flex-start}
+.pkg li::before{content:"";width:16px;height:16px;flex:none;margin-top:3px;border-radius:50%;
+  background:var(--field);position:relative}
+.pkg li::after{content:"✓";position:absolute;margin-left:-14px;margin-top:1px;font-size:11px;color:var(--ok)}
+.pkg .btn{margin-top:auto}
+
+/* ---------- emergency ---------- */
+.emg{margin-top:22px;background:#FEF2F2;border:1px solid #FECACA;border-radius:var(--r);padding:22px;
+  display:flex;gap:16px;align-items:flex-start}
+.emg .ic{width:44px;height:44px;border-radius:10px;background:var(--clay);display:grid;place-items:center;flex:none;color:#fff;font-size:22px}
+.emg h3{color:var(--clay);font-family:var(--sans);font-size:18px;font-weight:700}
+.emg p{font-size:14px;color:var(--graphite);margin-top:4px}
+.emg .btn{margin-top:14px;width:auto}
+
+/* ---------- trust ---------- */
+.trust{display:grid;grid-template-columns:1fr 1fr;gap:2px;margin-top:22px;background:var(--line);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.trust .t{background:var(--paper);padding:18px}
+.trust .t b{font-size:15px;font-family:var(--sans)}
+.trust .t span{display:block;color:var(--grey);font-size:12.5px;margin-top:2px}
+
+/* ---------- consultants ---------- */
+.people{display:grid;grid-template-columns:1fr;gap:12px;margin-top:22px}
+.person{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:18px;display:flex;gap:14px;align-items:center}
+.person .av{width:52px;height:52px;border-radius:14px;background:var(--green-tint);display:grid;place-items:center;
+  font-family:var(--serif);font-weight:700;font-size:20px;color:var(--green-deep);flex:none}
+.person b{font-size:16px;font-family:var(--sans)}
+.person span{display:block;color:var(--grey);font-size:13px}
+
+/* ---------- faq ---------- */
+.faq{margin-top:20px;border-top:1px solid var(--line)}
+.faq details{border-bottom:1px solid var(--line)}
+.faq summary{list-style:none;cursor:pointer;padding:17px 2px;font-weight:600;font-size:15.5px;
+  display:flex;justify-content:space-between;gap:14px;align-items:center}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";font-size:22px;color:var(--grey);font-weight:400;transition:.2s}
+.faq details[open] summary::after{transform:rotate(45deg)}
+.faq p{padding:0 2px 18px;color:var(--graphite);font-size:14.5px}
+
+/* ---------- final cta ---------- */
+.finalcta{background:linear-gradient(135deg,var(--green-deep),#052E16);color:var(--paper);border-radius:22px;padding:34px 24px;margin-top:8px;text-align:center}
+.finalcta h2{color:var(--paper);font-size:clamp(24px,6.4vw,34px)}
+.finalcta p{color:#C9E8D3;margin-top:10px;max-width:30em;margin-inline:auto}
+.finalcta .actions{display:flex;flex-direction:column;gap:11px;margin-top:22px;max-width:340px;margin-inline:auto}
+.finalcta .btn-line{background:transparent;color:var(--paper);border-color:#2F6B44}
+.finalcta .btn-line:hover{border-color:var(--paper)}
+
+/* ---------- footer ---------- */
+footer{border-top:1px solid var(--line);margin-top:38px;padding:28px 0 34px;color:var(--grey);font-size:13.5px}
+footer .brand{color:var(--ink);margin-bottom:12px}
+footer .flinks{display:flex;flex-wrap:wrap;gap:8px 20px;margin:14px 0}
+footer .flinks a:hover{color:var(--ink)}
+footer .fine{margin-top:14px;font-size:12px;color:var(--faint)}
+
+/* ---------- bottom nav ---------- */
+.botnav{position:fixed;bottom:0;left:0;right:0;z-index:45;background:rgba(251,251,248,.94);backdrop-filter:blur(12px);
+  border-top:1px solid var(--line);display:flex;padding-bottom:env(safe-area-inset-bottom)}
+.botnav a{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:9px 0 8px;color:var(--grey);font-size:11px;font-weight:500}
+.botnav a svg{width:22px;height:22px;stroke:var(--grey);fill:none;stroke-width:1.7}
+.botnav a.on{color:var(--green-dark)}
+.botnav a.on svg{stroke:var(--green-dark)}
+
+/* ---------- floating WA ---------- */
+.fab{position:fixed;left:16px;bottom:76px;z-index:44;width:54px;height:54px;border-radius:50%;background:var(--wa);
+  color:#fff;display:grid;place-items:center;box-shadow:0 10px 24px -8px rgba(31,168,85,.6)}
+.fab svg{width:28px;height:28px;fill:#fff}
+
+/* ---------- booking flow ---------- */
+.flow{padding:18px 0 24px}
+.dimbar{display:flex;align-items:center;margin:6px 0 22px;padding:0 4px}
+.dimbar .seg{flex:1;height:1px;background:var(--line2);position:relative}
+.dimbar .node{width:26px;height:26px;border-radius:50%;border:1.5px solid var(--line2);background:var(--paper);
+  display:grid;place-items:center;font-size:12px;font-weight:700;color:var(--faint);flex:none;font-family:var(--serif)}
+.dimbar .node.done{border-color:var(--green);background:var(--green);color:var(--paper)}
+.dimbar .node.cur{border-color:var(--green);color:var(--green-dark)}
+.flowstep{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:22px}
+.flowstep h2{font-size:22px}
+.flowstep .hint{color:var(--grey);font-size:13.5px;margin-top:4px}
+.field{margin-top:16px}
+.field label{display:block;font-size:14px;font-weight:600;margin-bottom:6px}
+.field label .opt{color:var(--faint);font-weight:400;font-size:12.5px}
+.field input,.field select,.field textarea{width:100%;background:var(--field);border:1.5px solid transparent;
+  border-radius:var(--r-s);padding:13px 14px;transition:.12s}
+.field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--green);background:var(--panel)}
+.field textarea{min-height:110px;resize:vertical;line-height:1.6}
+.field .two{display:flex;gap:10px}
+.field .two>*{flex:1}
+.checkline{display:flex;align-items:center;gap:9px;margin-top:10px;font-size:14px;color:var(--graphite)}
+.checkline input{width:18px;height:18px;accent-color:var(--green)}
+.pickgrid{display:grid;grid-template-columns:1fr;gap:10px;margin-top:8px}
+.pick{border:1.5px solid var(--line2);border-radius:var(--r-s);padding:15px 16px;display:flex;gap:13px;align-items:center;transition:.12s;text-align:right}
+.pick:hover{border-color:var(--green)}
+.pick.on{border-color:var(--green);background:var(--green-tint)}
+.pick .ic{width:38px;height:38px;border-radius:9px;background:var(--field);display:grid;place-items:center;flex:none}
+.pick.on .ic{background:var(--panel)}
+.pick b{font-size:15.5px;font-family:var(--sans)}
+.pick span{display:block;color:var(--grey);font-size:13px;margin-top:1px}
+.pick .rt{margin-right:auto;font-weight:700;font-family:var(--serif);white-space:nowrap}
+
+.slots-tabs{display:flex;gap:8px;margin:14px 0 4px}
+.slots-tabs button{flex:1;border:1.5px solid var(--line2);border-radius:40px;padding:9px 0;font-size:13.5px;font-weight:600;color:var(--grey)}
+.slots-tabs button.on{background:var(--green);color:var(--paper);border-color:var(--green)}
+.slotgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-top:14px}
+.slot{border:1.5px solid var(--line2);border-radius:var(--r-s);padding:13px 8px;text-align:center;font-weight:600;font-size:14.5px;transition:.12s}
+.slot:hover{border-color:var(--green)}
+.slot.on{background:var(--green);color:var(--paper);border-color:var(--green)}
+.slot.busy{opacity:.4;text-decoration:line-through;pointer-events:none}
+
+.upbox{border:1.5px dashed var(--line2);border-radius:var(--r);padding:26px 18px;text-align:center;margin-top:8px}
+.upbox p{color:var(--grey);font-size:13.5px;margin-top:6px}
+.uplist{margin-top:12px;display:grid;gap:8px}
+.upitem{background:var(--field);border-radius:var(--r-s);padding:10px 13px;font-size:13.5px;display:flex;align-items:center;gap:10px}
+.upitem .bar{flex:1;height:4px;background:#E0DED6;border-radius:3px;overflow:hidden}
+.upitem .bar i{display:block;height:100%;width:0;background:var(--ok);transition:width .4s}
+.upitem .rm{color:var(--grey);font-size:18px;line-height:1}
+
+.summary{margin-top:6px;border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.summary .r{display:flex;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--line);font-size:14.5px}
+.summary .r:last-child{border-bottom:none}
+.summary .r span{color:var(--grey)}
+.summary .r.total{background:var(--field);font-weight:700}
+.summary .r.total b{font-family:var(--serif);font-size:18px}
+.paynote{display:flex;gap:9px;align-items:flex-start;margin-top:14px;color:var(--grey);font-size:12.5px;
+  background:var(--field);border-radius:var(--r-s);padding:12px 14px}
+.demo-ribbon{background:#FFF6E6;border:1px solid #EAD9A8;color:#7A5A18;border-radius:var(--r-s);
+  padding:11px 14px;font-size:12.5px;margin-top:14px;display:flex;gap:8px;align-items:flex-start}
+
+.flow-actions{display:flex;gap:10px;margin-top:20px}
+.flow-actions .btn{flex:1}
+.back-min{background:none;color:var(--grey);width:auto;flex:none;padding:13px 8px;font-weight:600;font-size:14px}
+
+/* ---------- success ---------- */
+.success{text-align:center;padding:20px 0}
+.success .check{width:78px;height:78px;border-radius:50%;background:var(--green-tint);border:2px solid var(--ok);
+  display:grid;place-items:center;margin:6px auto 18px}
+.success .check svg{width:38px;height:38px;stroke:var(--ok);fill:none;stroke-width:2.4}
+.success h2{font-size:26px}
+.success .bid{font-family:var(--serif);font-weight:700;font-size:20px;background:var(--field);display:inline-block;
+  padding:7px 18px;border-radius:40px;margin-top:14px;letter-spacing:.02em}
+.success .grid{text-align:right;margin-top:22px}
+.success .actions{display:grid;gap:10px;margin-top:22px}
+.success .actions .two{display:flex;gap:10px}
+.success .actions .two .btn{flex:1}
+
+/* ---------- dashboard ---------- */
+.dcard{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:18px;margin-top:12px}
+.dcard .top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.dcard .bid{font-family:var(--serif);font-weight:700;font-size:15px}
+.dcard .meta{color:var(--grey);font-size:13.5px;margin-top:4px}
+.status{font-size:12px;font-weight:600;padding:4px 11px;border-radius:20px;white-space:nowrap}
+.status.wait{background:#FDF3E3;color:#946014}
+.status.ok{background:var(--green-tint);color:var(--green-deep)}
+.status.done{background:#F3F4F6;color:var(--graphite)}
+.empty{text-align:center;color:var(--grey);padding:44px 20px;border:1px dashed var(--line2);border-radius:var(--r);margin-top:14px}
+.empty svg{width:40px;height:40px;stroke:var(--line2);fill:none;stroke-width:1.5;margin:0 auto 12px}
+
+/* ---------- admin ---------- */
+.adm-shell{border:1px solid var(--line);border-radius:var(--r);overflow:hidden;background:var(--panel);margin-top:14px}
+.adm-tabs{display:flex;overflow-x:auto;gap:4px;background:var(--field);padding:8px;border-bottom:1px solid var(--line)}
+.adm-tabs button{flex:none;padding:9px 15px;border-radius:10px;font-size:13.5px;font-weight:600;color:var(--graphite);white-space:nowrap;transition:.12s}
+.adm-tabs button:hover{background:rgba(0,0,0,.04)}
+.adm-tabs button.on{background:var(--green);color:#fff}
+.adm-panel{padding:20px}
+.adm-panel .dcard:first-child{margin-top:0}
+.adm-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.stat{background:var(--green-tint);border-radius:var(--r-s);padding:16px}
+.stat b{font-size:26px;font-family:var(--serif);display:block;color:var(--green-deep)}
+.stat span{color:var(--grey);font-size:12.5px}
+@media(min-width:600px){.adm-stats{grid-template-columns:repeat(4,1fr)}}
+.adm-price{display:flex;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid var(--line)}
+.adm-price b{flex:1;font-family:var(--sans)}
+.adm-price input{width:120px;background:var(--field);border:1.5px solid transparent;border-radius:8px;padding:9px 12px;text-align:right;font-weight:600}
+.adm-price input:focus{outline:none;border-color:var(--green);background:#fff}
+
+/* ---------- modal ---------- */
+.modal{position:fixed;inset:0;z-index:60;background:rgba(20,22,25,.5);display:none;align-items:flex-end;justify-content:center}
+.modal.on{display:flex}
+.sheet{background:var(--paper);width:100%;max-width:520px;border-radius:20px 20px 0 0;padding:26px 22px calc(26px + env(safe-area-inset-bottom));
+  max-height:88vh;overflow:auto;animation:up .28s ease}
+@keyframes up{from{transform:translateY(40px);opacity:.6}to{transform:translateY(0);opacity:1}}
+.sheet h3{font-size:20px}
+.sheet .safe-ic{width:46px;height:46px;border-radius:12px;background:var(--clay);color:#fff;display:grid;place-items:center;font-size:24px;margin-bottom:14px}
+
+/* ---------- toast ---------- */
+.toast{position:fixed;left:50%;bottom:84px;transform:translateX(-50%) translateY(20px);z-index:70;
+  background:var(--ink);color:var(--paper);font-size:13px;font-weight:600;padding:9px 18px;border-radius:30px;
+  opacity:0;pointer-events:none;transition:.25s;white-space:nowrap}
+.toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+@media(min-width:760px){.toast{bottom:24px}}
+
+/* ---------- unit info ---------- */
+.unit-info{display:inline-flex;width:18px;height:18px;border-radius:50%;background:var(--field);
+  border:1px solid var(--line2);color:var(--grey);font-size:11px;align-items:center;justify-content:center;
+  margin-left:6px;vertical-align:middle;flex:none}
+
+/* ---------- desktop ---------- */
+@media(min-width:760px){
+  body{padding-bottom:0}
+  .botnav,.fab{display:none}
+  .nav-desk{display:flex;gap:26px;font-size:14.5px;font-weight:500}
+  .nav-desk a{color:var(--graphite)} .nav-desk a:hover{color:var(--green-dark)}
+  .top-cta{display:inline-flex;width:auto;padding:10px 18px;min-height:auto}
+  .hero{padding-top:54px}
+  .hero .actions{flex-direction:row;max-width:440px}
+  .svc-grid{grid-template-columns:1fr 1fr}
+  .steps{grid-template-columns:1fr 1fr}
+  .pkgs{grid-template-columns:repeat(3,1fr)}
+  .trust{grid-template-columns:repeat(4,1fr)}
+  .people{grid-template-columns:repeat(3,1fr)}
+  .pickgrid.two-col{grid-template-columns:1fr 1fr}
+  .flowstep{padding:30px}
+  footer .wrap{display:flex;justify-content:space-between;gap:30px}
+  .modal{align-items:center}
+  .sheet{border-radius:18px}
+}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto}}
+</style>
+</head>
+<body>
+
+<!-- ================= TOP BAR ================= -->
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="#/" onclick="go('home')">
+      <span class="mk"></span>
+      <span class="brand-txt"><b>নকশা সেবা</b><small data-i18n="brandTag">স্থপতি ও প্রকৌশলীর অনলাইন পরামর্শ</small><em id="clockLine"></em></span>
+    </a>
+    <div class="right">
+      <nav class="nav-desk">
+        <a data-i18n="navHome" onclick="go('home')">হোম</a>
+        <a data-i18n="navHow" onclick="go('home');jump('how')">কীভাবে কাজ করে</a>
+        <a data-i18n="navFees" onclick="go('home');jump('pkgs')">পরামর্শ ফি</a>
+        <a data-i18n="navFaq" onclick="go('home');jump('faq')">প্রশ্নোত্তর</a>
+        <a data-i18n="navDash" onclick="go('dashboard')">আমার প্রকল্প</a>
+      </nav>
+      <div class="langctl" role="group" aria-label="Language / ভাষা">
+        <button type="button" data-lang="bn" onclick="setLang('bn')">বাং</button>
+        <button type="button" data-lang="en" onclick="setLang('en')">EN</button>
+      </div>
+      <div class="fontctl" role="group" aria-label="লেখার আকার পরিবর্তন করুন">
+        <button type="button" data-fs="1" onclick="setTextSize(1)" aria-label="স্বাভাবিক লেখার আকার" style="font-size:12px">অ</button>
+        <button type="button" data-fs="2" onclick="setTextSize(2)" aria-label="বড় লেখার আকার" style="font-size:15px">অ</button>
+        <button type="button" data-fs="3" onclick="setTextSize(3)" aria-label="অতিরিক্ত বড় লেখার আকার" style="font-size:18px">অ</button>
+      </div>
+      <button class="btn btn-ink top-cta" data-i18n="bookBtn" onclick="startBooking()">পরামর্শ বুক করুন</button>
+    </div>
+  </div>
+</header>
+
+<main id="app"><!-- views injected/toggled here --></main>
+
+<!-- ================= HOME ================= -->
+<section id="view-home" class="view">
+  <!-- HERO -->
+  <div class="hero">
+    <div class="wrap hero-in">
+      <div class="hero-badges" id="heroBadges"></div>
+      <h1><span data-i18n="heroTitle">আপনার নির্মাণ স্বপ্নের</span><br><span class="accent" id="heroAccent">সঠিক পরিকল্পনা</span></h1>
+      <p class="sub" id="heroSub">স্থাপত্য, ইন্টেরিয়র, স্ট্রাকচার, ইলেকট্রিক্যাল ও প্লাম্বিং বিষয়ে অভিজ্ঞ স্থপতি ও প্রকৌশলীর পরামর্শ নিন — বাংলাদেশের যেকোনো স্থান থেকে, হাতের মুঠোয়।</p>
+      <div class="actions">
+        <button class="btn btn-ink" data-i18n="bookBtn" onclick="startBooking()">পরামর্শ বুক করুন</button>
+        <a class="btn btn-outline-invert" id="heroWa" data-i18n="waBtn">WhatsApp-এ কথা বলুন</a>
+      </div>
+      <div class="hero-call"><a id="heroCallLink" href="tel:">☎ WhatsApp নেই? সরাসরি কল করুন</a></div>
+      <div class="assure">
+        <span><i></i><span data-i18n="assure1">স্বচ্ছ পরামর্শ ফি</span></span>
+        <span><i></i><span data-i18n="assure2">নিরাপদ পেমেন্ট</span></span>
+        <span><i></i><span data-i18n="assure3">ড্রয়িং ডিজিটাল ডেলিভারি</span></span>
+      </div>
+      <div class="hero-dots" id="heroDots">
+        <button data-i="0" onclick="jumpHero(0)" aria-label="স্লাইড ১"></button>
+        <button data-i="1" onclick="jumpHero(1)" aria-label="স্লাইড ২"></button>
+        <button data-i="2" onclick="jumpHero(2)" aria-label="স্লাইড ৩"></button>
+      </div>
+      <button class="scrolldown" onclick="jump('services')" aria-label="নিচে স্ক্রল করুন"><span data-i18n="scrollDown">নিচে যান</span>
+        <svg viewBox="0 0 24 24" width="16" height="16" stroke="#fff" fill="none" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
+    </div>
+    <div class="hero-wave" aria-hidden="true">
+      <svg viewBox="0 0 1440 80" preserveAspectRatio="none"><path fill="#FFFFFF" d="M0,40 C240,80 480,0 720,20 C960,40 1200,80 1440,40 L1440,80 L0,80 Z"/></svg>
+    </div>
+  </div>
+
+  <!-- SERVICES -->
+  <div class="section wrap" id="services" style="border-top:none">
+    <div class="dim left"><span class="tick"></span><span data-i18n="eyebrowServices">সেবাসমূহ</span></div>
+    <h2 data-i18n="svcHeading">পাঁচটি প্রকৌশল সেবা, এক প্ল্যাটফর্মে</h2>
+    <div class="svc-grid" id="svcGrid"></div>
+    <div class="helpcard">
+      <div><b data-i18n="helpTitle">কোন সেবা প্রয়োজন বুঝতে পারছেন না?</b><div style="color:var(--grey);font-size:13.5px" data-i18n="helpSub">সমস্যাটি বেছে নিন — আমরা উপযুক্ত সেবা জানিয়ে দেব।</div></div>
+      <button class="btn btn-line btn-sm inline" data-i18n="helpBtn" onclick="go('problem')">সমস্যাটি বেছে নিন</button>
+    </div>
+  </div>
+
+  <!-- EMERGENCY -->
+  <div class="section wrap" style="border-top:none;padding-top:0">
+    <div class="emg">
+      <div class="ic">⚠</div>
+      <div>
+        <h3 data-i18n="emgTitle">ভবনে ফাটল বা ঝুঁকির লক্ষণ দেখছেন?</h3>
+        <p data-i18n="emgDesc">গুরুতর কাঠামোগত সমস্যায় দ্রুত পেশাদার মতামত নিন। জরুরি বুকিংয়ের আগে নিরাপত্তা নির্দেশনা দেখুন।</p>
+        <button class="btn btn-clay inline" data-i18n="emgBtn" onclick="emergency()">জরুরি পরামর্শ নিন</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- HOW IT WORKS -->
+  <div class="section wrap" id="how">
+    <div class="dim left"><span class="tick"></span><span data-i18n="eyebrowProcess">প্রক্রিয়া</span></div>
+    <h2 data-i18n="howHeading">কীভাবে কাজ করে</h2>
+    <p class="lead" data-i18n="howLead">মাত্র কয়েক মিনিটে বুকিং সম্পন্ন করুন।</p>
+    <div class="steps">
+      <div class="step"><span class="n">১</span><div><h3 data-i18n="how1t">সেবা ও সময় নির্বাচন</h3><p data-i18n="how1d">প্রয়োজন অনুযায়ী সেবা ও সুবিধাজনক সময় বেছে নিন।</p></div></div>
+      <div class="step"><span class="n">২</span><div><h3 data-i18n="how2t">তথ্য ও ছবি দিন</h3><p data-i18n="how2d">প্রকল্পের তথ্য লিখুন এবং ছবি/ড্রয়িং আপলোড করুন।</p></div></div>
+      <div class="step"><span class="n">৩</span><div><h3 data-i18n="how3t">ফি পরিশোধ</h3><p data-i18n="how3d">নিরাপদ মোবাইল/ব্যাংক গেটওয়েতে পরামর্শ ফি দিন।</p></div></div>
+      <div class="step"><span class="n">৪</span><div><h3 data-i18n="how4t">WhatsApp / Zoom পরামর্শ</h3><p data-i18n="how4d">নির্ধারিত সময়ে স্থপতির সঙ্গে সরাসরি আলোচনা করুন ও ড্রয়িং বুঝে নিন।</p></div></div>
+    </div>
+  </div>
+
+  <!-- PACKAGES -->
+  <div class="section wrap" id="pkgs">
+    <div class="dim left"><span class="tick"></span><span data-i18n="eyebrowFees">পরামর্শ ফি</span></div>
+    <h2 data-i18n="pkgHeading">পরামর্শ প্যাকেজ</h2>
+    <p class="lead" data-i18n="pkgLead">স্বচ্ছ, নির্ধারিত ফি — কোনো লুকানো খরচ নেই।</p>
+    <div class="pkgs" id="pkgCards"></div>
+  </div>
+
+  <!-- TRUST -->
+  <div class="section wrap">
+    <div class="dim left"><span class="tick"></span><span data-i18n="eyebrowWhy">কেন নকশা সেবা</span></div>
+    <h2 data-i18n="trustHeading">বিশ্বাসযোগ্য, পেশাদার, সহজ</h2>
+    <div class="trust" id="trustGrid"></div>
+  </div>
+
+  <!-- CONSULTANTS -->
+  <div class="section wrap">
+    <div class="dim left"><span class="tick"></span><span data-i18n="eyebrowTeam">বিশেষজ্ঞ দল</span></div>
+    <h2 data-i18n="teamHeading">যাঁদের পরামর্শ পাবেন</h2>
+    <div class="people" id="teamGrid"></div>
+  </div>
+
+  <!-- FAQ -->
+  <div class="section wrap" id="faq">
+    <div class="dim left"><span class="tick"></span><span data-i18n="navFaq">প্রশ্নোত্তর</span></div>
+    <h2 data-i18n="faqHeading">সাধারণ জিজ্ঞাসা</h2>
+    <div class="faq" id="faqList"></div>
+  </div>
+
+  <!-- FINAL CTA -->
+  <div class="section wrap" style="border-top:none">
+    <div class="finalcta">
+      <h2 data-i18n="ctaHeading">নকশা নিয়ে দ্বিধায় আছেন?</h2>
+      <p data-i18n="ctaDesc">ছবি বা ড্রয়িং পাঠান। একজন পেশাদারের সঙ্গে কথা বলুন।</p>
+      <div class="actions">
+        <button class="btn btn-ink" style="background:var(--paper);color:var(--ink)" data-i18n="bookBtn" onclick="startBooking()">পরামর্শ বুক করুন</button>
+        <a class="btn btn-line" id="ctaWa" data-i18n="waBtn2">WhatsApp-এ যোগাযোগ করুন</a>
+        <a class="btn btn-line" id="ctaCallLink" href="tel:" data-i18n="callBtn2">☎ সরাসরি কল করুন</a>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="wrap">
+      <div>
+        <div class="brand"><span class="mk"></span>নকশা সেবা</div>
+        <div data-i18n="footerTag">আপনার নির্মাণ সমস্যার পেশাদার সমাধান, এখন হাতের মুঠোয়।</div>
+        <div class="flinks">
+          <a data-i18n="linkPrivacy" onclick="go('policy')">গোপনীয়তা নীতি</a>
+          <a data-i18n="linkTerms" onclick="go('policy')">সেবার শর্তাবলি</a>
+          <a data-i18n="linkRefund" onclick="go('policy')">ফেরত নীতি</a>
+          <a data-i18n="linkAdmin" onclick="go('admin')">অ্যাডমিন</a>
+        </div>
+      </div>
+      <div>
+        <div data-i18n="footerContactLabel">যোগাযোগ</div>
+        <div class="fine" id="footerContact"></div>
+        <div class="fine" data-i18n="footerDemo">© ২০২৬ নকশা সেবা। এই সংস্করণটি একটি কার্যকরী ডেমো প্রোটোটাইপ — পেমেন্ট, Zoom ও WhatsApp API সার্ভার-সাইড সংযোগ প্রয়োজন।</div>
+      </div>
+    </div>
+  </footer>
+</section>
+
+<!-- ================= PROBLEM SELECTOR ================= -->
+<section id="view-problem" class="view hidden">
+  <div class="wrap flow">
+    <button class="back-min" data-i18n="backBtn" onclick="go('home')">← ফিরে যান</button>
+    <div class="dim left" style="margin-top:10px"><span class="tick"></span><span data-i18n="eyebrowProblem">সমস্যা নির্বাচন</span></div>
+    <h2 style="font-size:26px" data-i18n="problemHeading">আপনার সমস্যাটি কী?</h2>
+    <p class="lead" data-i18n="problemLead">একটি বেছে নিন — উপযুক্ত সেবা সাজেস্ট করা হবে।</p>
+    <div class="chips" id="probChips"></div>
+    <div id="probReco"></div>
+  </div>
+</section>
+
+<!-- ================= BOOKING FLOW ================= -->
+<section id="view-booking" class="view hidden">
+  <div class="wrap flow">
+    <button class="back-min" data-i18n="cancelBtn" onclick="go('home')">← বাতিল</button>
+    <div class="dimbar" id="dimbar"></div>
+    <div id="flowBody"></div>
+  </div>
+</section>
+
+<!-- ================= SUCCESS ================= -->
+<section id="view-success" class="view hidden">
+  <div class="wrap flow"><div id="successBody"></div></div>
+</section>
+
+<!-- ================= DASHBOARD ================= -->
+<section id="view-dashboard" class="view hidden">
+  <div class="wrap flow">
+    <div class="dim left"><span class="tick"></span><span data-i18n="eyebrowMyProjects">আমার নকশা সেবা</span></div>
+    <h2 style="font-size:26px" data-i18n="dashHeading">আমার অ্যাপয়েন্টমেন্ট</h2>
+    <p class="lead" data-i18n="dashLead">আপনার বুকিং, মিটিং লিংক ও প্রাপ্ত নথি এক জায়গায়।</p>
+    <div id="dashList"></div>
+    <button class="btn btn-ink" style="margin-top:18px" data-i18n="newBookBtn" onclick="startBooking()">নতুন পরামর্শ বুক করুন</button>
+  </div>
+</section>
+
+<!-- ================= ADMIN ================= -->
+<section id="view-admin" class="view hidden">
+  <div class="wrap flow">
+    <button class="back-min" data-i18n="homeBtn" onclick="go('home')">← হোম</button>
+    <div class="dim left" style="margin-top:10px"><span class="tick"></span><span data-i18n="eyebrowAdmin">অ্যাডমিন</span></div>
+    <h2 style="font-size:24px" data-i18n="adminHeading">নিয়ন্ত্রণ প্যানেল</h2>
+    <div id="admBody"></div>
+  </div>
+</section>
+
+<!-- ================= POLICY ================= -->
+<section id="view-policy" class="view hidden">
+  <div class="wrap flow">
+    <button class="back-min" data-i18n="homeBtn" onclick="go('home')">← হোম</button>
+    <h2 style="font-size:24px;margin-top:10px" data-i18n="policyHeading">নীতিমালা ও শর্তাবলি</h2>
+    <div class="dcard"><b data-i18n="policyLimitT">অনলাইন পরামর্শের সীমাবদ্ধতা</b><p style="color:var(--graphite);font-size:14.5px;margin-top:8px" data-i18n="policyLimitP">অনলাইন পরামর্শ প্রাথমিক পেশাদার দিকনির্দেশনা প্রদান করে এবং প্রয়োজনীয় সরেজমিন পরিদর্শন বা বিস্তারিত প্রকৌশল ডিজাইনের বিকল্প নয়। গুরুতর ঝুঁকিতে সংশ্লিষ্ট জরুরি কর্তৃপক্ষের সহায়তা নিন।</p></div>
+    <div class="dcard"><b data-i18n="policyPrivT">গোপনীয়তা নীতি</b><p style="color:var(--graphite);font-size:14.5px;margin-top:8px" data-i18n="policyPrivP">আপনার দেওয়া তথ্য ও ফাইল কেবল পরামর্শ সেবার জন্য ব্যবহৃত হয় এবং নিরাপদভাবে সংরক্ষিত থাকে। সংবেদনশীল ফাইল জমা দেওয়ার আগে আপনার সম্মতি নেওয়া হয়।</p></div>
+    <div class="dcard"><b data-i18n="policyPayT">পেমেন্ট ও ফেরত নীতি</b><p style="color:var(--graphite);font-size:14.5px;margin-top:8px" data-i18n="policyPayP">পরামর্শ ফি অগ্রিম পরিশোধযোগ্য। নির্ধারিত সময়ের যথেষ্ট আগে জানালে সময় পুনঃনির্ধারণ করা যায়। বিশেষ ক্ষেত্রে ফেরত প্রযোজ্য হতে পারে।</p></div>
+  </div>
+</section>
+
+<!-- ================= BOTTOM NAV / FAB ================= -->
+<nav class="botnav" id="botnav">
+  <a data-nav="home" onclick="go('home')"><svg viewBox="0 0 24 24"><path d="M3 11l9-7 9 7M5 10v10h14V10"/></svg><span data-i18n="bnHome">হোম</span></a>
+  <a data-nav="services" onclick="go('home');jump('services')"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg><span data-i18n="bnServices">সেবা</span></a>
+  <a data-nav="booking" onclick="startBooking()"><svg viewBox="0 0 24 24"><path d="M7 3v4M17 3v4M4 8h16M5 6h14v14H5z"/></svg><span data-i18n="bnBooking">বুকিং</span></a>
+  <a data-nav="dashboard" onclick="go('dashboard')"><svg viewBox="0 0 24 24"><path d="M4 4h7v7H4zM13 4h7v4h-7zM13 12h7v8h-7zM4 15h7v5H4z"/></svg><span data-i18n="navDash">আমার প্রকল্প</span></a>
+  <a data-nav="policy" onclick="contactWa()"><svg viewBox="0 0 24 24"><path d="M4 4h16v12H7l-3 3z"/></svg><span data-i18n="bnContact">যোগাযোগ</span></a>
+</nav>
+<a class="fab" id="fabWa" aria-label="WhatsApp"><svg viewBox="0 0 24 24"><path d="M17.5 14.4c-.3-.1-1.7-.8-2-.9-.3-.1-.5-.1-.7.2-.2.3-.7.9-.9 1.1-.2.2-.3.2-.6.1-1.6-.8-2.6-1.4-3.7-3.2-.3-.5.3-.5.8-1.5.1-.2 0-.4 0-.5 0-.1-.7-1.6-.9-2.2-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.4s1 2.8 1.2 3c.1.2 2 3.1 4.9 4.3 2.9 1.2 2.9.8 3.4.8.5 0 1.7-.7 1.9-1.3.2-.7.2-1.2.2-1.3-.1-.2-.3-.2-.6-.4zM12 2a10 10 0 0 0-8.6 15l-1.3 4.8 4.9-1.3A10 10 0 1 0 12 2z"/></svg></a>
+
+<!-- ================= MODAL ================= -->
+<div class="modal" id="modal"><div class="sheet" id="sheet" role="dialog" aria-modal="true"></div></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+"use strict";
+/* ---------- resilient store (localStorage + in-memory fallback) ---------- */
+const store=(()=>{let mem={};let ok=false;try{localStorage.setItem('__t','1');localStorage.removeItem('__t');ok=true}catch(e){}
+  return{get(k,d){try{if(ok){const v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}}catch(e){}return(k in mem)?mem[k]:d},
+  set(k,v){try{if(ok){localStorage.setItem(k,JSON.stringify(v));return}}catch(e){}mem[k]=v}}})();
+
+/* ---------- language ---------- */
+let LANG=store.get('ns_lang','bn');
+function bi(o){if(o==null)return'';if(typeof o==='string')return o;return o[LANG]||o.bn||o.en||''}
+const I18N={
+  bookBtn:{bn:"পরামর্শ বুক করুন",en:"Book a Consultation"},
+  brandTag:{bn:"স্থপতি ও প্রকৌশলীর অনলাইন পরামর্শ",en:"Online consultation with architects & engineers"},
+  navHome:{bn:"হোম",en:"Home"}, navHow:{bn:"কীভাবে কাজ করে",en:"How it works"},
+  navFees:{bn:"পরামর্শ ফি",en:"Fees"}, navFaq:{bn:"প্রশ্নোত্তর",en:"FAQ"}, navDash:{bn:"আমার প্রকল্প",en:"My Bookings"},
+  heroTitle:{bn:"আপনার নির্মাণ স্বপ্নের",en:"The right plan for"},
+  waBtn:{bn:"WhatsApp-এ কথা বলুন",en:"Chat on WhatsApp"},
+  waBtn2:{bn:"WhatsApp-এ যোগাযোগ করুন",en:"Contact on WhatsApp"},
+  callBtn2:{bn:"☎ সরাসরি কল করুন",en:"☎ Call us directly"},
+  heroCallPrefix:{bn:"☎ WhatsApp নেই? সরাসরি কল করুন — ",en:"☎ No WhatsApp? Call us directly — "},
+  assure1:{bn:"স্বচ্ছ পরামর্শ ফি",en:"Transparent fees"}, assure2:{bn:"নিরাপদ পেমেন্ট",en:"Secure payment"},
+  assure3:{bn:"ড্রয়িং ডিজিটাল ডেলিভারি",en:"Digital drawing delivery"},
+  scrollDown:{bn:"নিচে যান",en:"Scroll down"},
+  eyebrowServices:{bn:"সেবাসমূহ",en:"Services"},
+  svcHeading:{bn:"পাঁচটি প্রকৌশল সেবা, এক প্ল্যাটফর্মে",en:"Five engineering services, one platform"},
+  helpTitle:{bn:"কোন সেবা প্রয়োজন বুঝতে পারছেন না?",en:"Not sure which service you need?"},
+  helpSub:{bn:"সমস্যাটি বেছে নিন — আমরা উপযুক্ত সেবা জানিয়ে দেব।",en:"Pick your problem — we'll suggest the right service."},
+  helpBtn:{bn:"সমস্যাটি বেছে নিন",en:"Pick your problem"},
+  svcGo:{bn:"এই সেবা →",en:"This service →"},
+  emgTitle:{bn:"ভবনে ফাটল বা ঝুঁকির লক্ষণ দেখছেন?",en:"Seeing cracks or warning signs in your building?"},
+  emgDesc:{bn:"গুরুতর কাঠামোগত সমস্যায় দ্রুত পেশাদার মতামত নিন। জরুরি বুকিংয়ের আগে নিরাপত্তা নির্দেশনা দেখুন।",en:"Get a fast professional opinion for serious structural issues. See safety guidance before an emergency booking."},
+  emgBtn:{bn:"জরুরি পরামর্শ নিন",en:"Get emergency consultation"},
+  eyebrowProcess:{bn:"প্রক্রিয়া",en:"Process"},
+  howHeading:{bn:"কীভাবে কাজ করে",en:"How it works"},
+  howLead:{bn:"মাত্র কয়েক মিনিটে বুকিং সম্পন্ন করুন।",en:"Complete your booking in just a few minutes."},
+  how1t:{bn:"সেবা ও সময় নির্বাচন",en:"Choose service & time"}, how1d:{bn:"প্রয়োজন অনুযায়ী সেবা ও সুবিধাজনক সময় বেছে নিন।",en:"Pick the service you need and a convenient time."},
+  how2t:{bn:"তথ্য ও ছবি দিন",en:"Share details & photos"}, how2d:{bn:"প্রকল্পের তথ্য লিখুন এবং ছবি/ড্রয়িং আপলোড করুন।",en:"Fill in project details and upload photos/drawings."},
+  how3t:{bn:"ফি পরিশোধ",en:"Pay the fee"}, how3d:{bn:"নিরাপদ মোবাইল/ব্যাংক গেটওয়েতে পরামর্শ ফি দিন।",en:"Pay the consultation fee via a secure mobile/bank gateway."},
+  how4t:{bn:"WhatsApp / Zoom পরামর্শ",en:"WhatsApp / Zoom consultation"}, how4d:{bn:"নির্ধারিত সময়ে স্থপতির সঙ্গে সরাসরি আলোচনা করুন ও ড্রয়িং বুঝে নিন।",en:"Talk directly with the architect at the scheduled time and review your drawing."},
+  eyebrowFees:{bn:"পরামর্শ ফি",en:"Fees"},
+  pkgHeading:{bn:"পরামর্শ প্যাকেজ",en:"Consultation Packages"},
+  pkgLead:{bn:"স্বচ্ছ, নির্ধারিত ফি — কোনো লুকানো খরচ নেই।",en:"Transparent, fixed fees — no hidden costs."},
+  pkgPopular:{bn:"সবচেয়ে জনপ্রিয়",en:"Most popular"},
+  pkgPerSession:{bn:" / সেশন",en:" / session"},
+  pkgChooseTime:{bn:"সময় নির্বাচন করুন",en:"Choose a time"},
+  eyebrowWhy:{bn:"কেন নকশা সেবা",en:"Why Noksha Seba"},
+  trustHeading:{bn:"বিশ্বাসযোগ্য, পেশাদার, সহজ",en:"Trusted, professional, simple"},
+  eyebrowTeam:{bn:"বিশেষজ্ঞ দল",en:"Expert Team"},
+  teamHeading:{bn:"যাঁদের পরামর্শ পাবেন",en:"Who you'll consult with"},
+  faqHeading:{bn:"সাধারণ জিজ্ঞাসা",en:"Frequently Asked Questions"},
+  ctaHeading:{bn:"নকশা নিয়ে দ্বিধায় আছেন?",en:"Unsure about your design?"},
+  ctaDesc:{bn:"ছবি বা ড্রয়িং পাঠান। একজন পেশাদারের সঙ্গে কথা বলুন।",en:"Send a photo or drawing. Talk to a professional."},
+  footerTag:{bn:"আপনার নির্মাণ সমস্যার পেশাদার সমাধান, এখন হাতের মুঠোয়।",en:"Professional solutions for your construction problems, now in your hand."},
+  linkPrivacy:{bn:"গোপনীয়তা নীতি",en:"Privacy Policy"}, linkTerms:{bn:"সেবার শর্তাবলি",en:"Terms of Service"},
+  linkRefund:{bn:"ফেরত নীতি",en:"Refund Policy"}, linkAdmin:{bn:"অ্যাডমিন",en:"Admin"},
+  footerContactLabel:{bn:"যোগাযোগ",en:"Contact"},
+  footerDemo:{bn:"© ২০২৬ নকশা সেবা। এই সংস্করণটি একটি কার্যকরী ডেমো প্রোটোটাইপ — পেমেন্ট, Zoom ও WhatsApp API সার্ভার-সাইড সংযোগ প্রয়োজন।",en:"© 2026 Noksha Seba. This build is a working demo prototype — payment, Zoom and WhatsApp APIs need server-side integration."},
+  backBtn:{bn:"← ফিরে যান",en:"← Go back"},
+  eyebrowProblem:{bn:"সমস্যা নির্বাচন",en:"Select Problem"},
+  problemHeading:{bn:"আপনার সমস্যাটি কী?",en:"What's your problem?"},
+  problemLead:{bn:"একটি বেছে নিন — উপযুক্ত সেবা সাজেস্ট করা হবে।",en:"Pick one — we'll suggest the right service."},
+  problemRecoLabel:{bn:"আপনার সমস্যার জন্য উপযুক্ত সেবা",en:"Recommended service for your problem"},
+  problemBookBtn:{bn:"এই সেবা বুক করুন",en:"Book this service"},
+  cancelBtn:{bn:"← বাতিল",en:"← Cancel"},
+  eyebrowMyProjects:{bn:"আমার নকশা সেবা",en:"My Noksha Seba"},
+  dashHeading:{bn:"আমার অ্যাপয়েন্টমেন্ট",en:"My Appointments"},
+  dashLead:{bn:"আপনার বুকিং, মিটিং লিংক ও প্রাপ্ত নথি এক জায়গায়।",en:"Your bookings, meeting links and received documents in one place."},
+  newBookBtn:{bn:"নতুন পরামর্শ বুক করুন",en:"Book a new consultation"},
+  homeBtn:{bn:"← হোম",en:"← Home"},
+  eyebrowAdmin:{bn:"অ্যাডমিন",en:"Admin"},
+  adminHeading:{bn:"নিয়ন্ত্রণ প্যানেল",en:"Control Panel"},
+  policyHeading:{bn:"নীতিমালা ও শর্তাবলি",en:"Policies & Terms"},
+  policyLimitT:{bn:"অনলাইন পরামর্শের সীমাবদ্ধতা",en:"Limits of online consultation"},
+  policyLimitP:{bn:"অনলাইন পরামর্শ প্রাথমিক পেশাদার দিকনির্দেশনা প্রদান করে এবং প্রয়োজনীয় সরেজমিন পরিদর্শন বা বিস্তারিত প্রকৌশল ডিজাইনের বিকল্প নয়। গুরুতর ঝুঁকিতে সংশ্লিষ্ট জরুরি কর্তৃপক্ষের সহায়তা নিন।",en:"Online consultation provides preliminary professional guidance and is not a substitute for a required site visit or detailed engineering design. In serious risk, seek help from the relevant emergency authorities."},
+  policyPrivT:{bn:"গোপনীয়তা নীতি",en:"Privacy Policy"},
+  policyPrivP:{bn:"আপনার দেওয়া তথ্য ও ফাইল কেবল পরামর্শ সেবার জন্য ব্যবহৃত হয় এবং নিরাপদভাবে সংরক্ষিত থাকে। সংবেদনশীল ফাইল জমা দেওয়ার আগে আপনার সম্মতি নেওয়া হয়।",en:"Information and files you provide are used only for the consultation service and stored securely. Your consent is taken before submitting sensitive files."},
+  policyPayT:{bn:"পেমেন্ট ও ফেরত নীতি",en:"Payment & Refund Policy"},
+  policyPayP:{bn:"পরামর্শ ফি অগ্রিম পরিশোধযোগ্য। নির্ধারিত সময়ের যথেষ্ট আগে জানালে সময় পুনঃনির্ধারণ করা যায়। বিশেষ ক্ষেত্রে ফেরত প্রযোজ্য হতে পারে।",en:"Consultation fees are payable in advance. Rescheduling is possible with sufficient advance notice. Refunds may apply in special cases."},
+  bnHome:{bn:"হোম",en:"Home"}, bnServices:{bn:"সেবা",en:"Services"}, bnBooking:{bn:"বুকিং",en:"Book"}, bnContact:{bn:"যোগাযোগ",en:"Contact"},
+  emptyFiles:{bn:"এখনো কোনো ফাইল যোগ করা হয়নি (ঐচ্ছিক)।",en:"No files added yet (optional)."},
+  savedToast:{bn:"✓ তথ্য সংরক্ষিত হয়েছে",en:"✓ Your info has been saved"},
+  emptyBookings:{bn:"এখনো কোনো বুকিং নেই।",en:"No bookings yet."},
+  firstBooking:{bn:"আপনার প্রথম পরামর্শ বুক করুন।",en:"Book your first consultation."},
+  today:{bn:"আজ",en:"Today"}, tomorrow:{bn:"আগামীকাল",en:"Tomorrow"}, thisWeek:{bn:"এই সপ্তাহ",en:"This week"},
+  bdTime:{bn:"বাংলাদেশ সময়",en:"Bangladesh time"},
+  step1Title:{bn:"কোন বিষয়ে পরামর্শ?",en:"What do you need advice on?"}, step1Hint:{bn:"আপনার প্রয়োজন অনুযায়ী একটি সেবা বেছে নিন।",en:"Choose a service that fits your need."},
+  step2Title:{bn:"পরামর্শ প্যাকেজ",en:"Consultation package"}, step2Hint:{bn:"সময়কাল ও ফি অনুযায়ী বেছে নিন।",en:"Choose by duration and fee."},
+  step3Title:{bn:"প্রকল্পের তথ্য",en:"Project details"}, step3Hint:{bn:"তথ্য স্বয়ংক্রিয়ভাবে সংরক্ষিত হচ্ছে।",en:"Your info is saved automatically."},
+  step4Title:{bn:"প্রয়োজনীয় ছবি বা ড্রয়িং দিন",en:"Add photos or drawings"}, step4Hint:{bn:"স্পষ্ট ছবি দিলে আপনার সমস্যা বুঝতে আমাদের সুবিধা হবে।",en:"Clear photos help us understand your issue better."},
+  step5Title:{bn:"আপনার সুবিধাজনক সময় বেছে নিন",en:"Pick a convenient time"}, step5Hint:{bn:"সব সময় বাংলাদেশ সময় অনুযায়ী।",en:"All times are in Bangladesh time."},
+  step6Title:{bn:"কীভাবে পরামর্শ নিতে চান?",en:"How would you like to consult?"},
+  step7Title:{bn:"পরামর্শ ফি পরিশোধ করুন",en:"Pay the consultation fee"},
+  nextStep:{bn:"পরবর্তী ধাপ",en:"Next step"}, prevStep:{bn:"← পূর্ববর্তী",en:"← Previous"},
+  labelName:{bn:"আপনার নাম",en:"Your name"}, phName:{bn:"যেমন: মোঃ রহিম উদ্দিন",en:"e.g. Md. Rahim Uddin"},
+  labelMobile:{bn:"মোবাইল নম্বর",en:"Mobile number"},
+  labelWaSame:{bn:"মোবাইল নম্বরই WhatsApp নম্বর",en:"My mobile number is also my WhatsApp number"},
+  labelWhatsapp:{bn:"WhatsApp নম্বর",en:"WhatsApp number"},
+  labelEmail:{bn:"ইমেইল",en:"Email"}, optional:{bn:"(ঐচ্ছিক)",en:"(optional)"},
+  labelWhere:{bn:"প্রকল্প কোথায়?",en:"Where is the project?"},
+  optDivision:{bn:"বিভাগ",en:"Division"}, optDistrict:{bn:"জেলা",en:"District"},
+  labelPtype:{bn:"প্রকল্পের ধরন",en:"Project type"}, optSelect:{bn:"নির্বাচন করুন",en:"Select"},
+  labelLand:{bn:"জমির পরিমাণ",en:"Land size"}, phLand:{bn:"যেমন: ৫",en:"e.g. 5"},
+  labelArea:{bn:"আনুমানিক নির্মিত এলাকা",en:"Approx. built-up area"}, unitSqft:{bn:"(বর্গফুট)",en:"(sq ft)"}, phArea:{bn:"যেমন: ১২০০",en:"e.g. 1200"},
+  labelProblem:{bn:"আপনার সমস্যাটি লিখুন",en:"Describe your problem"},
+  phProblem:{bn:"যেমন: আমার ৫ কাঠা জমিতে তিন বেডরুমের একটি বাড়ি করতে চাই। দক্ষিণ পাশে রাস্তা...",en:"e.g. I want to build a 3-bedroom house on 5 katha of land. There's a road on the south side..."},
+  camera:{bn:"ক্যামেরা",en:"Camera"}, chooseFile:{bn:"ফাইল নির্বাচন",en:"Choose file"},
+  fileTypes:{bn:"JPG · PNG · PDF · DWG (একাধিক ফাইল দেওয়া যাবে)",en:"JPG · PNG · PDF · DWG (multiple files allowed)"},
+  modeWaTitle:{bn:"WhatsApp Call",en:"WhatsApp Call"}, modeWaDesc:{bn:"WhatsApp-এর মাধ্যমে কথা বলুন",en:"Talk over WhatsApp"},
+  modeZoomTitle:{bn:"Zoom Meeting",en:"Zoom Meeting"}, modeZoomDesc:{bn:"ভিডিওতে ড্রয়িং ও ছবি দেখিয়ে আলোচনা",en:"Discuss over video while showing drawings/photos"},
+  modeZoomBadge:{bn:"✓ ড্রয়িং আলোচনার জন্য উপযোগী",en:"✓ Best for discussing drawings"},
+  modeCallTitle:{bn:"সরাসরি ফোন কল",en:"Direct phone call"}, modeCallDesc:{bn:"অ্যাপ ছাড়াই সাধারণ মোবাইল কলে কথা বলুন",en:"Talk on a normal mobile call, no app needed"},
+  modeHelp:{bn:"কোনটি বেছে নেবেন বুঝতে না পারলে চিন্তা নেই — নির্ধারিত সময়ে আমরাই আপনাকে ফোন করে জানিয়ে দেব।",en:"Not sure which to pick? No worries — we'll call you at the scheduled time to sort it out."},
+  seeFee:{bn:"ফি দেখুন",en:"See fee"},
+  sumService:{bn:"সেবা",en:"Service"}, sumPackage:{bn:"প্যাকেজ",en:"Package"}, sumDate:{bn:"তারিখ",en:"Date"},
+  sumTime:{bn:"সময়",en:"Time"}, sumMode:{bn:"মাধ্যম",en:"Mode"}, sumTotal:{bn:"মোট ফি",en:"Total fee"},
+  labelPayMethod:{bn:"পেমেন্ট মাধ্যম",en:"Payment method"},
+  paySslTitle:{bn:"SSLCOMMERZ",en:"SSLCOMMERZ"}, paySslDesc:{bn:"কার্ড ও ব্যাংক চ্যানেল",en:"Card & bank channels"},
+  payBkashTitle:{bn:"bKash",en:"bKash"}, payBkashDesc:{bn:"মোবাইল পেমেন্ট",en:"Mobile payment"},
+  paynote:{bn:"🔒 আপনার পেমেন্ট নিরাপদ গেটওয়েতে যাচাই করা হয়। কোনো কার্ড তথ্য, PIN বা OTP এই সাইটে সংরক্ষণ করা হয় না।",en:"🔒 Your payment is verified through a secure gateway. No card details, PIN or OTP are stored on this site."},
+  demoNote:{bn:"⚙ <b>ডেমো:</b> প্রকৃত পেমেন্ট SSLCOMMERZ/bKash সার্ভার-সাইডে যাচাই হবে। এখানে ফলাফল সিমুলেট করা হচ্ছে।",en:"⚙ <b>Demo:</b> real payments would be verified server-side via SSLCOMMERZ/bKash. The result here is simulated."},
+  payBtn:{bn:" — পে করুন",en:" — Pay now"},
+  payFailSim:{bn:"পেমেন্ট ব্যর্থ (ডেমো)",en:"Simulate payment failure (demo)"},
+  payVerifying:{bn:"যাচাই হচ্ছে…",en:"Verifying…"},
+  needInfoT:{bn:"কিছু তথ্য প্রয়োজন",en:"A few details are needed"},
+  needInfoP:{bn:"অনুগ্রহ করে অন্তত <b>নাম</b> ও <b>মোবাইল নম্বর</b> দিন — বুকিং নিশ্চিত করতে এগুলো প্রয়োজন।",en:"Please provide at least your <b>name</b> and <b>mobile number</b> — these are needed to confirm the booking."},
+  okBtn:{bn:"ঠিক আছে",en:"OK"},
+  badPhoneT:{bn:"মোবাইল নম্বরটি সঠিক নয়",en:"That mobile number isn't valid"},
+  badPhoneP:{bn:"সঠিক বাংলাদেশি মোবাইল নম্বর দিন — যেমন:",en:"Please enter a valid Bangladeshi mobile number — e.g."},
+  orWord:{bn:"অথবা",en:"or"},
+  unitHelpT:{bn:"জমির একক সহজে বোঝা",en:"Understanding land units"},
+  unitHelpNote:{bn:"সঠিক পরিমাণ না জানলে আনুমানিক ধারণা দিলেই চলবে — নির্দিষ্ট পরিমাপ পরামর্শের সময় যাচাই করা যাবে।",en:"If you don't know the exact figure, a rough estimate is fine — we can confirm the precise size during the consultation."},
+  gotIt:{bn:"বুঝেছি",en:"Got it"},
+  emgModalT:{bn:"জরুরি নিরাপত্তা নির্দেশনা",en:"Emergency safety guidance"},
+  emgModalP1:{bn:"গুরুতর ফাটল, ভবন হেলে পড়া, আগুন, বৈদ্যুতিক শর্ট সার্কিট বা তাৎক্ষণিক জীবনঝুঁকি থাকলে অনলাইন পরামর্শের অপেক্ষা না করে <b>ভবন ত্যাগ করুন</b> এবং সংশ্লিষ্ট জরুরি কর্তৃপক্ষের সহায়তা নিন।",en:"If there are severe cracks, a tilting building, fire, electrical short circuit, or immediate danger to life, don't wait for online consultation — <b>evacuate the building</b> and contact the relevant emergency authorities."},
+  emgModalP2:{bn:"অনলাইন পরামর্শ প্রয়োজনীয় সরেজমিন পরিদর্শনের বিকল্প নয়।",en:"Online consultation is not a substitute for a necessary in-person site visit."},
+  call999:{bn:"৯৯৯-এ কল",en:"Call 999"},
+  emgAnyway:{bn:"তবুও পরামর্শ বুক করি",en:"Book a consultation anyway"},
+  payFailT:{bn:"পেমেন্ট সম্পন্ন হয়নি",en:"Payment didn't go through"},
+  payFailP:{bn:"লেনদেন যাচাই করা যায়নি। অনুগ্রহ করে আবার চেষ্টা করুন।",en:"The transaction could not be verified. Please try again."},
+  payRetry:{bn:"পুনরায় পেমেন্ট করুন",en:"Retry payment"},
+  successHeading:{bn:"আপনার অ্যাপয়েন্টমেন্ট নিশ্চিত হয়েছে",en:"Your appointment is confirmed"},
+  paidFee:{bn:"পরিশোধিত ফি",en:"Fee paid"},
+  waOpen:{bn:"WhatsApp খুলুন",en:"Open WhatsApp"},
+  zoomView:{bn:"Zoom দেখুন",en:"View Zoom"},
+  callNow:{bn:"এখনই কল করুন",en:"Call now"},
+  dashBtn:{bn:"ড্যাশবোর্ড",en:"Dashboard"},
+  addCalendar:{bn:"ক্যালেন্ডারে যোগ",en:"Add to calendar"},
+  downloadReceipt:{bn:"রসিদ ডাউনলোড করুন",en:"Download receipt"},
+  goToDash:{bn:"আমার প্রকল্পে যান",en:"Go to my bookings"},
+  successNote:{bn:"একটি WhatsApp নিশ্চিতকরণ বার্তা প্রস্তুত করা হয়েছে। উপরের বাটনে ট্যাপ করে পাঠিয়ে দিন।",en:"A WhatsApp confirmation message has been prepared. Tap the button above to send it."},
+  statConfirmed:{bn:"বুকিং নিশ্চিত",en:"Confirmed"}, statDone:{bn:"সম্পন্ন",en:"Completed"}, statWait:{bn:"পেমেন্ট অপেক্ষমাণ",en:"Payment pending"},
+  receiptBtn:{bn:"রসিদ",en:"Receipt"},
+};
+function t(k){const e=I18N[k];return e?bi(e):k}
+function applyLang(){
+  document.documentElement.lang=LANG;
+  $$('.langctl button').forEach(b=>b.classList.toggle('on',b.dataset.lang===LANG));
+  $$('[data-i18n]').forEach(el=>{const k=el.dataset.i18n;if(I18N[k])el.textContent=t(k)});
+  renderSiteContent();renderPkgCards();
+  if(current==='booking')renderFlow();
+  if(current==='dashboard')renderDash();
+  if(current==='admin')renderAdmin();
+  if(current==='problem')renderProblem();
+}
+function setLang(l){if(l===LANG)return;LANG=l;store.set('ns_lang',l);applyLang()}
+
+/* ---------- config ---------- */
+const DEFAULT_PRICES={quick:800,detail:1500,project:3500};
+
+/* ---------- editable site content (admin-managed, localStorage-backed) ---------- */
+const DEF_CONTACT={wa:"8801711034941",call:"+8801711034941",email:"arch_cell@yahoo.com",ref:"archcellbd.com"};
+const DEF_HERO={
+  badges:[
+    {bn:"🏠 স্থাপত্য পরামর্শ",en:"🏠 Architecture consultation"},
+    {bn:"🏗 স্ট্রাকচারাল সেবা",en:"🏗 Structural service"},
+    {bn:"⚡ ইলেকট্রিক্যাল ও প্লাম্বিং",en:"⚡ Electrical & plumbing"}
+  ],
+  slides:[
+    {accent:{bn:"সঠিক পরিকল্পনা",en:"your construction dream"},sub:{bn:"স্থাপত্য, ইন্টেরিয়র, স্ট্রাকচার, ইলেকট্রিক্যাল ও প্লাম্বিং বিষয়ে অভিজ্ঞ স্থপতি ও প্রকৌশলীর পরামর্শ নিন — বাংলাদেশের যেকোনো স্থান থেকে, হাতের মুঠোয়।",en:"Get advice from experienced architects & engineers on architecture, interior, structure, electrical and plumbing — from anywhere in Bangladesh, right in your hand."}},
+    {accent:{bn:"নির্ভরযোগ্য প্রকৌশল মতামত",en:"reliable engineering opinions"},sub:{bn:"ফাটল, কাঠামোগত ঝুঁকি বা ভবনের নিরাপত্তা নিয়ে দ্রুত পেশাদার দিকনির্দেশনা পান।",en:"Get fast professional guidance on cracks, structural risk, or building safety."}},
+    {accent:{bn:"ঘরে বসেই বিশেষজ্ঞ পরামর্শ",en:"expert advice from home"},sub:{bn:"WhatsApp অথবা Zoom-এ সরাসরি কথা বলুন — কোনো ভ্রমণ বা অপেক্ষা ছাড়াই।",en:"Talk directly over WhatsApp or Zoom — no travel, no waiting."}}
+  ]
+};
+const SVC_ICONS={
+  arch:'<path d="M3 21h18M5 21V9l7-5 7 5v12M9 21v-6h6v6"/>',
+  struct:'<path d="M4 20V6l8-3 8 3v14M4 20h16M8 20v-8h8v8M8 12V8m8 4V8"/>',
+  elec:'<path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z"/>',
+  plumb:'<path d="M7 3v7a5 5 0 0 0 10 0V3M7 7h10M12 15v6M9 21h6"/>',
+  interior:'<path d="M4 18v-5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v5M4 18a1 1 0 0 0 1 1h1a1 1 0 0 0 1-1v-1h10v1a1 1 0 0 0 1 1h1a1 1 0 0 0 1-1M6 11V8a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v3"/>'
+};
+const DEF_SERVICES={
+  arch:{title:{bn:"স্থাপত্য পরামর্শ",en:"Architecture Consultation"},desc:{bn:"বাড়ি, ভবন, রুম বিন্যাস, আলো-বাতাস, ফ্যাসাড, সংস্কার ও জায়গার সর্বোত্তম ব্যবহার।",en:"Homes, buildings, room layout, light & ventilation, facades, renovation, and best use of space."}},
+  struct:{title:{bn:"স্ট্রাকচারাল পরামর্শ",en:"Structural Consultation"},desc:{bn:"কলাম, বিম, ফাউন্ডেশন, ফাটল, পুরোনো ভবন, ভূমিকম্প নিরাপত্তা ও কাঠামোগত সমস্যা।",en:"Columns, beams, foundations, cracks, old buildings, earthquake safety, and structural issues."}},
+  elec:{title:{bn:"ইলেকট্রিক্যাল পরামর্শ",en:"Electrical Consultation"},desc:{bn:"লোড পরিকল্পনা, আলো, পাওয়ার পয়েন্ট, DB, নিরাপত্তা ও বৈদ্যুতিক লেআউট।",en:"Load planning, lighting, power points, distribution board, safety, and electrical layout."}},
+  plumb:{title:{bn:"প্লাম্বিং পরামর্শ",en:"Plumbing Consultation"},desc:{bn:"পানি সরবরাহ, ড্রেনেজ, স্যানিটারি, সেপটিক ট্যাংক, রেইন ওয়াটার ও পাইপ লেআউট।",en:"Water supply, drainage, sanitary, septic tank, rainwater, and pipe layout."}},
+  interior:{title:{bn:"ইন্টেরিয়র পরামর্শ",en:"Interior Consultation"},desc:{bn:"ইন্টেরিয়র লেআউট, রঙ নির্বাচন, আসবাবপত্র বিন্যাস, লাইটিং ও ফিনিশিং নিয়ে পেশাদার পরামর্শ।",en:"Professional advice on interior layout, color selection, furniture arrangement, lighting and finishing."}}
+};
+const DEF_TRUST=[
+  {t:{bn:"অভিজ্ঞ স্থপতি ও প্রকৌশলী",en:"Experienced architects & engineers"},s:{bn:"বহু বছরের বাস্তব অভিজ্ঞতা",en:"Many years of hands-on experience"}},
+  {t:{bn:"বাংলাদেশের বাস্তবতা",en:"Built for Bangladesh"},s:{bn:"স্থানীয় উপকরণ ও কোড অনুযায়ী",en:"Based on local materials & codes"}},
+  {t:{bn:"অনলাইনে সহজ পরামর্শ",en:"Easy online consultation"},s:{bn:"ঘরে বসেই WhatsApp/Zoom",en:"Via WhatsApp/Zoom from home"}},
+  {t:{bn:"স্বচ্ছ পরামর্শ ফি",en:"Transparent fees"},s:{bn:"আগেই ফি জেনে নিন",en:"Know the fee in advance"}},
+  {t:{bn:"নিরাপদ পেমেন্ট",en:"Secure payment"},s:{bn:"যাচাইকৃত গেটওয়ে",en:"Verified gateway"}},
+  {t:{bn:"ডিজিটাল ডেলিভারি",en:"Digital delivery"},s:{bn:"ড্রয়িং ও নথি অনলাইনে",en:"Drawings & documents online"}},
+  {t:{bn:"পাঁচ সেবা এক জায়গায়",en:"Five services, one place"},s:{bn:"স্থাপত্য+ইন্টেরিয়র+স্ট্রাকচার+MEP",en:"Architecture+Interior+Structure+MEP"}},
+  {t:{bn:"BNBC অনুযায়ী মতামত",en:"Advice per BNBC code"},s:{bn:"বিধিসম্মত পরামর্শ",en:"Code-compliant guidance"}}
+];
+const DEF_TEAM=[
+  {av:{bn:"স্থ",en:"AR"},t:{bn:"প্রধান স্থপতি",en:"Principal Architect"},s:{bn:"স্থাপত্য • ইন্টেরিয়র • নগর পরিকল্পনা",en:"Architecture • Interior • Urban planning"}},
+  {av:{bn:"প্র",en:"SE"},t:{bn:"স্ট্রাকচারাল প্রকৌশলী",en:"Structural Engineer"},s:{bn:"RCC • ফাউন্ডেশন • অ্যাসেসমেন্ট",en:"RCC • Foundation • Assessment"}},
+  {av:{bn:"MEP",en:"MEP"},t:{bn:"ইলেকট্রিক্যাল ও প্লাম্বিং প্রকৌশলী",en:"Electrical & Plumbing Engineer"},s:{bn:"লোড • লেআউট • নিরাপত্তা",en:"Load • Layout • Safety"}}
+];
+const DEF_FAQ=[
+  {q:{bn:"অনলাইন পরামর্শে কী কী সমস্যা সমাধান করা যায়?",en:"What kinds of problems can online consultation solve?"},a:{bn:"নকশা পর্যালোচনা, রুম বিন্যাস, ফাটল বা কাঠামোগত উদ্বেগ, বৈদ্যুতিক ও প্লাম্বিং পরিকল্পনা, সংস্কার এবং জায়গার ব্যবহার — বেশিরভাগ বিষয়েই দিকনির্দেশনা দেওয়া যায়। জটিল ক্ষেত্রে সাইট ভিজিট প্রয়োজন হতে পারে।",en:"Design review, room layout, cracks or structural concerns, electrical/plumbing planning, renovation, and space usage — guidance can be given on most topics. Complex cases may need a site visit."}},
+  {q:{bn:"কোন ড্রয়িং আগে পাঠাতে হবে?",en:"What drawings should I send beforehand?"},a:{bn:"যা আছে তা-ই যথেষ্ট — সাইটের ছবি, হাতে আঁকা স্কেচ, পুরোনো প্ল্যান বা PDF ড্রয়িং। স্পষ্ট ছবি দিলে সমস্যা বুঝতে সুবিধা হয়।",en:"Whatever you have is enough — site photos, hand-drawn sketches, an old plan, or a PDF drawing. Clear photos help us understand the issue faster."}},
+  {q:{bn:"জমির কাগজ প্রয়োজন কি?",en:"Are land documents required?"},a:{bn:"পরামর্শের জন্য সাধারণত প্রয়োজন নেই। শুধু জমির পরিমাণ ও অবস্থান জানালেই চলে।",en:"Generally not required for a consultation. Just letting us know the land size and location is enough."}},
+  {q:{bn:"পরামর্শের পর ড্রয়িং পাওয়া যাবে কি?",en:"Will I receive a drawing after the consultation?"},a:{bn:"প্রযোজ্য ক্ষেত্রে মার্কআপ ড্রয়িং, স্কেচ বা লিখিত সারাংশ আপনার ড্যাশবোর্ডে দেওয়া হয়। পূর্ণ ডিজাইন একটি আলাদা প্রকল্প সেবা।",en:"Where applicable, a markup drawing, sketch, or written summary is provided on your dashboard. A full design is a separate project service."}},
+  {q:{bn:"সাইট ভিজিট প্রয়োজন হলে কী হবে?",en:"What if a site visit is needed?"},a:{bn:"প্রয়োজন হলে আমরা জানিয়ে দেব এবং আলাদা ব্যবস্থা করা হবে। অনলাইন পরামর্শ বাধ্যতামূলক সরেজমিন পরিদর্শনের বিকল্প নয়।",en:"If needed, we'll let you know and arrange it separately. Online consultation is not a substitute for a mandatory in-person site visit."}},
+  {q:{bn:"পেমেন্ট ফেরতযোগ্য কি?",en:"Is the payment refundable?"},a:{bn:"নির্ধারিত সময়ের আগে বাতিল করলে পুনঃনির্ধারণ করা যায়। বিস্তারিত ফেরত নীতিতে দেওয়া আছে।",en:"Cancelling before the scheduled time allows rescheduling. Details are in the refund policy."}},
+  {q:{bn:"সময় পরিবর্তন করা যাবে কি?",en:"Can I reschedule?"},a:{bn:"হ্যাঁ, মিটিংয়ের নির্ধারিত সময়ের যথেষ্ট আগে ড্যাশবোর্ড থেকে সময় পরিবর্তন করা যায়।",en:"Yes, you can reschedule from your dashboard with sufficient advance notice before the meeting time."}},
+  {q:{bn:"Zoom ব্যবহার না জানলে কী করব?",en:"What if I don't know how to use Zoom?"},a:{bn:"চিন্তার কিছু নেই — WhatsApp-এ কল করেও পরামর্শ নেওয়া যায়। Zoom লিংকে শুধু ট্যাপ করলেই মিটিং শুরু হয়।",en:"No problem — you can also consult over a WhatsApp call. For Zoom, just tap the link to join the meeting."}}
+];
+function contactData(){return store.get('ns_contact',DEF_CONTACT)}
+function heroData(){return store.get('ns_hero',DEF_HERO)}
+function servicesData(){return store.get('ns_services',DEF_SERVICES)}
+function trustDataGet(){return store.get('ns_trust',DEF_TRUST)}
+function teamData(){return store.get('ns_team',DEF_TEAM)}
+function faqDataGet(){return store.get('ns_faq',DEF_FAQ)}
+function SVC(){const d=servicesData();const o={};Object.keys(DEF_SERVICES).forEach(k=>o[k]=bi((d[k]||DEF_SERVICES[k]).title));return o}
+const PKGS=[
+  {id:"quick",name:{bn:"দ্রুত পরামর্শ",en:"Quick Consultation"},dur:{bn:"২০ মিনিট",en:"20 minutes"},
+   feat:[{bn:"একটি নির্দিষ্ট প্রশ্ন",en:"One specific question"},{bn:"ছোটখাটো পরিবর্তন",en:"Minor changes"},{bn:"দ্রুত second opinion",en:"Quick second opinion"}]},
+  {id:"detail",name:{bn:"বিস্তারিত পরামর্শ",en:"Detailed Consultation"},dur:{bn:"৪৫ মিনিট",en:"45 minutes"},pop:true,
+   feat:[{bn:"ফ্লোর প্ল্যান পর্যালোচনা",en:"Floor plan review"},{bn:"সংস্কার",en:"Renovation"},{bn:"কাঠামোগত উদ্বেগ",en:"Structural concerns"},{bn:"ইলেকট্রিক্যাল/প্লাম্বিং পরিকল্পনা",en:"Electrical/plumbing planning"},{bn:"একাধিক প্রশ্ন",en:"Multiple questions"}]},
+  {id:"project",name:{bn:"প্রকল্প পরামর্শ",en:"Project Consultation"},dur:{bn:"৬০–৯০ মিনিট",en:"60–90 minutes"},
+   feat:[{bn:"নতুন ভবন",en:"New building"},{bn:"জটিল renovation",en:"Complex renovation"},{bn:"স্থাপত্য+স্ট্রাকচার+MEP সমন্বয়",en:"Architecture+Structure+MEP coordination"},{bn:"multidisciplinary পরামর্শ",en:"Multidisciplinary consultation"}]}
+];
+const DIVS={
+ "ঢাকা":["ঢাকা","গাজীপুর","নারায়ণগঞ্জ","টাঙ্গাইল","নরসিংদী","মুন্সিগঞ্জ","মানিকগঞ্জ","কিশোরগঞ্জ","ফরিদপুর","গোপালগঞ্জ","মাদারীপুর","শরীয়তপুর","রাজবাড়ী"],
+ "চট্টগ্রাম":["চট্টগ্রাম","কক্সবাজার","বান্দরবান","রাঙামাটি","খাগড়াছড়ি","ফেনী","নোয়াখালী","লক্ষ্মীপুর","কুমিল্লা","চাঁদপুর","ব্রাহ্মণবাড়িয়া"],
+ "রাজশাহী":["রাজশাহী","নাটোর","নওগাঁ","চাঁপাইনবাবগঞ্জ","পাবনা","সিরাজগঞ্জ","বগুড়া","জয়পুরহাট"],
+ "খুলনা":["খুলনা","বাগেরহাট","সাতক্ষীরা","যশোর","ঝিনাইদহ","মাগুরা","নড়াইল","কুষ্টিয়া","চুয়াডাঙ্গা","মেহেরপুর"],
+ "বরিশাল":["বরিশাল","পটুয়াখালী","ভোলা","পিরোজপুর","বরগুনা","ঝালকাঠি"],
+ "সিলেট":["সিলেট","মৌলভীবাজার","হবিগঞ্জ","সুনামগঞ্জ"],
+ "রংপুর":["রংপুর","দিনাজপুর","কুড়িগ্রাম","গাইবান্ধা","নীলফামারী","লালমনিরহাট","পঞ্চগড়","ঠাকুরগাঁও"],
+ "ময়মনসিংহ":["ময়মনসিংহ","জামালপুর","নেত্রকোনা","শেরপুর"]
+};
+const PTYPES=[
+  {bn:"বাড়ি",en:"House"},{bn:"অ্যাপার্টমেন্ট",en:"Apartment"},{bn:"দোকান",en:"Shop"},{bn:"অফিস",en:"Office"},
+  {bn:"রেস্টুরেন্ট",en:"Restaurant"},{bn:"প্রতিষ্ঠান",en:"Institution"},{bn:"ধর্মীয় ভবন",en:"Religious building"},
+  {bn:"শিল্প ভবন",en:"Industrial building"},{bn:"অন্যান্য",en:"Other"}
+];
+const LANDUNITS=[
+  {bn:"কাঠা",en:"Katha"},{bn:"শতক",en:"Shotangsho"},{bn:"ডেসিমেল",en:"Decimal"},{bn:"একর",en:"Acre"},{bn:"বর্গফুট",en:"Sq ft"}
+];
+const PROBLEMS=[
+ {bn:"নতুন বাড়ি করতে চাই",en:"I want to build a new house",svc:"arch"},
+ {bn:"জমির জন্য পরিকল্পনা দরকার",en:"I need a plan for my land",svc:"arch"},
+ {bn:"বাড়ির নকশা পরিবর্তন করতে চাই",en:"I want to change my house design",svc:"arch"},
+ {bn:"বাড়িতে ফাটল দেখা দিয়েছে",en:"Cracks have appeared in my house",svc:"struct"},
+ {bn:"ভবন নিরাপদ কি না জানতে চাই",en:"I want to know if my building is safe",svc:"struct"},
+ {bn:"ভূমিকম্প নিরাপত্তা পরীক্ষা",en:"Earthquake safety check",svc:"struct"},
+ {bn:"ইলেকট্রিক্যাল সমস্যা",en:"Electrical problem",svc:"elec"},
+ {bn:"পানি/ড্রেনেজ সমস্যা",en:"Water/drainage problem",svc:"plumb"},
+ {bn:"বাড়ি সংস্কার করতে চাই",en:"I want to renovate my house",svc:"arch"},
+ {bn:"ইন্টেরিয়র পরিবর্তন করতে চাই",en:"I want to change my interior",svc:"interior"},
+ {bn:"অনুমোদনের জন্য ড্রয়িং প্রয়োজন",en:"I need a drawing for approval",svc:"arch"},
+ {bn:"অন্য সমস্যা",en:"Something else",svc:"arch"}
+];
+const SLOT_TIMES=["10:00 AM","11:30 AM","3:00 PM","5:30 PM","8:00 PM"];
+
+/* ---------- helpers ---------- */
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const BN="০১২৩৪৫৬৭৮৯";
+const toBn=n=>LANG==='bn'?String(n).replace(/[0-9]/g,d=>BN[d]):String(n);
+const taka=n=>"৳ "+toBn(Number(n).toLocaleString('en-US'));
+function fmtPhone(v){
+  let d=(v||"").replace(/\D/g,'');
+  if(d.startsWith('880'))d=d.slice(3);
+  if(d.length===11&&d.startsWith('0'))d=d.slice(1);
+  if(d.length>=10)return"+৮৮০ "+toBn(d.slice(0,4))+"-"+toBn(d.slice(4));
+  return toBn(v||"");
+}
+function prices(){return Object.assign({},DEFAULT_PRICES,store.get('ns_prices',{}))}
+function draft(){return store.get('ns_draft',{})}
+function saveDraft(d){store.set('ns_draft',d)}
+function bookings(){return store.get('ns_bookings',[])}
+function slotsCfg(){return store.get('ns_slots',SLOT_TIMES.slice())}
+function bookedKeys(){return new Set(bookings().map(b=>b.date+"|"+b.time))}
+function waHref(msg){return"https://wa.me/"+contactData().wa+(msg?("?text="+encodeURIComponent(msg)):"")}
+function bdPhoneValid(v){return /^(?:\+?880|0)1[3-9]\d{8}$/.test((v||"").replace(/[\s-]/g,''))}
+function modeLabel(m){return m==='zoom'?'Zoom Meeting':(m==='call'?'সরাসরি ফোন কল':'WhatsApp Call')}
+function modeLabelShort(m){return m==='zoom'?'Zoom':(m==='call'?'ফোন কল':'WhatsApp')}
+
+/* ---------- text size (accessibility) ---------- */
+const FS_SCALE={1:1,2:1.15,3:1.32};
+function setTextSize(n){
+  store.set('ns_textsize',n);
+  document.body.style.zoom=FS_SCALE[n]||1;
+  $$('.fontctl button').forEach(b=>b.classList.toggle('on',+b.dataset.fs===n));
+}
+
+/* ---------- toast ---------- */
+let _toastT;
+function showToast(msg){
+  const t=$("#toast");if(!t)return;
+  t.textContent=msg;t.classList.add("on");
+  clearTimeout(_toastT);_toastT=setTimeout(()=>t.classList.remove("on"),1600);
+}
+
+/* ---------- header live clock ---------- */
+const BN_MON=["জানু","ফেব্রু","মার্চ","এপ্রিল","মে","জুন","জুলাই","আগস্ট","সেপ্ট","অক্টো","নভে","ডিসে"];
+function tickClock(){
+  const el=$("#clockLine");if(!el)return;
+  const d=new Date();
+  let h=d.getHours(),ap=h>=12?"PM":"AM";h=h%12;if(h===0)h=12;
+  const t=toBn(h)+":"+toBn(String(d.getMinutes()).padStart(2,'0'))+":"+toBn(String(d.getSeconds()).padStart(2,'0'))+" "+ap;
+  el.textContent=t+" · "+toBn(d.getDate())+" "+BN_MON[d.getMonth()]+", "+toBn(d.getFullYear());
+}
+
+/* ---------- hero rotating highlight ---------- */
+let heroIdx=0,heroT;
+function renderHeroSlide(i){
+  const slides=heroData().slides;if(!slides.length)return;
+  heroIdx=i%slides.length;
+  const s=slides[heroIdx];
+  const a=$("#heroAccent"),su=$("#heroSub");
+  if(a)a.textContent=bi(s.accent); if(su)su.textContent=bi(s.sub);
+  $$("#heroDots button").forEach((b,j)=>b.classList.toggle("on",j===heroIdx));
+}
+function jumpHero(i){clearInterval(heroT);renderHeroSlide(i);const n=heroData().slides.length;heroT=setInterval(()=>renderHeroSlide((heroIdx+1)%n),4500)}
+function startHeroCarousel(){
+  const n=heroData().slides.length;
+  $("#heroDots").innerHTML=heroData().slides.map((_,i)=>`<button data-i="${i}" onclick="jumpHero(${i})" aria-label="Slide ${toBn(i+1)}"></button>`).join('');
+  renderHeroSlide(0);
+  heroT=setInterval(()=>renderHeroSlide((heroIdx+1)%n),4500);
+}
+function renderHeroBadges(){
+  $("#heroBadges").innerHTML=heroData().badges.map(b=>`<span class="hbadge">${esc(bi(b))}</span>`).join('');
+}
+
+/* ---------- content section renderers ---------- */
+function renderServices(){
+  const d=servicesData();
+  $("#svcGrid").innerHTML=Object.keys(DEF_SERVICES).map(k=>{
+    const s=d[k]||DEF_SERVICES[k];
+    return `<button class="svc" onclick="startBooking('${k}')">
+      <span class="ic"><svg viewBox="0 0 24 24">${SVC_ICONS[k]}</svg></span>
+      <span><h3>${esc(bi(s.title))}</h3><p>${esc(bi(s.desc))}</p><span class="go">${t('svcGo')}</span></span>
+    </button>`;
+  }).join('');
+}
+function renderTrust(){
+  $("#trustGrid").innerHTML=trustDataGet().map(x=>`<div class="t"><b>${esc(bi(x.t))}</b><span>${esc(bi(x.s))}</span></div>`).join('');
+}
+function renderTeam(){
+  $("#teamGrid").innerHTML=teamData().map(x=>`<div class="person"><span class="av">${esc(bi(x.av))}</span><div><b>${esc(bi(x.t))}</b><span>${esc(bi(x.s))}</span></div></div>`).join('');
+}
+function renderFaqList(){
+  $("#faqList").innerHTML=faqDataGet().map(x=>`<details><summary>${esc(bi(x.q))}</summary><p>${esc(bi(x.a))}</p></details>`).join('');
+}
+function renderContactPoints(){
+  const c=contactData();
+  const heroCall=$("#heroCallLink"),ctaCall=$("#ctaCallLink"),foot=$("#footerContact");
+  if(heroCall){heroCall.href="tel:"+c.call;heroCall.textContent=t('heroCallPrefix')+fmtPhone(c.call)}
+  if(ctaCall)ctaCall.href="tel:"+c.call;
+  if(foot)foot.innerHTML=`WhatsApp: ${fmtPhone(c.wa)}<br>${LANG==='bn'?'ই-মেইল':'Email'}: ${esc(c.email)}<br>${LANG==='bn'?'রেফারেন্স':'Reference'}: ${esc(c.ref)}`;
+}
+function renderSiteContent(){
+  renderHeroBadges();renderServices();renderTrust();renderTeam();renderFaqList();renderContactPoints();
+}
+
+/* ---------- land unit help ---------- */
+function unitHelp(){
+  const u=LANG==='bn'
+    ?`<li><b>১ কাঠা</b> ≈ ৭২০ বর্গফুট</li><li><b>১ শতক / ডেসিমেল</b> ≈ ৪৩৫.৬ বর্গফুট</li><li><b>১ একর</b> = ১০০ শতক ≈ ৪৩,৫৬০ বর্গফুট</li>`
+    :`<li><b>1 Katha</b> ≈ 720 sq ft</li><li><b>1 Shotangsho / Decimal</b> ≈ 435.6 sq ft</li><li><b>1 Acre</b> = 100 Shotangsho ≈ 43,560 sq ft</li>`;
+  openModal(`<h3>${t('unitHelpT')}</h3>
+    <ul style="margin-top:14px;color:var(--graphite);font-size:14.5px;line-height:2">${u}</ul>
+    <p style="color:var(--grey);font-size:13px;margin-top:12px">${t('unitHelpNote')}</p>
+    <button class="btn btn-ink" style="margin-top:16px" onclick="closeModal()">${t('gotIt')}</button>`);
+}
+
+/* ---------- router ---------- */
+let current="home";
+function go(view){
+  current=view;
+  $$(".view").forEach(v=>v.classList.add("hidden"));
+  const el=$("#view-"+view); if(el)el.classList.remove("hidden");
+  $$(".botnav a").forEach(a=>a.classList.toggle("on",a.dataset.nav===view));
+  window.scrollTo({top:0,behavior:"auto"});
+  if(view==="dashboard")renderDash();
+  if(view==="admin")renderAdmin();
+  if(view==="problem")renderProblem();
+  history.replaceState(null,"","#/"+view);
+}
+function jump(id){const e=$("#"+id);if(e)setTimeout(()=>e.scrollIntoView({behavior:"smooth",block:"start"}),60)}
+function contactWa(){location.href=waHref("আসসালামু আলাইকুম, নকশা সেবা সম্পর্কে জানতে চাই।")}
+
+/* ---------- packages on home ---------- */
+function renderPkgCards(){
+  const p=prices();
+  $("#pkgCards").innerHTML=PKGS.map(pk=>`
+    <div class="pkg ${pk.pop?'pop':''}">
+      ${pk.pop?`<span class="badge">${t('pkgPopular')}</span>`:''}
+      <div class="dur">${bi(pk.dur)}</div>
+      <h3>${bi(pk.name)}</h3>
+      <div class="price">${taka(p[pk.id])}<small>${t('pkgPerSession')}</small></div>
+      <ul>${pk.feat.map(f=>`<li>${bi(f)}</li>`).join('')}</ul>
+      <button class="btn btn-ink" onclick="startBooking(null,'${pk.id}')">${t('pkgChooseTime')}</button>
+    </div>`).join('');
+}
+
+/* ---------- problem selector ---------- */
+function renderProblem(){
+  $("#probChips").innerHTML=PROBLEMS.map((p,i)=>`<button class="chip" data-i="${i}" onclick="pickProblem(${i})">${esc(bi(p))}</button>`).join('');
+  $("#probReco").innerHTML="";
+}
+function pickProblem(i){
+  $$("#probChips .chip").forEach(c=>c.classList.toggle("on",+c.dataset.i===i));
+  const p=PROBLEMS[i],svc=p.svc,label=bi(p);
+  $("#probReco").innerHTML=`<div class="reco">
+    <div style="color:var(--grey);font-size:13px">${t('problemRecoLabel')}</div>
+    <b>${SVC()[svc]}</b>
+    <div style="margin-top:14px"><button class="btn btn-ink inline" onclick="startBooking('${svc}',null,'${label.replace(/'/g,'')}')">${t('problemBookBtn')}</button></div>
+  </div>`;
+}
+
+/* ================= BOOKING FLOW ================= */
+const STEPS=["service","package","info","upload","schedule","mode","payment"];
+const STEP_LABEL_I18N=[
+  {bn:"সেবা",en:"Service"},{bn:"প্যাকেজ",en:"Package"},{bn:"তথ্য",en:"Info"},{bn:"ফাইল",en:"Files"},
+  {bn:"সময়",en:"Time"},{bn:"মাধ্যম",en:"Mode"},{bn:"পেমেন্ট",en:"Payment"}
+];
+let step=0, D={};
+
+function startBooking(svc,pkg,problemText){
+  D=draft(); D.files=D.files||[];
+  if(svc)D.service=svc;
+  if(pkg)D.package=pkg;
+  if(problemText)D.problem=(D.problem?D.problem:problemText);
+  if(D.emergency)delete D.emergency;
+  saveDraft(D);
+  step = D.service?(D.package?2:1):0;
+  go('booking'); renderFlow();
+}
+function emergency(){
+  openModal(`<div class="safe-ic">⚠</div>
+    <h3>${t('emgModalT')}</h3>
+    <p style="color:var(--graphite);font-size:14.5px;margin-top:10px">${t('emgModalP1')}</p>
+    <p style="color:var(--grey);font-size:13px;margin-top:10px">${t('emgModalP2')}</p>
+    <div class="row-btns" style="margin-top:18px">
+      <a class="btn btn-clay" href="tel:999">${t('call999')}</a>
+      <button class="btn btn-ink" onclick="closeModal();bookEmergency()">${t('emgAnyway')}</button>
+    </div>`);
+}
+function bookEmergency(){D=draft();D.service='struct';D.package='detail';D.emergency=true;saveDraft(D);startBooking('struct','detail')}
+
+function renderFlow(){
+  // progress dimbar
+  $("#dimbar").innerHTML=STEPS.map((s,i)=>{
+    const cls=i<step?'done':(i===step?'cur':'');
+    const node=`<div class="node ${cls}" title="${bi(STEP_LABEL_I18N[i])}">${i<step?'✓':toBn(i+1)}</div>`;
+    return (i>0?'<div class="seg"></div>':'')+node;
+  }).join('');
+  const body=$("#flowBody");
+  const p=prices();
+  const stepOf=(n)=>`${LANG==='bn'?'ধাপ':'Step'} ${toBn(n)} / ${toBn(7)}`;
+  if(STEPS[step]==="service"){
+    body.innerHTML=`<div class="flowstep">
+      <div class="dim left"><span class="tick"></span>${stepOf(1)}</div>
+      <h2>${t('step1Title')}</h2><div class="hint">${t('step1Hint')}</div>
+      <div class="pickgrid two-col">${Object.entries(SVC()).map(([k,v])=>`
+        <button class="pick ${D.service===k?'on':''}" onclick="setField('service','${k}');renderFlow()">
+          <span class="ic">${svcIcon(k)}</span><span><b>${v}</b></span></button>`).join('')}</div>
+      <div class="flow-actions"><button class="btn btn-ink" onclick="next()" ${D.service?'':'disabled style=opacity:.4'}>${t('nextStep')}</button></div>
+    </div>`;
+  }
+  else if(STEPS[step]==="package"){
+    body.innerHTML=`<div class="flowstep">
+      <div class="dim left"><span class="tick"></span>${stepOf(2)}</div>
+      <h2>${t('step2Title')}</h2><div class="hint">${t('step2Hint')}</div>
+      <div class="pickgrid" style="margin-top:14px">${PKGS.map(pk=>`
+        <button class="pick ${D.package===pk.id?'on':''}" onclick="setField('package','${pk.id}');renderFlow()">
+          <span class="ic">${pk.pop?'★':'●'}</span>
+          <span><b>${bi(pk.name)}</b><span>${bi(pk.dur)}</span></span>
+          <span class="rt">${taka(p[pk.id])}</span></button>`).join('')}</div>
+      <div class="flow-actions"><button class="back-min" onclick="prev()">${t('prevStep')}</button>
+        <button class="btn btn-ink" onclick="next()" ${D.package?'':'disabled style=opacity:.4'}>${t('nextStep')}</button></div>
+    </div>`;
+  }
+  else if(STEPS[step]==="info"){
+    const div=D.division||"";
+    body.innerHTML=`<div class="flowstep">
+      <div class="dim left"><span class="tick"></span>${stepOf(3)}</div>
+      <h2>${t('step3Title')}</h2><div class="hint">${t('step3Hint')}</div>
+      <div class="field"><label>${t('labelName')}</label><input id="f_name" value="${esc(D.name)}" oninput="setField('name',this.value)" placeholder="${t('phName')}"></div>
+      <div class="field"><label>${t('labelMobile')}</label><input id="f_mobile" inputmode="tel" value="${esc(D.mobile)}" oninput="setField('mobile',this.value)" placeholder="+৮৮০ ১XXXXXXXXX"></div>
+      <div class="checkline"><input type="checkbox" id="f_wasame" ${D.waSame!==false?'checked':''} onchange="setField('waSame',this.checked);renderFlow()"><label for="f_wasame" style="margin:0;font-weight:400">${t('labelWaSame')}</label></div>
+      ${D.waSame===false?`<div class="field"><label>${t('labelWhatsapp')}</label><input value="${esc(D.whatsapp)}" oninput="setField('whatsapp',this.value)" placeholder="+৮৮০ ..."></div>`:''}
+      <div class="field"><label>${t('labelEmail')} <span class="opt">${t('optional')}</span></label><input type="email" value="${esc(D.email)}" oninput="setField('email',this.value)" placeholder="you@example.com"></div>
+      <div class="field"><label>${t('labelWhere')}</label>
+        <div class="two">
+          <select id="f_div" onchange="setField('division',this.value);setField('district','');renderFlow()">
+            <option value="">${t('optDivision')}</option>${Object.keys(DIVS).map(d=>`<option ${div===d?'selected':''}>${d}</option>`).join('')}</select>
+          <select onchange="setField('district',this.value)" ${div?'':'disabled'}>
+            <option value="">${t('optDistrict')}</option>${(DIVS[div]||[]).map(dd=>`<option ${D.district===dd?'selected':''}>${dd}</option>`).join('')}</select>
+        </div></div>
+      <div class="field"><label>${t('labelPtype')}</label><select onchange="setField('ptype',this.value)">
+        <option value="">${t('optSelect')}</option>${PTYPES.map(pt=>`<option value="${pt.bn}" ${D.ptype===pt.bn?'selected':''}>${esc(bi(pt))}</option>`).join('')}</select></div>
+      <div class="field"><label>${t('labelLand')} <button type="button" class="unit-info" onclick="unitHelp()" aria-label="${t('unitHelpT')}">ⓘ</button></label><div class="two">
+        <input inputmode="decimal" value="${esc(D.land)}" oninput="setField('land',this.value)" placeholder="${t('phLand')}">
+        <select onchange="setField('landUnit',this.value)">${LANDUNITS.map(u=>`<option value="${u.bn}" ${D.landUnit===u.bn?'selected':''}>${esc(bi(u))}</option>`).join('')}</select></div></div>
+      <div class="field"><label>${t('labelArea')} <span class="opt">${t('unitSqft')}</span></label><input inputmode="numeric" value="${esc(D.area)}" oninput="setField('area',this.value)" placeholder="${t('phArea')}"></div>
+      <div class="field"><label>${t('labelProblem')}</label><textarea oninput="setField('problem',this.value)" placeholder="${t('phProblem')}">${esc(D.problem)}</textarea></div>
+      <div class="flow-actions"><button class="back-min" onclick="prev()">${t('prevStep')}</button>
+        <button class="btn btn-ink" onclick="validInfo()">${t('nextStep')}</button></div>
+    </div>`;
+  }
+  else if(STEPS[step]==="upload"){
+    body.innerHTML=`<div class="flowstep">
+      <div class="dim left"><span class="tick"></span>${stepOf(4)}</div>
+      <h2>${t('step4Title')}</h2><div class="hint">${t('step4Hint')}</div>
+      <div class="upbox">
+        <div class="row-btns" style="max-width:360px;margin:0 auto">
+          <label class="btn btn-line"><input type="file" accept="image/*" capture="environment" style="display:none" onchange="addFiles(this.files)">${t('camera')}</label>
+          <label class="btn btn-ink"><input type="file" accept="image/*,application/pdf,.dwg" multiple style="display:none" onchange="addFiles(this.files)">${t('chooseFile')}</label>
+        </div>
+        <p>${t('fileTypes')}</p>
+      </div>
+      <div class="uplist" id="uplist"></div>
+      <div class="flow-actions"><button class="back-min" onclick="prev()">${t('prevStep')}</button>
+        <button class="btn btn-ink" onclick="next()">${t('nextStep')}</button></div>
+    </div>`;
+    renderUploads();
+  }
+  else if(STEPS[step]==="schedule"){
+    body.innerHTML=`<div class="flowstep">
+      <div class="dim left"><span class="tick"></span>${stepOf(5)}</div>
+      <h2>${t('step5Title')}</h2><div class="hint">${t('step5Hint')}</div>
+      <div class="slots-tabs" id="dayTabs"></div>
+      <div class="slotgrid" id="slotGrid"></div>
+      <div class="flow-actions"><button class="back-min" onclick="prev()">${t('prevStep')}</button>
+        <button class="btn btn-ink" onclick="next()" id="schNext" ${D.time?'':'disabled style=opacity:.4'}>${t('nextStep')}</button></div>
+    </div>`;
+    renderSchedule();
+  }
+  else if(STEPS[step]==="mode"){
+    body.innerHTML=`<div class="flowstep">
+      <div class="dim left"><span class="tick"></span>${stepOf(6)}</div>
+      <h2>${t('step6Title')}</h2>
+      <div class="pickgrid" style="margin-top:14px">
+        <button class="pick ${D.mode==='wa'?'on':''}" onclick="setField('mode','wa');renderFlow()">
+          <span class="ic">💬</span><span><b>${t('modeWaTitle')}</b><span>${t('modeWaDesc')}</span></span></button>
+        <button class="pick ${D.mode==='zoom'?'on':''}" onclick="setField('mode','zoom');renderFlow()">
+          <span class="ic">🎥</span><span><b>${t('modeZoomTitle')}</b><span>${t('modeZoomDesc')}</span><span style="color:var(--ok);font-size:12px;font-weight:600;margin-top:2px">${t('modeZoomBadge')}</span></span></button>
+        <button class="pick ${D.mode==='call'?'on':''}" onclick="setField('mode','call');renderFlow()">
+          <span class="ic">☎</span><span><b>${t('modeCallTitle')}</b><span>${t('modeCallDesc')}</span></span></button>
+      </div>
+      <p style="color:var(--grey);font-size:13px;margin-top:12px">${t('modeHelp')}</p>
+      <div class="flow-actions"><button class="back-min" onclick="prev()">${t('prevStep')}</button>
+        <button class="btn btn-ink" onclick="next()" ${D.mode?'':'disabled style=opacity:.4'}>${t('seeFee')}</button></div>
+    </div>`;
+  }
+  else if(STEPS[step]==="payment"){
+    const pk=PKGS.find(x=>x.id===D.package)||PKGS[0];
+    const fee=p[D.package]||0;
+    body.innerHTML=`<div class="flowstep">
+      <div class="dim left"><span class="tick"></span>${stepOf(7)}</div>
+      <h2>${t('step7Title')}</h2>
+      <div class="summary" style="margin-top:14px">
+        <div class="r"><span>${t('sumService')}</span><b>${SVC()[D.service]||'-'}</b></div>
+        <div class="r"><span>${t('sumPackage')}</span><b>${bi(pk.name)} · ${bi(pk.dur)}</b></div>
+        <div class="r"><span>${t('sumDate')}</span><b>${D.dateLabel||'-'}</b></div>
+        <div class="r"><span>${t('sumTime')}</span><b>${D.time||'-'}</b></div>
+        <div class="r"><span>${t('sumMode')}</span><b>${modeLabel(D.mode)}</b></div>
+        <div class="r total"><span>${t('sumTotal')}</span><b>${taka(fee)}</b></div>
+      </div>
+      <div class="field" style="margin-top:16px"><label>${t('labelPayMethod')}</label>
+        <div class="pickgrid">
+          <button class="pick ${D.pay==='sslc'?'on':''}" onclick="setField('pay','sslc');renderFlow()"><span class="ic">🏦</span><span><b>${t('paySslTitle')}</b><span>${t('paySslDesc')}</span></span></button>
+          <button class="pick ${D.pay==='bkash'?'on':''}" onclick="setField('pay','bkash');renderFlow()"><span class="ic">📱</span><span><b>${t('payBkashTitle')}</b><span>${t('payBkashDesc')}</span></span></button>
+        </div>
+      </div>
+      <div class="paynote">${t('paynote')}</div>
+      <div class="demo-ribbon">⚙ <span>${t('demoNote')}</span></div>
+      <div class="flow-actions"><button class="back-min" onclick="prev()">${t('prevStep')}</button>
+        <button class="btn btn-ink" onclick="pay()" ${D.pay?'':'disabled style=opacity:.4'}>${taka(fee)}${t('payBtn')}</button></div>
+      <button class="btn-ghost" style="margin:12px auto 0;display:block" onclick="payFail()">${t('payFailSim')}</button>
+    </div>`;
+  }
+}
+function svcIcon(k){const m={
+ arch:'<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#1B1E22" stroke-width="1.6"><path d="M3 21h18M5 21V9l7-5 7 5v12"/></svg>',
+ struct:'<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#1B1E22" stroke-width="1.6"><path d="M4 20V6l8-3 8 3v14M8 20v-8h8v8"/></svg>',
+ elec:'<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#1B1E22" stroke-width="1.6"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z"/></svg>',
+ plumb:'<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#1B1E22" stroke-width="1.6"><path d="M7 3v7a5 5 0 0 0 10 0V3M7 7h10"/></svg>',
+ interior:'<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#1B1E22" stroke-width="1.6"><path d="M4 18v-5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v5M6 11V8a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v3"/></svg>'};return m[k]||''}
+let _saveToastT;
+function setField(k,v){
+  D[k]=v;saveDraft(D);
+  clearTimeout(_saveToastT);
+  _saveToastT=setTimeout(()=>showToast(t('savedToast')),700);
+}
+function next(){if(step<STEPS.length-1){step++;renderFlow();window.scrollTo({top:0})}}
+function prev(){if(step>0){step--;renderFlow();window.scrollTo({top:0})}}
+function validInfo(){
+  if(!D.name||!D.mobile){openModal(`<h3>${t('needInfoT')}</h3><p style="color:var(--graphite);margin-top:10px">${t('needInfoP')}</p><button class="btn btn-ink" style="margin-top:16px" onclick="closeModal()">${t('okBtn')}</button>`);return}
+  if(!bdPhoneValid(D.mobile)){openModal(`<h3>${t('badPhoneT')}</h3><p style="color:var(--graphite);margin-top:10px">${t('badPhoneP')} <b style="direction:ltr;display:inline-block">01712345678</b> ${t('orWord')} <b style="direction:ltr;display:inline-block">+8801712345678</b></p><button class="btn btn-ink" style="margin-top:16px" onclick="closeModal()">${t('okBtn')}</button>`);return}
+  next();
+}
+
+/* uploads */
+function addFiles(list){
+  D.files=D.files||[];
+  [...list].forEach(f=>D.files.push({name:f.name,size:f.size}));
+  saveDraft(D);renderUploads();
+}
+function rmFile(i){D.files.splice(i,1);saveDraft(D);renderUploads()}
+function renderUploads(){
+  const el=$("#uplist");if(!el)return;
+  if(!D.files||!D.files.length){el.innerHTML=`<div style="color:var(--grey);font-size:13px;text-align:center;padding:6px">${t('emptyFiles')}</div>`;return}
+  el.innerHTML=D.files.map((f,i)=>`<div class="upitem"><span>📄</span><span style="flex:none;max-width:52%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(f.name)}</span><span class="bar"><i></i></span><button class="rm" onclick="rmFile(${i})">×</button></div>`).join('');
+  setTimeout(()=>$$("#uplist .bar i").forEach(b=>b.style.width="100%"),40);
+}
+
+/* schedule */
+function renderSchedule(){
+  const days=[[t('today'),0],[t('tomorrow'),1],[t('thisWeek'),3]];
+  const active=D.dayIdx||0;
+  $("#dayTabs").innerHTML=days.map((d,i)=>`<button class="${i===active?'on':''}" onclick="setField('dayIdx',${i});setDate(${d[1]});renderSchedule()">${d[0]}</button>`).join('');
+  const busy=bookedKeys();
+  const dkey=D.date||dateKey(active===2?3:(active===1?1:0));
+  const grid=$("#slotGrid");
+  grid.innerHTML=slotsCfg().map(t=>{
+    const isBusy=busy.has(dkey+"|"+t);
+    const on=D.time===t&&D.date===dkey;
+    return `<button class="slot ${on?'on':''} ${isBusy?'busy':''}" onclick="chooseSlot('${dkey}','${t}')">${t}</button>`;
+  }).join('');
+  $("#schNext").disabled=!D.time;
+  if(D.time)$("#schNext").removeAttribute("style");
+}
+function dateKey(offset){const d=new Date();d.setDate(d.getDate()+offset);return d.toISOString().slice(0,10)}
+function dateLabelBn(iso){const d=new Date(iso);
+  const days=LANG==='bn'?["রবি","সোম","মঙ্গল","বুধ","বৃহঃ","শুক্র","শনি"]:["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+  const mon=LANG==='bn'?["জানু","ফেব্রু","মার্চ","এপ্রিল","মে","জুন","জুলাই","আগস্ট","সেপ্ট","অক্টো","নভে","ডিসে"]:["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  return days[d.getDay()]+", "+toBn(d.getDate())+" "+mon[d.getMonth()]}
+function setDate(offset){const k=dateKey(offset);D.date=k;D.dateLabel=dateLabelBn(k);saveDraft(D)}
+function chooseSlot(dkey,t){D.date=dkey;D.dateLabel=dateLabelBn(dkey);D.time=t;saveDraft(D);renderSchedule()}
+
+/* payment + confirm */
+function pay(){
+  const btn=event.target;btn.textContent=t('payVerifying');btn.disabled=true;
+  setTimeout(()=>confirmBooking(),1100); // simulates server-side gateway verification
+}
+function payFail(){
+  openModal(`<h3>${t('payFailT')}</h3><p style="color:var(--graphite);margin-top:10px">${t('payFailP')}</p>
+    <button class="btn btn-ink" style="margin-top:16px" onclick="closeModal()">${t('payRetry')}</button>`);
+}
+function nextId(){let n=store.get('ns_counter',122)+1;store.set('ns_counter',n);return"NS-2026-"+String(n).padStart(6,"0")}
+function confirmBooking(){
+  const p=prices();
+  const b={
+    id:nextId(), created:Date.now(), status:"confirmed",
+    service:D.service, serviceName:SVC()[D.service],
+    package:D.package, packageName:bi((PKGS.find(x=>x.id===D.package)||{}).name),
+    fee:p[D.package]||0, name:D.name, mobile:D.mobile,
+    whatsapp:(D.waSame===false?D.whatsapp:D.mobile),
+    email:D.email||"", division:D.division||"", district:D.district||"",
+    ptype:D.ptype||"", land:(D.land?D.land+" "+(D.landUnit||""):""), area:D.area||"",
+    problem:D.problem||"", files:(D.files||[]).map(f=>f.name),
+    date:D.date, dateLabel:D.dateLabel, time:D.time, mode:D.mode,
+    emergency:!!D.emergency,
+    zoom:D.mode==='zoom'?{id:zoomId(),url:"https://zoom.us/j/"+zoomId()}:null
+  };
+  const all=bookings(); all.unshift(b); store.set('ns_bookings',all);
+  store.set('ns_draft',{}); // clear draft
+  renderSuccess(b); go('success');
+}
+function zoomId(){return String(Math.floor(1e9+Math.random()*8e9))}
+
+function renderSuccess(b){
+  const waMsg=`নকশা সেবা\nআপনার পরামর্শ বুকিং নিশ্চিত হয়েছে।\nবুকিং নম্বর: ${b.id}\nসেবা: ${b.serviceName}\nতারিখ: ${b.dateLabel}\nসময়: ${b.time} (বাংলাদেশ সময়)\nমাধ্যম: ${modeLabelShort(b.mode)}${b.zoom?'\nZoom: '+b.zoom.url:''}`;
+  $("#successBody").innerHTML=`<div class="success">
+    <div class="check"><svg viewBox="0 0 24 24"><path d="M4 12l5 5L20 6"/></svg></div>
+    <h2>${t('successHeading')}</h2>
+    <div class="bid">${b.id}</div>
+    <div class="summary grid" style="text-align:right">
+      <div class="r"><span>${t('sumService')}</span><b>${b.serviceName}</b></div>
+      <div class="r"><span>${t('sumPackage')}</span><b>${b.packageName}</b></div>
+      <div class="r"><span>${t('sumDate')}</span><b>${b.dateLabel}</b></div>
+      <div class="r"><span>${t('sumTime')}</span><b>${b.time} · ${t('bdTime')}</b></div>
+      <div class="r"><span>${t('sumMode')}</span><b>${modeLabel(b.mode)}</b></div>
+      ${b.zoom?`<div class="r"><span>Zoom</span><b style="direction:ltr;font-size:12.5px">${b.zoom.url}</b></div>`:''}
+      <div class="r total"><span>${t('paidFee')}</span><b>${taka(b.fee)}</b></div>
+    </div>
+    <div class="actions">
+      <a class="btn btn-wa" href="${waHref(waMsg)}">${t('waOpen')}</a>
+      <div class="two">
+        ${b.zoom?`<a class="btn btn-line" href="${b.zoom.url}" target="_blank" rel="noopener">${t('zoomView')}</a>`:(b.mode==='call'?`<a class="btn btn-line" href="tel:${contactData().call}">${t('callNow')}</a>`:`<button class="btn btn-line" onclick="go('dashboard')">${t('dashBtn')}</button>`)}
+        <button class="btn btn-line" onclick='addICS(${JSON.stringify(b.id)})'>${t('addCalendar')}</button>
+      </div>
+      <button class="btn btn-line" onclick='receipt(${JSON.stringify(b.id)})'>${t('downloadReceipt')}</button>
+      <button class="btn btn-ink" onclick="go('dashboard')">${t('goToDash')}</button>
+    </div>
+    <p style="color:var(--grey);font-size:12.5px;margin-top:16px">${t('successNote')}</p>
+  </div>`;
+}
+
+/* dashboard */
+function renderDash(){
+  const all=bookings();const el=$("#dashList");
+  if(!all.length){el.innerHTML=`<div class="empty"><svg viewBox="0 0 24 24"><path d="M4 7h16v13H4zM8 3v4M16 3v4"/></svg>
+    ${t('emptyBookings')}<br>${t('firstBooking')}</div>`;return}
+  el.innerHTML=all.map(b=>{
+    const st=b.status==='confirmed'?['ok',t('statConfirmed')]:(b.status==='done'?['done',t('statDone')]:['wait',t('statWait')]);
+    return `<div class="dcard">
+      <div class="top"><div><div class="bid">${b.id}</div><div class="meta">${b.serviceName} · ${b.packageName}</div></div>
+        <span class="status ${st[0]}">${st[1]}</span></div>
+      <div class="meta" style="margin-top:10px">📅 ${b.dateLabel} · ${b.time} · ${modeLabelShort(b.mode)}</div>
+      ${b.district?`<div class="meta">📍 ${b.district}, ${b.division}</div>`:''}
+      <div class="row-btns" style="margin-top:14px">
+        <a class="btn btn-wa btn-sm" style="flex:1" href="${waHref('বুকিং নম্বর '+b.id+' প্রসঙ্গে')}">WhatsApp</a>
+        ${b.zoom?`<a class="btn btn-line btn-sm" style="flex:1" href="${b.zoom.url}" target="_blank" rel="noopener">Zoom</a>`:''}
+        ${b.mode==='call'?`<a class="btn btn-line btn-sm" style="flex:1" href="tel:${contactData().call}">${t('callNow')}</a>`:''}
+        <button class="btn btn-line btn-sm" style="flex:1" onclick='receipt(${JSON.stringify(b.id)})'>${t('receiptBtn')}</button>
+      </div></div>`;
+  }).join('');
+}
+
+/* ICS + receipt */
+function addICS(id){
+  const b=bookings().find(x=>x.id===id);if(!b)return;
+  const dt=new Date(b.date+"T"+to24(b.time));
+  const end=new Date(dt.getTime()+45*60000);
+  const f=d=>d.toISOString().replace(/[-:]/g,'').split('.')[0]+'Z';
+  const ics=["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//Noksha Seba//BN","BEGIN:VEVENT",
+    "UID:"+b.id+"@nokshaseba","DTSTAMP:"+f(new Date()),"DTSTART:"+f(dt),"DTEND:"+f(end),
+    "SUMMARY:নকশা সেবা | "+b.serviceName+" ("+b.id+")",
+    "DESCRIPTION:"+(b.mode==='zoom'&&b.zoom?("Zoom: "+b.zoom.url):"WhatsApp consultation"),
+    "END:VEVENT","END:VCALENDAR"].join("\r\n");
+  dl(b.id+".ics",ics,"text/calendar");
+}
+function to24(t){const m=t.match(/(\d+):(\d+)\s*(AM|PM)/i);let h=+m[1];if(/PM/i.test(m[3])&&h<12)h+=12;if(/AM/i.test(m[3])&&h===12)h=0;return String(h).padStart(2,'0')+":"+m[2]+":00"}
+function receipt(id){
+  const b=bookings().find(x=>x.id===id);if(!b)return;
+  const w=window.open("","_blank");
+  if(!w){openModal(`<h3>রসিদ</h3><p style="margin-top:8px">${b.id} · ${b.serviceName} · ${taka(b.fee)}</p><button class="btn btn-ink" style="margin-top:14px" onclick="closeModal()">ঠিক আছে</button>`);return}
+  w.document.write(`<html lang="bn"><head><meta charset="utf-8"><title>রসিদ ${b.id}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>body{font-family:'Hind Siliguri',sans-serif;max-width:520px;margin:30px auto;color:#1B1E22;padding:20px}
+    h1{font-size:22px}.rr{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid #eee}
+    .t{font-weight:700;border-top:2px solid #1B1E22;margin-top:8px}.mut{color:#71757B}</style></head><body>
+    <h1>নকশা সেবা — পরামর্শ রসিদ</h1><div class="mut">বুকিং নম্বর: <b>${b.id}</b></div><br>
+    <div class="rr"><span class="mut">সেবা</span><b>${b.serviceName}</b></div>
+    <div class="rr"><span class="mut">প্যাকেজ</span><b>${b.packageName}</b></div>
+    <div class="rr"><span class="mut">নাম</span><b>${esc(b.name)}</b></div>
+    <div class="rr"><span class="mut">মোবাইল</span><b>${esc(b.mobile)}</b></div>
+    <div class="rr"><span class="mut">তারিখ ও সময়</span><b>${b.dateLabel} · ${b.time}</b></div>
+    <div class="rr"><span class="mut">মাধ্যম</span><b>${modeLabelShort(b.mode)}</b></div>
+    <div class="rr t"><span>পরিশোধিত ফি</span><b>${taka(b.fee)}</b></div>
+    <p class="mut" style="margin-top:16px;font-size:12px">এই রসিদটি নকশা সেবা কর্তৃক স্বয়ংক্রিয়ভাবে তৈরি। VAT/AIT প্রযোজ্য ক্ষেত্রে NBR বিধি অনুযায়ী।</p>
+    <button onclick="print()" style="margin-top:10px;padding:10px 18px">প্রিন্ট / PDF</button></body></html>`);
+  w.document.close();
+}
+function dl(name,text,mime){const b=new Blob([text],{type:mime});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),3000)}
+
+/* admin */
+const ADM_TABS=[
+  ['dash','ড্যাশবোর্ড'],['hero','হিরো সেকশন'],['services','সেবাসমূহ'],['pkgs','প্যাকেজ ও মূল্য'],
+  ['slots','সময়সূচি'],['team','পরামর্শক দল'],['trust','বিশ্বাসযোগ্যতা'],['faq','প্রশ্নোত্তর'],
+  ['contact','যোগাযোগ তথ্য'],['bookings','বুকিং তালিকা']
+];
+let _adm=false,_admTab='dash';
+function sessionFlag(){return _adm}
+function admLogin(){if($("#admPass").value==="archcell"){_adm=true;_admTab='dash';renderAdmin()}else{openModal(`<h3>ভুল পাসকোড</h3><p style="margin-top:8px">আবার চেষ্টা করুন। ডেমো পাসকোড: archcell</p><button class="btn btn-ink" style="margin-top:14px" onclick="closeModal()">ঠিক আছে</button>`)}}
+function admLogout(){_adm=false;renderAdmin()}
+function admGo(tab){_admTab=tab;renderAdmin()}
+
+function renderAdmin(){
+  const authed=sessionFlag();
+  if(!authed){$("#admBody").innerHTML=`<div class="dcard"><b>অ্যাডমিন প্রবেশ</b>
+    <p style="color:var(--grey);font-size:13px;margin-top:6px">ডেমো পাসকোড: <b>archcell</b> (প্রকৃত অ্যাপে সার্ভার-সাইড নিরাপদ লগইন)</p>
+    <div class="field"><input id="admPass" type="password" placeholder="পাসকোড"></div>
+    <button class="btn btn-ink" onclick="admLogin()">প্রবেশ করুন</button></div>`;return}
+  $("#admBody").innerHTML=`
+    <div class="adm-shell">
+      <div class="adm-tabs">${ADM_TABS.map(([k,l])=>`<button class="${_admTab===k?'on':''}" onclick="admGo('${k}')">${l}</button>`).join('')}</div>
+      <div class="adm-panel">${admPanelHTML(_admTab)}</div>
+    </div>
+    <button class="btn btn-line" style="margin-top:16px" onclick="admLogout()">লগআউট</button>`;
+}
+function admPanelHTML(tab){
+  return {dash:admDash,hero:admHero,services:admServices,pkgs:admPkgs,slots:admSlots,
+    team:admTeam,trust:admTrust,faq:admFaq,contact:admContact,bookings:admBookings}[tab]();
+}
+
+/* dashboard overview */
+function admDash(){
+  const all=bookings();
+  const done=all.filter(b=>b.status==='done').length;
+  const active=all.filter(b=>b.status!=='done').length;
+  const weekAgo=Date.now()-7*24*3600*1000;
+  const week=all.filter(b=>b.created>=weekAgo).length;
+  return `<div class="adm-stats">
+      <div class="stat"><b>${toBn(all.length)}</b><span>মোট বুকিং</span></div>
+      <div class="stat"><b>${toBn(week)}</b><span>এই সপ্তাহে</span></div>
+      <div class="stat"><b>${toBn(active)}</b><span>সক্রিয়</span></div>
+      <div class="stat"><b>${toBn(done)}</b><span>সম্পন্ন</span></div>
+    </div>
+    <div class="dcard" style="margin-top:16px"><b>সাম্প্রতিক বুকিং</b>
+      ${all.length?all.slice(0,5).map(b=>`<div style="border-top:1px solid var(--line);padding:10px 0;font-size:13.5px">
+        <b>${b.id}</b> · ${esc(b.serviceName)}<br><span style="color:var(--grey)">${esc(b.name)} · ${b.dateLabel} ${b.time}</span></div>`).join(''):'<p style="color:var(--grey);font-size:13px;margin-top:8px">কোনো বুকিং নেই।</p>'}
+    </div>`;
+}
+
+/* hero editor */
+function biField(label,val,callFor,multiline){
+  const mk=(lang,v)=>multiline
+    ?`<textarea style="min-height:60px" onchange="${callFor(lang)}">${esc(v)}</textarea>`
+    :`<input value="${esc(v)}" onchange="${callFor(lang)}">`;
+  return `<div class="field"><label>${label}</label><div class="two">
+    <div><label style="font-weight:400;color:var(--faint);font-size:11px;margin-bottom:3px;display:block">বাংলা</label>${mk('bn',val.bn)}</div>
+    <div><label style="font-weight:400;color:var(--faint);font-size:11px;margin-bottom:3px;display:block">English</label>${mk('en',val.en)}</div>
+  </div></div>`;
+}
+function admHero(){
+  const h=heroData();
+  return `<div class="dcard"><b>হিরো ব্যাজ</b>
+    <p style="color:var(--grey);font-size:12px;margin-top:6px">হোমপেজের উপরের অংশে দেখানো ছোট ব্যাজগুলো।</p>
+    ${h.badges.map((b,i)=>biField('ব্যাজ '+toBn(i+1),b,lang=>`setHeroBadge(${i},'${lang}',this.value)`)).join('')}
+  </div>
+  <div class="dcard" style="margin-top:14px"><b>হিরো রোটেটিং স্লাইড</b>
+    <p style="color:var(--grey);font-size:12px;margin-top:6px">হেডলাইন ও সাবটেক্সট প্রতি কয়েক সেকেন্ড পরপর পালাক্রমে দেখানো হয়।</p>
+    ${h.slides.map((s,i)=>`<div style="border-top:1px solid var(--line);padding-top:14px;margin-top:14px">
+      ${biField('হাইলাইট লাইন '+toBn(i+1),s.accent,lang=>`setHeroSlideField(${i},'accent','${lang}',this.value)`)}
+      ${biField('সাবটেক্সট',s.sub,lang=>`setHeroSlideField(${i},'sub','${lang}',this.value)`,true)}
+    </div>`).join('')}
+  </div>`;
+}
+function setHeroBadge(i,lang,v){const h=JSON.parse(JSON.stringify(heroData()));h.badges[i][lang]=v;store.set('ns_hero',h);renderHeroBadges();showToast(t('savedToast'))}
+function setHeroSlideField(i,field,lang,v){const h=JSON.parse(JSON.stringify(heroData()));h.slides[i][field][lang]=v;store.set('ns_hero',h);clearInterval(heroT);startHeroCarousel();showToast(t('savedToast'))}
+
+/* services editor */
+function admServices(){
+  const d=servicesData();
+  return `<div class="dcard"><b>সেবার শিরোনাম ও বিবরণ</b>
+    <p style="color:var(--grey);font-size:12px;margin-top:6px">প্রতিটি সেবার নাম ও বর্ণনা সম্পাদনা করুন। পরিবর্তন সঙ্গে সঙ্গে হোমপেজ ও বুকিং ফ্লোতে প্রতিফলিত হবে।</p>
+    ${Object.keys(DEF_SERVICES).map(k=>{
+      const s=d[k]||DEF_SERVICES[k];
+      return `<div style="border-top:1px solid var(--line);padding-top:14px;margin-top:14px">
+        ${biField('শিরোনাম',s.title,lang=>`setServiceField('${k}','title','${lang}',this.value)`)}
+        ${biField('বিবরণ',s.desc,lang=>`setServiceField('${k}','desc','${lang}',this.value)`,true)}
+      </div>`;
+    }).join('')}
+  </div>`;
+}
+function setServiceField(k,field,lang,v){
+  const d=JSON.parse(JSON.stringify(servicesData()));
+  if(!d[k])d[k]=JSON.parse(JSON.stringify(DEF_SERVICES[k]));
+  d[k][field][lang]=v;store.set('ns_services',d);renderServices();showToast(t('savedToast'));
+}
+
+/* trust editor */
+function admTrust(){
+  const arr=trustDataGet();
+  return `<div class="dcard"><b>বিশ্বাসযোগ্যতার পয়েন্ট (${toBn(arr.length)})</b>
+    <p style="color:var(--grey);font-size:12px;margin-top:6px">হোমপেজের "কেন নকশা সেবা" অংশে দেখানো পয়েন্ট।</p>
+    ${arr.map((x,i)=>`<div style="border-top:1px solid var(--line);padding-top:14px;margin-top:14px">
+      ${biField('শিরোনাম',x.t,lang=>`setTrustField(${i},'t','${lang}',this.value)`)}
+      ${biField('উপশিরোনাম',x.s,lang=>`setTrustField(${i},'s','${lang}',this.value)`)}
+      <button class="btn btn-ghost" style="color:var(--clay);margin-top:6px" onclick="removeTrust(${i})">মুছে ফেলুন</button>
+    </div>`).join('')}
+    <button class="btn btn-line" style="margin-top:16px" onclick="addTrust()">+ নতুন পয়েন্ট যোগ করুন</button>
+  </div>`;
+}
+function setTrustField(i,f,lang,v){const a=JSON.parse(JSON.stringify(trustDataGet()));a[i][f][lang]=v;store.set('ns_trust',a);renderTrust();showToast(t('savedToast'))}
+function addTrust(){const a=JSON.parse(JSON.stringify(trustDataGet()));a.push({t:{bn:'নতুন পয়েন্ট',en:'New point'},s:{bn:'বিবরণ লিখুন',en:'Enter description'}});store.set('ns_trust',a);renderTrust();renderAdmin()}
+function removeTrust(i){const a=JSON.parse(JSON.stringify(trustDataGet()));a.splice(i,1);store.set('ns_trust',a);renderTrust();renderAdmin()}
+
+/* team editor */
+function admTeam(){
+  const arr=teamData();
+  return `<div class="dcard"><b>পরামর্শক দল (${toBn(arr.length)})</b>
+    ${arr.map((x,i)=>`<div style="border-top:1px solid var(--line);padding-top:14px;margin-top:14px">
+      ${biField('সংক্ষিপ্ত আদ্যক্ষর (অ্যাভাটারে দেখাবে)',x.av,lang=>`setTeamField(${i},'av','${lang}',this.value)`)}
+      ${biField('পদবি',x.t,lang=>`setTeamField(${i},'t','${lang}',this.value)`)}
+      ${biField('বিশেষজ্ঞতা',x.s,lang=>`setTeamField(${i},'s','${lang}',this.value)`)}
+      <button class="btn btn-ghost" style="color:var(--clay);margin-top:6px" onclick="removeTeam(${i})">মুছে ফেলুন</button>
+    </div>`).join('')}
+    <button class="btn btn-line" style="margin-top:16px" onclick="addTeam()">+ নতুন সদস্য যোগ করুন</button>
+  </div>`;
+}
+function setTeamField(i,f,lang,v){const a=JSON.parse(JSON.stringify(teamData()));a[i][f][lang]=v;store.set('ns_team',a);renderTeam();showToast(t('savedToast'))}
+function addTeam(){const a=JSON.parse(JSON.stringify(teamData()));a.push({av:{bn:'নতুন',en:'New'},t:{bn:'পদবি লিখুন',en:'Enter title'},s:{bn:'বিশেষজ্ঞতা লিখুন',en:'Enter specialty'}});store.set('ns_team',a);renderTeam();renderAdmin()}
+function removeTeam(i){const a=JSON.parse(JSON.stringify(teamData()));a.splice(i,1);store.set('ns_team',a);renderTeam();renderAdmin()}
+
+/* faq editor */
+function admFaq(){
+  const arr=faqDataGet();
+  return `<div class="dcard"><b>প্রশ্নোত্তর (${toBn(arr.length)})</b>
+    ${arr.map((x,i)=>`<div style="border-top:1px solid var(--line);padding-top:14px;margin-top:14px">
+      ${biField('প্রশ্ন',x.q,lang=>`setFaqField(${i},'q','${lang}',this.value)`)}
+      ${biField('উত্তর',x.a,lang=>`setFaqField(${i},'a','${lang}',this.value)`,true)}
+      <button class="btn btn-ghost" style="color:var(--clay);margin-top:6px" onclick="removeFaqItem(${i})">মুছে ফেলুন</button>
+    </div>`).join('')}
+    <button class="btn btn-line" style="margin-top:16px" onclick="addFaqItem()">+ নতুন প্রশ্ন যোগ করুন</button>
+  </div>`;
+}
+function setFaqField(i,f,lang,v){const a=JSON.parse(JSON.stringify(faqDataGet()));a[i][f][lang]=v;store.set('ns_faq',a);renderFaqList();showToast(t('savedToast'))}
+function addFaqItem(){const a=JSON.parse(JSON.stringify(faqDataGet()));a.push({q:{bn:'নতুন প্রশ্ন লিখুন',en:'Enter new question'},a:{bn:'উত্তর লিখুন',en:'Enter answer'}});store.set('ns_faq',a);renderFaqList();renderAdmin()}
+function removeFaqItem(i){const a=JSON.parse(JSON.stringify(faqDataGet()));a.splice(i,1);store.set('ns_faq',a);renderFaqList();renderAdmin()}
+
+/* contact editor */
+function admContact(){
+  const c=contactData();
+  return `<div class="dcard"><b>যোগাযোগ তথ্য</b>
+    <p style="color:var(--grey);font-size:12px;margin-top:6px">এই নম্বর/ইমেইল পুরো সাইট জুড়ে (WhatsApp বাটন, কল বাটন, ফুটার) ব্যবহৃত হয়।</p>
+    <div class="field"><label>WhatsApp নম্বর <span class="opt">(দেশের কোডসহ, + ছাড়া, যেমন 8801XXXXXXXXX)</span></label><input value="${esc(c.wa)}" onchange="setContactField('wa',this.value)"></div>
+    <div class="field"><label>কল নম্বর <span class="opt">(যেমন +8801XXXXXXXXX)</span></label><input value="${esc(c.call)}" onchange="setContactField('call',this.value)"></div>
+    <div class="field"><label>ই-মেইল</label><input type="email" value="${esc(c.email)}" onchange="setContactField('email',this.value)"></div>
+    <div class="field"><label>রেফারেন্স ওয়েবসাইট</label><input value="${esc(c.ref)}" onchange="setContactField('ref',this.value)"></div>
+  </div>`;
+}
+function setContactField(f,v){
+  const c=JSON.parse(JSON.stringify(contactData()));c[f]=v;store.set('ns_contact',c);renderContactPoints();
+  const wa=waHref("আসসালামু আলাইকুম, নকশা সেবা থেকে পরামর্শ নিতে চাই।");
+  ["heroWa","ctaWa","fabWa"].forEach(id=>{const e=document.getElementById(id);if(e)e.href=wa});
+  showToast('✓ সংরক্ষিত হয়েছে');
+}
+
+/* packages / slots / bookings */
+function admPkgs(){
+  const p=prices();
+  return `<div class="dcard"><b>পরামর্শ ফি (সম্পাদনযোগ্য)</b>
+    ${PKGS.map(pk=>`<div class="adm-price"><b>${pk.name.bn} <span style="color:var(--grey);font-weight:400;font-size:12px">(${pk.dur.bn})</span></b>
+      <span>৳</span><input type="number" value="${p[pk.id]}" onchange="setPrice('${pk.id}',this.value)"></div>`).join('')}
+    <p style="color:var(--grey);font-size:12px;margin-top:10px">পরিবর্তন সঙ্গে সঙ্গে হোমপেজ ও বুকিংয়ে প্রতিফলিত হবে।</p>
+  </div>`;
+}
+function admSlots(){
+  const sl=slotsCfg();
+  return `<div class="dcard"><b>সময়ের স্লট (availability)</b>
+    <div class="field"><input id="admSlots" value="${sl.join(', ')}" placeholder="10:00 AM, 11:30 AM, ..."></div>
+    <button class="btn btn-line btn-sm inline" onclick="saveSlots()">স্লট সংরক্ষণ</button>
+    <p style="color:var(--grey);font-size:12px;margin-top:8px">কমা দিয়ে আলাদা করুন। ইতিমধ্যে বুক করা স্লট স্বয়ংক্রিয়ভাবে ব্লক হয়।</p>
+  </div>`;
+}
+function admBookings(){
+  const all=bookings();
+  return `<div class="dcard"><b>বুকিং তালিকা (${toBn(all.length)})</b>
+    ${all.length?all.map(b=>`<div style="border-top:1px solid var(--line);padding:12px 0;font-size:13.5px">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap">
+        <div><b>${b.id}</b> · ${esc(b.serviceName)}<br><span style="color:var(--grey)">${esc(b.name)} · ${esc(b.mobile)} · ${b.dateLabel} ${b.time} · ${taka(b.fee)}${b.emergency?' · <span style="color:var(--clay)">জরুরি</span>':''}</span></div>
+        <select style="background:var(--field);border:1.5px solid var(--line2);border-radius:8px;padding:7px 9px;font-size:12.5px;font-weight:600" onchange="setBookingStatus('${b.id}',this.value)">
+          <option value="confirmed" ${b.status==='confirmed'?'selected':''}>নিশ্চিত</option>
+          <option value="done" ${b.status==='done'?'selected':''}>সম্পন্ন</option>
+        </select>
+      </div></div>`).join(''):'<p style="color:var(--grey);font-size:13px;margin-top:8px">কোনো বুকিং নেই।</p>'}
+  </div>`;
+}
+function setBookingStatus(id,status){
+  const all=bookings();const b=all.find(x=>x.id===id);if(!b)return;
+  b.status=status;store.set('ns_bookings',all);renderAdmin();
+}
+function setPrice(id,v){const p=store.get('ns_prices',{});p[id]=Math.max(0,parseInt(v)||0);store.set('ns_prices',p);renderPkgCards()}
+function saveSlots(){const arr=$("#admSlots").value.split(',').map(s=>s.trim()).filter(Boolean);store.set('ns_slots',arr.length?arr:SLOT_TIMES.slice());openModal(`<h3>স্লট সংরক্ষিত</h3><p style="margin-top:8px">নতুন সময়ের স্লট সংরক্ষণ করা হয়েছে।</p><button class="btn btn-ink" style="margin-top:14px" onclick="closeModal()">ঠিক আছে</button>`)}
+
+/* modal */
+function openModal(html){$("#sheet").innerHTML=html;$("#modal").classList.add("on")}
+function closeModal(){$("#modal").classList.remove("on")}
+$("#modal").addEventListener("click",e=>{if(e.target.id==="modal")closeModal()});
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeModal()});
+
+/* utils */
+function esc(s){return(s==null?"":String(s)).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+
+/* init */
+function boot(){
+  setTextSize(store.get('ns_textsize',1));
+  tickClock();setInterval(tickClock,1000);
+  applyLang();
+  startHeroCarousel();
+  const wa=waHref("আসসালামু আলাইকুম, নকশা সেবা থেকে পরামর্শ নিতে চাই।");
+  ["heroWa","ctaWa","fabWa"].forEach(id=>{const e=document.getElementById(id);if(e)e.href=wa});
+  const h=(location.hash||"").replace("#/","");
+  if(h&&document.getElementById("view-"+h))go(h);else go('home');
+}
+boot();
+</script>
+</body>
+</html>
