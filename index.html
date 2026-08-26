@@ -1251,7 +1251,7 @@ function searchGo(i){const r=(window._searchResults||[])[i];if(r)r.go()}
 
 /* ---------- router ---------- */
 let current="home";
-function go(view){
+function go(view,opts){
   current=view;
   $$(".view").forEach(v=>v.classList.add("hidden"));
   const el=$("#view-"+view); if(el)el.classList.remove("hidden");
@@ -1260,8 +1260,19 @@ function go(view){
   if(view==="dashboard")renderDash();
   if(view==="admin")enterAdmin();
   if(view==="problem")renderProblem();
-  history.replaceState(null,"","#/"+view);
+  const url="#/"+view;
+  // Each real navigation pushes a new history entry so the phone/browser
+  // back button steps back through app screens one at a time, instead of
+  // immediately exiting the site (replaceState never grows history, so
+  // "back" had nowhere to go but out). popstate syncing below uses
+  // replace:true to avoid pushing a duplicate entry for itself.
+  if(opts&&opts.replace){history.replaceState({view},"",url)}
+  else{history.pushState({view},"",url)}
 }
+window.addEventListener('popstate',e=>{
+  const view=(e.state&&e.state.view)||(location.hash||"").replace("#/","")||'home';
+  if(document.getElementById("view-"+view))go(view,{replace:true});
+});
 function jump(id){const e=$("#"+id);if(e)setTimeout(()=>e.scrollIntoView({behavior:"smooth",block:"start"}),60)}
 function contactWa(){location.href=waHref("আসসালামু আলাইকুম, নকশা সেবা সম্পর্কে জানতে চাই।")}
 
@@ -2084,7 +2095,7 @@ async function boot(){
   const wa=waHref("আসসালামু আলাইকুম, নকশা সেবা থেকে পরামর্শ নিতে চাই।");
   ["heroWa","ctaWa","fabWa"].forEach(id=>{const e=document.getElementById(id);if(e)e.href=wa});
   const h=(location.hash||"").replace("#/","");
-  if(h&&document.getElementById("view-"+h))go(h);else go('home');
+  if(h&&document.getElementById("view-"+h))go(h,{replace:true});else go('home',{replace:true});
 }
 boot();
 </script>
