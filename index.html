@@ -708,7 +708,7 @@ const store=(()=>{let mem={};let ok=false;try{localStorage.setItem('__t','1');lo
 
 /* ---------- server sync (admin-editable content only; bookings have their own flow) ---------- */
 const SYNC_KEY_MAP={ns_hero:'hero',ns_services:'services',ns_trust:'trust',ns_team:'team',
-  ns_faq:'faq',ns_reviews:'reviews',ns_prices:'prices',ns_slots:'slots',
+  ns_faq:'faq',ns_reviews:'reviews',ns_prices:'prices',ns_slots:'slots',ns_pkg_dur:'pkg_dur',
   ns_nav_order:'nav_order',ns_site:'site',ns_mobile_vis:'mobile_vis',ns_contact:'contact'};
 function syncContentKey(key,value){
   fetch('api/content.php',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'include',
