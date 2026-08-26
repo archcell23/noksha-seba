@@ -1,13 +1,34 @@
 # Deploying to Hostinger
 
 This site is static HTML/CSS/JS plus a small PHP backend (`api/`) that
-stores site content and bookings in `data/`. Git deploy handles the code;
-these steps handle the parts that must never come from git.
+stores site content and bookings in a `private_data` folder — a **sibling
+of `public_html`, not inside it**. That's deliberate: Hostinger's git
+deploy syncs `public_html` to exactly match this repo on every push,
+including deleting anything not tracked here. Any real data (bookings,
+edited content, the admin password) living inside `public_html` — even
+gitignored — would get wiped the next time anyone pushes a typo fix. Living
+one level up means git never touches it, and it's also never directly
+web-accessible at all, regardless of `.htaccess` correctness.
+
+Expected layout on the server:
+
+```
+~/domains/yourdomain.com/
+  private_data/        <- created automatically by the PHP code; not in git
+    config.php          <- the one file you create by hand, see below
+    content.php          <- auto-created on first admin save
+    bookings.php          <- auto-created on first booking
+  public_html/          <- this repo, deployed by git
+    index.html
+    api/
+    ...
+```
 
 ## One-time setup after connecting the Git repo
 
-1. **Upload `data/config.php` by hand** (via hPanel File Manager or FTP —
-   it's intentionally not in this repo, see below). Use this template:
+1. **Create `private_data/config.php`** one level above `public_html`
+   (via hPanel File Manager or SSH/FTP — the folder may not exist yet;
+   create it). Use this template:
 
    ```php
    <?php
@@ -22,24 +43,9 @@ these steps handle the parts that must never come from git.
    ```
    (Run that on any machine with PHP — it doesn't need to be the server.)
 
-2. **Check `data/` is writable** by the PHP process. Hostinger's default
-   file permissions are normally fine (directories 755, files 644, owned by
-   your hosting account) — nothing extra to do unless saves start failing.
-
-3. Confirm `data/.htaccess` deployed correctly by visiting
-   `https://yourdomain/data/content.php` directly — it should show a blank
-   page / 403, never raw JSON.
-
-## Why `data/content.php`, `data/bookings.php`, and `data/config.php` aren't in git
-
-Those three files hold **live state**: real bookings, real edited site
-content, and the admin password. If they were committed, every future
-`git push` — even one just fixing a typo in `index.html` — would silently
-overwrite whatever real data had accumulated on the server since the last
-push. `content.php` and `bookings.php` don't need manual setup: the PHP
-code creates them automatically (starting empty) the first time anything
-is saved or booked. Only `config.php` needs the one-time manual upload
-above, since there's no automatic way to know your password otherwise.
+2. Nothing else — `api/_lib.php` creates `private_data/` and the other two
+   files automatically the first time anything is saved or booked, with
+   permissions that keep them private.
 
 ## Migrating existing browser-only data
 

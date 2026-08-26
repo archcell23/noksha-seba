@@ -7,7 +7,19 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-define('NS_DATA_DIR', __DIR__ . '/../data');
+// Deliberately OUTSIDE public_html (a sibling of it, one level up), not
+// just gitignored inside it. On Hostinger (and most git-based deploy
+// platforms), every deploy syncs public_html to exactly match the repo —
+// including deleting untracked files. A gitignored-but-inside-public_html
+// data folder would get wiped on every push regardless. Living outside
+// the web root also means it's never directly web-accessible at all,
+// regardless of .htaccess/guard-line correctness — stronger than the
+// original design, not just a workaround.
+define('NS_DATA_DIR', dirname(dirname(__DIR__)) . '/private_data');
+
+if (!is_dir(NS_DATA_DIR)) {
+    @mkdir(NS_DATA_DIR, 0770, true);
+}
 
 header('X-Content-Type-Options: nosniff');
 
