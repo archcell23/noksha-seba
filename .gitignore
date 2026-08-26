@@ -1,0 +1,9 @@
+# These files hold live server state (real bookings, real edited site
+# content, and the admin password hash). They must never be committed:
+# every git push would otherwise silently overwrite whatever real data has
+# accumulated on the live server since the last push. The PHP code creates
+# content.php and bookings.php automatically on first use if missing, and
+# data/config.php must be uploaded to the server by hand (see README-DEPLOY).
+data/content.php
+data/bookings.php
+data/config.php

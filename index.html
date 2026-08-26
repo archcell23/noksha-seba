@@ -362,6 +362,10 @@ footer .fine{margin-top:14px;font-size:12px;color:var(--faint)}
 .empty svg{width:40px;height:40px;stroke:var(--line2);fill:none;stroke-width:1.5;margin:0 auto 12px}
 
 /* ---------- admin ---------- */
+.autosave-badge{display:inline-flex;align-items:center;gap:7px;background:var(--green-tint);color:var(--green-deep);
+  font-size:12px;font-weight:600;padding:6px 13px;border-radius:20px;flex:none}
+.autosave-badge i{width:7px;height:7px;border-radius:50%;background:var(--green);display:inline-block;animation:pulse 1.8s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
 .adm-shell{border:1px solid var(--line);border-radius:var(--r);overflow:hidden;background:var(--panel);margin-top:14px}
 .adm-tabs{display:flex;overflow-x:auto;gap:4px;background:var(--field);padding:8px;border-bottom:1px solid var(--line)}
 .adm-tabs button{flex:none;padding:9px 15px;border-radius:10px;font-size:13.5px;font-weight:600;color:var(--graphite);white-space:nowrap;transition:.12s}
@@ -660,7 +664,10 @@ footer .fine{margin-top:14px;font-size:12px;color:var(--faint)}
   <div class="wrap flow">
     <button class="back-min" data-i18n="homeBtn" onclick="go('home')">← হোম</button>
     <div class="dim left" style="margin-top:10px"><span class="tick"></span><span data-i18n="eyebrowAdmin">অ্যাডমিন</span></div>
-    <h2 style="font-size:24px" data-i18n="adminHeading">নিয়ন্ত্রণ প্যানেল</h2>
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
+      <h2 style="font-size:24px" data-i18n="adminHeading">নিয়ন্ত্রণ প্যানেল</h2>
+      <span class="autosave-badge"><i></i><span data-i18n="autoSaveBadge">স্বয়ংক্রিয়ভাবে সংরক্ষিত হয়</span></span>
+    </div>
     <div id="admBody"></div>
   </div>
 </section>
@@ -695,7 +702,44 @@ footer .fine{margin-top:14px;font-size:12px;color:var(--faint)}
 /* ---------- resilient store (localStorage + in-memory fallback) ---------- */
 const store=(()=>{let mem={};let ok=false;try{localStorage.setItem('__t','1');localStorage.removeItem('__t');ok=true}catch(e){}
   return{get(k,d){try{if(ok){const v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}}catch(e){}return(k in mem)?mem[k]:d},
-  set(k,v){try{if(ok){localStorage.setItem(k,JSON.stringify(v));return}}catch(e){}mem[k]=v}}})();
+  set(k,v){try{if(ok){localStorage.setItem(k,JSON.stringify(v))}}catch(e){}mem[k]=v;
+    if(SYNC_KEY_MAP[k])syncContentKey(SYNC_KEY_MAP[k],v);
+  }}})();
+
+/* ---------- server sync (admin-editable content only; bookings have their own flow) ---------- */
+const SYNC_KEY_MAP={ns_hero:'hero',ns_services:'services',ns_trust:'trust',ns_team:'team',
+  ns_faq:'faq',ns_reviews:'reviews',ns_prices:'prices',ns_slots:'slots',
+  ns_nav_order:'nav_order',ns_site:'site',ns_mobile_vis:'mobile_vis',ns_contact:'contact'};
+function syncContentKey(key,value){
+  fetch('api/content.php',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'include',
+    body:JSON.stringify({key,value})})
+    .then(r=>{if(!r.ok)throw new Error('sync failed')})
+    .catch(()=>{if(typeof showToast==='function'&&typeof t==='function')showToast(t('syncFailed'))});
+}
+async function pullFromServer(){
+  try{
+    const ctrl=new AbortController();
+    const timer=setTimeout(()=>ctrl.abort(),4000);
+    const res=await fetch('api/content.php',{credentials:'include',cache:'no-store',signal:ctrl.signal});
+    clearTimeout(timer);
+    if(!res.ok)return;
+    const data=await res.json();
+    if(!data||typeof data!=='object')return;
+    Object.keys(SYNC_KEY_MAP).forEach(lsKey=>{
+      const serverKey=SYNC_KEY_MAP[lsKey];
+      if(Object.prototype.hasOwnProperty.call(data,serverKey)){
+        try{localStorage.setItem(lsKey,JSON.stringify(data[serverKey]))}catch(e){}
+      }
+    });
+  }catch(e){ /* offline or server unreachable — fall back to whatever's cached locally */ }
+}
+function pushAllToServer(){
+  Object.keys(SYNC_KEY_MAP).forEach(lsKey=>{
+    let has=false;try{has=localStorage.getItem(lsKey)!=null}catch(e){}
+    if(has)syncContentKey(SYNC_KEY_MAP[lsKey],store.get(lsKey,null));
+  });
+  showToast(t('pushedAll'));
+}
 
 /* ---------- language ---------- */
 let LANG=store.get('ns_lang','bn');
@@ -722,6 +766,9 @@ const I18N={
   searchHint:{bn:"টাইপ করা শুরু করুন...",en:"Start typing..."},
   reviewsEyebrow:{bn:"গ্রাহক মতামত",en:"Client Reviews"},
   reviewsHeading:{bn:"যাঁরা আমাদের সেবা নিয়েছেন",en:"What our clients say"},
+  autoSaveBadge:{bn:"স্বয়ংক্রিয়ভাবে সংরক্ষিত হয়",en:"Auto-saves"},
+  syncFailed:{bn:"⚠ সার্ভারে সংরক্ষণ ব্যর্থ হয়েছে — ইন্টারনেট সংযোগ পরীক্ষা করুন",en:"⚠ Could not save to the server — check your connection"},
+  pushedAll:{bn:"✓ সব ডেটা সার্ভারে পাঠানো হয়েছে",en:"✓ All data sent to the server"},
   heroTitle:{bn:"আপনার নির্মাণ স্বপ্নের",en:"The right plan for"},
   waBtn:{bn:"WhatsApp-এ কথা বলুন",en:"Chat on WhatsApp"},
   waBtn2:{bn:"WhatsApp-এ যোগাযোগ করুন",en:"Contact on WhatsApp"},
@@ -1026,7 +1073,17 @@ function draft(){return store.get('ns_draft',{})}
 function saveDraft(d){store.set('ns_draft',d)}
 function bookings(){return store.get('ns_bookings',[])}
 function slotsCfg(){return store.get('ns_slots',SLOT_TIMES.slice())}
-function bookedKeys(){return new Set(bookings().map(b=>b.date+"|"+b.time))}
+let _serverBusyKeys=null;
+async function fetchBusyKeys(){
+  try{
+    const res=await fetch('api/bookings.php?busy=1',{cache:'no-store'});
+    if(res.ok){_serverBusyKeys=await res.json();if(STEPS[step]==="schedule")renderSchedule()}
+  }catch(e){ /* keep going with local-only knowledge */ }
+}
+function bookedKeys(){
+  const local=bookings().map(b=>b.date+"|"+b.time);
+  return new Set(local.concat(_serverBusyKeys||[]));
+}
 function waHref(msg){return"https://wa.me/"+contactData().wa+(msg?("?text="+encodeURIComponent(msg)):"")}
 function bdPhoneValid(v){return /^(?:\+?880|0)1[3-9]\d{8}$/.test((v||"").replace(/[\s-]/g,''))}
 function modeLabel(m){return m==='zoom'?'Zoom Meeting':(m==='call'?'সরাসরি ফোন কল':'WhatsApp Call')}
@@ -1201,7 +1258,7 @@ function go(view){
   $$(".botnav a").forEach(a=>a.classList.toggle("on",a.dataset.nav===view));
   window.scrollTo({top:0,behavior:"auto"});
   if(view==="dashboard")renderDash();
-  if(view==="admin")renderAdmin();
+  if(view==="admin")enterAdmin();
   if(view==="problem")renderProblem();
   history.replaceState(null,"","#/"+view);
 }
@@ -1355,6 +1412,7 @@ function renderFlow(){
         <button class="btn btn-ink" onclick="next()" id="schNext" ${D.time?'':'disabled style=opacity:.4'}>${t('nextStep')}</button></div>
     </div>`;
     renderSchedule();
+    fetchBusyKeys();
   }
   else if(STEPS[step]==="mode"){
     body.innerHTML=`<div class="flowstep">
@@ -1468,7 +1526,15 @@ function payFail(){
   openModal(`<h3>${t('payFailT')}</h3><p style="color:var(--graphite);margin-top:10px">${t('payFailP')}</p>
     <button class="btn btn-ink" style="margin-top:16px" onclick="closeModal()">${t('payRetry')}</button>`);
 }
-function nextId(){let n=store.get('ns_counter',122)+1;store.set('ns_counter',n);return"NS-2026-"+String(n).padStart(6,"0")}
+function nextId(){
+  // Timestamp+random rather than a simple local counter: bookings now come
+  // from many different visitors' browsers, so IDs must be collision-free
+  // without needing to coordinate with a server first.
+  const y=new Date().getFullYear();
+  const t=Date.now().toString(36).toUpperCase();
+  const r=Math.random().toString(36).slice(2,5).toUpperCase();
+  return"NS-"+y+"-"+t+r;
+}
 function confirmBooking(){
   const p=prices();
   const b={
@@ -1486,6 +1552,9 @@ function confirmBooking(){
   };
   const all=bookings(); all.unshift(b); store.set('ns_bookings',all);
   store.set('ns_draft',{}); // clear draft
+  fetch('api/bookings.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({booking:b})})
+    .then(r=>{if(!r.ok)throw new Error('failed')})
+    .catch(()=>showToast(t('syncFailed')));
   renderSuccess(b); go('success');
 }
 function zoomId(){return String(Math.floor(1e9+Math.random()*8e9))}
@@ -1583,17 +1652,48 @@ const ADM_TABS=[
   ['slots','সময়সূচি'],['team','পরামর্শক দল'],['trust','বিশ্বাসযোগ্যতা'],['faq','প্রশ্নোত্তর'],['reviews','গ্রাহক মতামত'],
   ['contact','যোগাযোগ তথ্য'],['bookings','বুকিং তালিকা']
 ];
-let _adm=false,_admTab='dash';
+let _adm=false,_admTab='dash',_adminBookings=null;
 function sessionFlag(){return _adm}
-function admLogin(){if($("#admPass").value==="archcell"){_adm=true;_admTab='dash';renderAdmin()}else{openModal(`<h3>ভুল পাসকোড</h3><p style="margin-top:8px">আবার চেষ্টা করুন। ডেমো পাসকোড: archcell</p><button class="btn btn-ink" style="margin-top:14px" onclick="closeModal()">ঠিক আছে</button>`)}}
-function admLogout(){_adm=false;renderAdmin()}
+async function enterAdmin(){
+  if(!_adm){
+    try{
+      const res=await fetch('api/auth.php',{credentials:'include',cache:'no-store'});
+      if(res.ok){const d=await res.json();if(d&&d.authed)_adm=true}
+    }catch(e){ /* backend unreachable — fall back to the login form */ }
+  }
+  renderAdmin();
+  if(_adm)fetchAdminBookings();
+}
+async function admLogin(){
+  const btn=event?event.target:null;const pass=$("#admPass").value;
+  if(btn){btn.disabled=true}
+  try{
+    const res=await fetch('api/auth.php',{method:'POST',headers:{'Content-Type':'application/json'},
+      credentials:'include',body:JSON.stringify({password:pass})});
+    if(res.ok){_adm=true;_admTab='dash';renderAdmin();fetchAdminBookings();return}
+  }catch(e){}
+  if(btn)btn.disabled=false;
+  openModal(`<h3>ভুল পাসকোড</h3><p style="margin-top:8px">আবার চেষ্টা করুন, অথবা ইন্টারনেট সংযোগ পরীক্ষা করুন।</p><button class="btn btn-ink" style="margin-top:14px" onclick="closeModal()">ঠিক আছে</button>`);
+}
+function admLogout(){
+  _adm=false;_adminBookings=null;renderAdmin();
+  fetch('api/auth.php',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'include',
+    body:JSON.stringify({action:'logout'})}).catch(()=>{});
+}
 function admGo(tab){_admTab=tab;renderAdmin()}
+async function fetchAdminBookings(){
+  try{
+    const res=await fetch('api/bookings.php',{credentials:'include',cache:'no-store'});
+    if(res.ok){_adminBookings=await res.json();if(_adm)renderAdmin()}
+  }catch(e){ /* keep showing whatever we had (or the local fallback) */ }
+}
+function adminBookingsData(){return _adminBookings!==null?_adminBookings:bookings()}
 
 function renderAdmin(){
   const authed=sessionFlag();
   if(!authed){$("#admBody").innerHTML=`<div class="dcard"><b>অ্যাডমিন প্রবেশ</b>
-    <p style="color:var(--grey);font-size:13px;margin-top:6px">ডেমো পাসকোড: <b>archcell</b> (প্রকৃত অ্যাপে সার্ভার-সাইড নিরাপদ লগইন)</p>
-    <div class="field"><input id="admPass" type="password" placeholder="পাসকোড"></div>
+    <p style="color:var(--grey);font-size:13px;margin-top:6px">আপনার পাসকোড দিয়ে প্রবেশ করুন।</p>
+    <div class="field"><input id="admPass" type="password" placeholder="পাসকোড" onkeydown="if(event.key==='Enter')admLogin()"></div>
     <button class="btn btn-ink" onclick="admLogin()">প্রবেশ করুন</button></div>`;return}
   $("#admBody").innerHTML=`
     <div class="adm-shell">
@@ -1609,7 +1709,7 @@ function admPanelHTML(tab){
 
 /* dashboard overview */
 function admDash(){
-  const all=bookings();
+  const all=adminBookingsData();
   const done=all.filter(b=>b.status==='done').length;
   const active=all.filter(b=>b.status!=='done').length;
   const weekAgo=Date.now()-7*24*3600*1000;
@@ -1646,6 +1746,10 @@ function admDash(){
           <span style="color:var(--grey)">→</span>
         </button>`).join('')}
       </div>
+    </div>
+    <div class="dcard" style="margin-top:16px"><b>সার্ভারের সাথে সিঙ্ক</b>
+      <p style="color:var(--grey);font-size:12px;margin-top:6px">এই ব্রাউজারে সংরক্ষিত সব কনটেন্ট (হিরো, সেবা, প্যাকেজ, টিম ইত্যাদি) এখনই সার্ভারে জোর করে পাঠাতে চাইলে ব্যবহার করুন — সাধারণত প্রয়োজন হয় না, কারণ প্রতিটি পরিবর্তন এমনিতেই সঙ্গে সঙ্গে সার্ভারে যায়।</p>
+      <button class="btn btn-line" style="margin-top:10px" onclick="pushAllToServer()">সব ডেটা সার্ভারে পাঠান</button>
     </div>`;
 }
 
@@ -1756,7 +1860,7 @@ function admMobileVis(){
 }
 function setMobileVis(id,checked){
   const vis=JSON.parse(JSON.stringify(mobileVisData()));vis[id]=checked;
-  store.set('ns_mobile_vis',vis);applyMobileVis();
+  store.set('ns_mobile_vis',vis);applyMobileVis();showToast(t('savedToast'));
 }
 
 /* hero editor */
@@ -1932,8 +2036,9 @@ function admSlots(){
   </div>`;
 }
 function admBookings(){
-  const all=bookings();
+  const all=adminBookingsData();
   return `<div class="dcard"><b>বুকিং তালিকা (${toBn(all.length)})</b>
+    <p style="color:var(--grey);font-size:12px;margin-top:6px">সকল ভিজিটরের বুকিং — সার্ভার থেকে সরাসরি।</p>
     ${all.length?all.map(b=>`<div style="border-top:1px solid var(--line);padding:12px 0;font-size:13.5px">
       <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap">
         <div><b>${b.id}</b> · ${esc(b.serviceName)}<br><span style="color:var(--grey)">${esc(b.name)} · ${esc(b.mobile)} · ${b.dateLabel} ${b.time} · ${taka(b.fee)}${b.emergency?' · <span style="color:var(--clay)">জরুরি</span>':''}</span></div>
@@ -1945,10 +2050,17 @@ function admBookings(){
   </div>`;
 }
 function setBookingStatus(id,status){
-  const all=bookings();const b=all.find(x=>x.id===id);if(!b)return;
-  b.status=status;store.set('ns_bookings',all);renderAdmin();
+  if(_adminBookings){const b=_adminBookings.find(x=>x.id===id);if(b)b.status=status}
+  renderAdmin();showToast(t('savedToast'));
+  fetch('api/bookings.php',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'include',
+    body:JSON.stringify({action:'status',id,status})})
+    .then(r=>{if(!r.ok)throw new Error('failed')})
+    .catch(()=>showToast(t('syncFailed')));
+  // keep this browser's own local copy in sync too, in case it's the same device that made the booking
+  const localAll=bookings();const lb=localAll.find(x=>x.id===id);
+  if(lb){lb.status=status;store.set('ns_bookings',localAll)}
 }
-function setPrice(id,v){const p=store.get('ns_prices',{});p[id]=Math.max(0,parseInt(v)||0);store.set('ns_prices',p);renderPkgCards()}
+function setPrice(id,v){const p=store.get('ns_prices',{});p[id]=Math.max(0,parseInt(v)||0);store.set('ns_prices',p);renderPkgCards();showToast(t('savedToast'))}
 function setSlot(i,v){const arr=slotsCfg().slice();v=v.trim();arr[i]=v||arr[i];store.set('ns_slots',arr);renderAdmin();showToast(t('savedToast'))}
 function addSlot(){const arr=slotsCfg().slice();arr.push('12:00 PM');store.set('ns_slots',arr);renderAdmin()}
 function removeSlot(i){const arr=slotsCfg().slice();arr.splice(i,1);store.set('ns_slots',arr.length?arr:SLOT_TIMES.slice());renderAdmin()}
@@ -1963,7 +2075,8 @@ document.addEventListener("keydown",e=>{if(e.key==="Escape")closeModal()});
 function esc(s){return(s==null?"":String(s)).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
 
 /* init */
-function boot(){
+async function boot(){
+  await pullFromServer();
   setTextSize(store.get('ns_textsize',1));
   tickClock();setInterval(tickClock,1000);
   applyLang();
