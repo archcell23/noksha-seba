@@ -701,7 +701,7 @@ footer .fine{margin-top:14px;font-size:12px;color:var(--faint)}
 "use strict";
 /* ---------- resilient store (localStorage + in-memory fallback) ---------- */
 const store=(()=>{let mem={};let ok=false;try{localStorage.setItem('__t','1');localStorage.removeItem('__t');ok=true}catch(e){}
-  return{get(k,d){try{if(ok){const v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}}catch(e){}return(k in mem)?mem[k]:d},
+  return{get(k,d){try{if(ok){const v=localStorage.getItem(k);if(v==null)return d;const parsed=JSON.parse(v);return parsed===null?d:parsed}}catch(e){}return(k in mem)?mem[k]:d},
   set(k,v){try{if(ok){localStorage.setItem(k,JSON.stringify(v))}}catch(e){}mem[k]=v;
     if(SYNC_KEY_MAP[k])syncContentKey(SYNC_KEY_MAP[k],v);
   }}})();

@@ -37,7 +37,14 @@ if ($method === 'POST') {
     if (!is_array($content)) {
         $content = array();
     }
-    $content[$key] = $value;
+    // Storing a literal null would make every future reader of this key
+    // get null instead of its normal default -- treat "save null" as
+    // "clear this key" instead, so it's as if nothing was ever saved here.
+    if ($value === null) {
+        unset($content[$key]);
+    } else {
+        $content[$key] = $value;
+    }
 
     if (!ns_write_guarded_json('content.php', $content)) {
         ns_json_response(array('error' => 'write_failed'), 500);
