@@ -1768,10 +1768,10 @@ function admDash(){
 function admSite(){
   const s=siteSettingsData();
   return `<div class="dcard"><b>ব্র্যান্ড / লোগো</b>
-    <p style="color:var(--grey);font-size:12px;margin-top:6px">কম্পিউটার থেকে ছবি আপলোড করুন অথবা একটি ইমেজ URL দিন। খালি রাখলে ডিফল্ট আইকন দেখাবে।</p>
-    ${imageField('লোগো ইমেজ',s.logoUrl,'logoUrl')}
+    <p style="color:var(--grey);font-size:12px;margin-top:6px">কম্পিউটার থেকে ছবি আপলোড করুন অথবা একটি ইমেজ URL দিন। খালি রাখলে ডিফল্ট আইকন দেখাবে। <b>লোগোর জন্য:</b> PNG ফরম্যাট (স্বচ্ছ ব্যাকগ্রাউন্ড, ধারালো লেখা) এবং কমপক্ষে ৩০০ পিক্সেল চওড়া ছবি ব্যবহার করুন — নাহলে বড় স্ক্রিনে ঝাপসা দেখাবে।</p>
+    ${imageField('লোগো ইমেজ',s.logoUrl,'logoUrl',300,120)}
     ${s.logoUrl?logoSizeField(s.logoSize||42):''}
-    ${imageField('ফেভিকন (ব্রাউজার ট্যাব আইকন)',s.faviconUrl,'faviconUrl')}
+    ${imageField('ফেভিকন (ব্রাউজার ট্যাব আইকন)',s.faviconUrl,'faviconUrl',32,32)}
   </div>
   <div class="dcard" style="margin-top:14px"><b>ফুটার বিবরণ</b>
     ${biField('ফুটার টেক্সট',s.footerDesc,lang=>`setSiteField('footerDesc','${lang}',this.value)`,true)}
@@ -1795,7 +1795,7 @@ function setLogoSize(px){
   const s=JSON.parse(JSON.stringify(siteSettingsData()));s.logoSize=px;
   store.set('ns_site',s);renderSiteSettingsPublic();renderAdmin();showToast(t('savedToast'));
 }
-function imageField(label,val,field){
+function imageField(label,val,field,minW,minH){
   if(val){
     return `<div class="field"><label>${label}</label>
       <div style="display:flex;align-items:center;gap:12px;background:var(--field);border-radius:10px;padding:10px">
@@ -1808,19 +1808,39 @@ function imageField(label,val,field){
   return `<div class="field"><label>${label}</label>
     <div class="row-btns">
       <label class="btn btn-line btn-sm inline" style="cursor:pointer">কম্পিউটার থেকে আপলোড
-        <input type="file" accept="image/*" style="display:none" onchange="uploadSiteImage('${field}',this.files[0])">
+        <input type="file" accept="image/*" style="display:none" onchange="uploadSiteImage('${field}',this.files[0],${minW||0},${minH||0})">
       </label>
     </div>
     <input style="margin-top:8px" onchange="setSiteField('${field}',this.value)" placeholder="অথবা ছবির URL পেস্ট করুন">
   </div>`;
 }
-function uploadSiteImage(field,file){
+let _pendingUpload=null;
+function uploadSiteImage(field,file,minW,minH){
   if(!file)return;
   if(!file.type.startsWith('image/')){openModal(`<h3>শুধু ছবি ফাইল</h3><p style="color:var(--graphite);margin-top:10px">অনুগ্রহ করে JPG, PNG বা WEBP ফরম্যাটের একটি ছবি বেছে নিন।</p><button class="btn btn-ink" style="margin-top:16px" onclick="closeModal()">${t('okBtn')}</button>`);return}
-  if(file.size>400*1024){openModal(`<h3>ছবিটি অনেক বড়</h3><p style="color:var(--graphite);margin-top:10px">অনুগ্রহ করে ৪০০ কিলোবাইটের ছোট একটি ছবি বেছে নিন (লোগো/ফেভিকনের জন্য ছোট, অপ্টিমাইজড ছবিই যথেষ্ট)।</p><button class="btn btn-ink" style="margin-top:16px" onclick="closeModal()">${t('okBtn')}</button>`);return}
+  if(file.size>800*1024){openModal(`<h3>ছবিটি অনেক বড়</h3><p style="color:var(--graphite);margin-top:10px">অনুগ্রহ করে ৮০০ কিলোবাইটের ছোট একটি ছবি বেছে নিন (একটি ভালো অপ্টিমাইজড লোগো/ফেভিকনের জন্য এটি যথেষ্ট)।</p><button class="btn btn-ink" style="margin-top:16px" onclick="closeModal()">${t('okBtn')}</button>`);return}
   const reader=new FileReader();
-  reader.onload=()=>{setSiteField(field,reader.result)};
+  reader.onload=()=>{
+    const dataUrl=reader.result;
+    if(!minW){setSiteField(field,dataUrl);return}
+    const img=new Image();
+    img.onload=()=>{
+      if(img.naturalWidth<minW||img.naturalHeight<minH){
+        _pendingUpload={field,dataUrl};
+        openModal(`<h3>ছবিটি রেজোলিউশনে ছোট</h3><p style="color:var(--graphite);margin-top:10px">এই ছবিটি মাত্র <b>${img.naturalWidth}×${img.naturalHeight}</b> পিক্সেল — বড় স্ক্রিনে (বিশেষত মোবাইলে) ঝাপসা দেখাবে। অন্তত <b>${minW}×${minH}</b> পিক্সেলের একটি ছবি সুপারিশ করা হচ্ছে।</p>
+          <div class="row-btns" style="margin-top:16px"><button class="btn btn-line" onclick="closeModal()">বাতিল করুন</button><button class="btn btn-ink" onclick="confirmSmallUpload()">তবুও ব্যবহার করি</button></div>`);
+      }else{
+        setSiteField(field,dataUrl);
+      }
+    };
+    img.onerror=()=>setSiteField(field,dataUrl);
+    img.src=dataUrl;
+  };
   reader.readAsDataURL(file);
+}
+function confirmSmallUpload(){
+  if(_pendingUpload){setSiteField(_pendingUpload.field,_pendingUpload.dataUrl);_pendingUpload=null}
+  closeModal();
 }
 function clearSiteImage(field){setSiteField(field,'')}
 function setSiteField(f,a,b){
