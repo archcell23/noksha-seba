@@ -897,6 +897,7 @@ const I18N={
   bnHome:{bn:"হোম",en:"Home"}, bnServices:{bn:"সেবা",en:"Services"}, bnBooking:{bn:"বুকিং",en:"Book"}, bnContact:{bn:"যোগাযোগ",en:"Contact"},
   emptyFiles:{bn:"এখনো কোনো ফাইল যোগ করা হয়নি (ঐচ্ছিক)।",en:"No files added yet (optional)."},
   savedToast:{bn:"✓ তথ্য সংরক্ষিত হয়েছে",en:"✓ Your info has been saved"},
+  refreshedToast:{bn:"✓ সার্ভার থেকে সর্বশেষ তথ্য আনা হয়েছে",en:"✓ Refreshed with the latest server data"},
   emptyBookings:{bn:"এখনো কোনো বুকিং নেই।",en:"No bookings yet."},
   firstBooking:{bn:"আপনার প্রথম পরামর্শ বুক করুন।",en:"Book your first consultation."},
   today:{bn:"আজ",en:"Today"}, tomorrow:{bn:"আগামীকাল",en:"Tomorrow"}, thisWeek:{bn:"এই সপ্তাহ",en:"This week"},
@@ -1899,6 +1900,12 @@ async function enterAdmin(){
       if(res.ok){const d=await res.json();if(d&&d.authed)_adm=true}
     }catch(e){ /* backend unreachable — fall back to the login form */ }
   }
+  // Content is only pulled once at page load (boot()); if this admin tab
+  // has been open a while, edits from elsewhere (another device/tab, or
+  // just time passing in a long session) wouldn't be reflected here, and
+  // saving from that stale view would silently overwrite the newer data.
+  // Re-pulling fresh on every admin entry keeps that staleness window short.
+  if(_adm)await pullFromServer();
   renderAdmin();
   if(_adm)fetchAdminBookings();
 }
@@ -2330,8 +2337,12 @@ let _galleryEditIdx=null;
 function admGallery(){
   const arr=galleryData();
   if(_galleryEditIdx!==null&&arr[_galleryEditIdx])return admGalleryEdit(_galleryEditIdx,arr);
-  return `<div class="dcard"><b>প্রকল্প গ্যালারি (${toBn(arr.length)})</b>
-    <p style="color:var(--grey);font-size:12px;margin-top:6px">শুধু প্রকৃত সম্পন্ন প্রকল্পের ছবি যোগ করুন। কোনো ছবি না থাকলে গ্যালারি সেকশনটি হোমপেজে দেখানো হবে না — শুধু প্রকল্পের ধরনের তালিকা দেখাবে।</p>
+  return `<div class="dcard">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap">
+      <b>প্রকল্প গ্যালারি (${toBn(arr.length)})</b>
+      <button class="btn btn-line btn-sm" style="width:auto;padding:7px 14px" onclick="refreshGalleryFromServer()">⟳ রিফ্রেশ</button>
+    </div>
+    <p style="color:var(--grey);font-size:12px;margin-top:6px">শুধু প্রকৃত সম্পন্ন প্রকল্পের ছবি যোগ করুন। কোনো ছবি না থাকলে গ্যালারি সেকশনটি হোমপেজে দেখানো হবে না — শুধু প্রকল্পের ধরনের তালিকা দেখাবে। অন্য ডিভাইস থেকে সম্পাদনা করে থাকলে এডিট করার আগে রিফ্রেশ করে নিন।</p>
     <div style="overflow-x:auto;margin-top:14px">
       <table style="width:100%;border-collapse:collapse;font-size:13px;min-width:600px">
         <thead><tr style="text-align:left;color:var(--grey);font-size:11px;text-transform:uppercase;letter-spacing:.04em">
@@ -2614,6 +2625,11 @@ function removeGalleryItem(i){
   _galleryEditIdx=null;renderAdmin();
 }
 function editGalleryProject(i){_galleryEditIdx=i;renderAdmin()}
+async function refreshGalleryFromServer(){
+  await pullFromServer();
+  renderGallery();renderAdmin();
+  showToast(t('refreshedToast'));
+}
 function moveGalleryProject(i,dir){
   const a=JSON.parse(JSON.stringify(galleryData()));
   const ni=i+dir;
