@@ -245,6 +245,8 @@ h1,h2,h3{font-family:var(--serif);font-weight:700;line-height:1.28;letter-spacin
 .gallery-filters button.on{background:var(--green);color:#fff;border-color:var(--green)}
 .gallery-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:16px}
 .gallery-item{position:relative;border-radius:var(--r-s);overflow:hidden;aspect-ratio:1/1;background:var(--field);border:1px solid var(--line);cursor:pointer}
+.gimg-cell.gdrag-over{outline:3px solid var(--green);outline-offset:-3px;border-radius:8px}
+.gimg-cell.gdrag-src{opacity:.4}
 .gallery-item img{width:100%;height:100%;object-fit:cover;display:block}
 .gallery-item .gi-label{position:absolute;left:0;right:0;bottom:0;background:linear-gradient(0deg,rgba(15,26,18,.82),transparent);
   color:#fff;padding:22px 10px 9px;font-size:12.5px;font-weight:700;line-height:1.3}
@@ -2234,7 +2236,8 @@ function admGallery(){
       ${biField('বিবরণ',x.desc,lang=>`setGalleryField(${i},'desc','${lang}',this.value)`,true)}
       <div style="margin-top:14px"><label style="display:block;font-size:14px;font-weight:600;margin-bottom:8px">অতিরিক্ত ছবি (${toBn(imgs.length)}/${toBn(GALLERY_MAX_IMAGES)}) <span class="opt">— প্রকল্পে ট্যাপ করলে সবগুলো ছবি দেখা যাবে</span></label>
         ${imgs.length?`<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px">
-          ${imgs.map((im,gi)=>`<div style="position:relative"><img src="${esc(im)}" style="width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:8px">
+          ${imgs.map((im,gi)=>`<div class="gimg-cell" data-proj="${i}" data-img="${gi}" style="position:relative"><img src="${esc(im)}" draggable="false" style="width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:8px">
+            <button class="gdrag-handle" style="position:absolute;top:-6px;left:-6px;width:24px;height:24px;border-radius:50%;background:var(--green-dark);color:#fff;font-size:13px;line-height:1;cursor:grab;touch-action:none" aria-label="টেনে সাজান">⠿</button>
             <button style="position:absolute;top:-6px;right:-6px;width:22px;height:22px;border-radius:50%;background:var(--clay);color:#fff;font-size:12px;line-height:1" onclick="removeGalleryImage(${i},${gi})">✕</button>
             <div style="position:absolute;bottom:4px;left:4px;right:4px;display:flex;justify-content:space-between;gap:4px">
               <button ${gi===0?'disabled':''} style="width:22px;height:22px;border-radius:6px;background:rgba(17,24,39,.72);color:#fff;font-size:12px;line-height:1;opacity:${gi===0?'.35':'1'}" onclick="moveGalleryImage(${i},${gi},-1)" aria-label="আগে সরান">◀</button>
@@ -2369,6 +2372,54 @@ function moveGalleryImage(i,gi,dir){
   a[i].images=imgs;
   store.set('ns_gallery',a);renderGallery();renderAdmin();
 }
+function reorderGalleryImage(i,from,to){
+  const a=JSON.parse(JSON.stringify(galleryData()));
+  const imgs=a[i].images||[];
+  if(from<0||from>=imgs.length||to<0||to>=imgs.length||from===to)return;
+  const moved=imgs.splice(from,1)[0];
+  imgs.splice(to,0,moved);
+  a[i].images=imgs;
+  store.set('ns_gallery',a);renderGallery();renderAdmin();
+}
+/* Drag-and-drop reordering (mouse + touch via Pointer Events, delegated on
+   #admBody since it gets replaced by innerHTML on every admin re-render).
+   The ◀▶ buttons stay as the tap-only fallback. */
+let _gdrag=null;
+function galleryDragStart(e){
+  const handle=e.target.closest('.gdrag-handle');
+  if(!handle)return;
+  const cell=handle.closest('.gimg-cell');
+  if(!cell)return;
+  e.preventDefault();
+  _gdrag={proj:+cell.dataset.proj,from:+cell.dataset.img,cell};
+  cell.classList.add('gdrag-src');
+  handle.setPointerCapture(e.pointerId);
+}
+function galleryDragMove(e){
+  if(!_gdrag)return;
+  e.preventDefault();
+  document.querySelectorAll('.gimg-cell.gdrag-over').forEach(c=>c.classList.remove('gdrag-over'));
+  const el=document.elementFromPoint(e.clientX,e.clientY);
+  const cell=el&&el.closest('.gimg-cell');
+  if(cell&&+cell.dataset.proj===_gdrag.proj&&cell!==_gdrag.cell)cell.classList.add('gdrag-over');
+}
+function galleryDragEnd(e){
+  if(!_gdrag)return;
+  document.querySelectorAll('.gimg-cell.gdrag-over').forEach(c=>c.classList.remove('gdrag-over'));
+  _gdrag.cell.classList.remove('gdrag-src');
+  const el=document.elementFromPoint(e.clientX,e.clientY);
+  const cell=el&&el.closest('.gimg-cell');
+  const proj=_gdrag.proj,from=_gdrag.from;
+  _gdrag=null;
+  if(cell&&+cell.dataset.proj===proj){
+    const to=+cell.dataset.img;
+    if(to!==from)reorderGalleryImage(proj,from,to);
+  }
+}
+document.addEventListener('pointerdown',galleryDragStart);
+document.addEventListener('pointermove',galleryDragMove);
+document.addEventListener('pointerup',galleryDragEnd);
+document.addEventListener('pointercancel',galleryDragEnd);
 function setGalleryField(i,f,lang,v){
   const a=JSON.parse(JSON.stringify(galleryData()));a[i][f][lang]=v;
   store.set('ns_gallery',a);renderGallery();showToast(t('savedToast'));
