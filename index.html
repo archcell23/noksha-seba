@@ -522,11 +522,7 @@ footer .fine{margin-top:14px;font-size:12px;color:var(--faint)}
         <a class="btn btn-outline-invert" id="heroWa" data-i18n="waBtn">WhatsApp-এ কথা বলুন</a>
       </div>
       <div class="hero-call"><a id="heroCallLink" href="tel:">☎ WhatsApp নেই? সরাসরি কল করুন</a></div>
-      <div class="assure">
-        <span><i></i><span data-i18n="assure1">স্বচ্ছ পরামর্শ ফি</span></span>
-        <span><i></i><span data-i18n="assure2">নিরাপদ পেমেন্ট</span></span>
-        <span><i></i><span data-i18n="assure3">ড্রয়িং ডিজিটাল ডেলিভারি</span></span>
-      </div>
+      <div class="assure" id="assureRow"></div>
       <div class="hero-dots" id="heroDots">
         <button data-i="0" onclick="jumpHero(0)" aria-label="স্লাইড ১"></button>
         <button data-i="1" onclick="jumpHero(1)" aria-label="স্লাইড ২"></button>
@@ -766,7 +762,7 @@ const store=(()=>{let mem={};let ok=false;try{localStorage.setItem('__t','1');lo
 /* ---------- server sync (admin-editable content only; bookings have their own flow) ---------- */
 const SYNC_KEY_MAP={ns_hero:'hero',ns_services:'services',ns_trust:'trust',ns_team:'team',
   ns_faq:'faq',ns_reviews:'reviews',ns_gallery:'gallery',ns_prices:'prices',ns_slots:'slots',ns_pkg_dur:'pkg_dur',ns_pkg_feat:'pkg_feat',
-  ns_nav_order:'nav_order',ns_nav_mobile:'nav_mobile',ns_site:'site',ns_mobile_vis:'mobile_vis',ns_contact:'contact',ns_botnav:'bot_nav'};
+  ns_nav_order:'nav_order',ns_nav_mobile:'nav_mobile',ns_site:'site',ns_mobile_vis:'mobile_vis',ns_contact:'contact',ns_botnav:'bot_nav',ns_assure:'assure'};
 function syncContentKey(key,value){
   fetch('api/content.php',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'include',
     body:JSON.stringify({key,value})})
@@ -836,8 +832,6 @@ const I18N={
   waBtn2:{bn:"WhatsApp-এ যোগাযোগ করুন",en:"Contact on WhatsApp"},
   callBtn2:{bn:"☎ সরাসরি কল করুন",en:"☎ Call us directly"},
   heroCallPrefix:{bn:"☎ WhatsApp নেই? সরাসরি কল করুন — ",en:"☎ No WhatsApp? Call us directly — "},
-  assure1:{bn:"স্বচ্ছ পরামর্শ ফি",en:"Transparent fees"}, assure2:{bn:"নিরাপদ পেমেন্ট",en:"Secure payment"},
-  assure3:{bn:"ড্রয়িং ডিজিটাল ডেলিভারি",en:"Digital drawing delivery"},
   scrollDown:{bn:"নিচে যান",en:"Scroll down"},
   eyebrowServices:{bn:"সেবাসমূহ",en:"Services"},
   svcHeading:{bn:"পাঁচটি প্রকৌশল সেবা, এক প্ল্যাটফর্মে",en:"Five engineering services, one platform"},
@@ -1011,6 +1005,12 @@ const DEF_HERO={
     {accent:{bn:"ঘরে বসেই বিশেষজ্ঞ পরামর্শ",en:"expert advice from home"},sub:{bn:"WhatsApp অথবা Zoom-এ সরাসরি কথা বলুন — কোনো ভ্রমণ বা অপেক্ষা ছাড়াই।",en:"Talk directly over WhatsApp or Zoom — no travel, no waiting."}}
   ]
 };
+const DEF_ASSURE=[
+  {bn:"স্বচ্ছ পরামর্শ ফি",en:"Transparent fees"},
+  {bn:"নিরাপদ পেমেন্ট",en:"Secure payment"},
+  {bn:"ড্রয়িং ডিজিটাল ডেলিভারি",en:"Digital drawing delivery"}
+];
+function assureData(){return store.get('ns_assure',DEF_ASSURE)}
 const SVC_ICONS={
   arch:'<path d="M3 21h18M5 21V9l7-5 7 5v12M9 21v-6h6v6"/>',
   struct:'<path d="M4 20V6l8-3 8 3v14M4 20h16M8 20v-8h8v8M8 12V8m8 4V8"/>',
@@ -1382,7 +1382,7 @@ function applyMobileVis(){
 }
 function renderSiteContent(){
   renderHeroBadges();renderServices();renderTrust();renderTeam();renderFaqList();renderReviews();renderGallery();renderContactPoints();renderProjectChips();
-  renderNavDesk();renderSiteSettingsPublic();applyMobileVis();renderBotNav();
+  renderNavDesk();renderSiteSettingsPublic();applyMobileVis();renderBotNav();renderAssure();
 }
 function renderBotNav(){
   const d=botNavData();
@@ -1391,6 +1391,10 @@ function renderBotNav(){
     const span=a.querySelector('span');
     if(span&&d[k])span.textContent=bi(d[k]);
   });
+}
+function renderAssure(){
+  const el=$("#assureRow");if(!el)return;
+  el.innerHTML=assureData().map(a=>`<span><i></i><span>${esc(bi(a))}</span></span>`).join('');
 }
 
 /* ---------- land unit help ---------- */
@@ -2230,6 +2234,14 @@ function admHero(){
     </div>`).join('')}
     <button class="btn btn-line" style="margin-top:16px" onclick="addHeroBadge()">+ নতুন ব্যাজ যোগ করুন</button>
   </div>
+  <div class="dcard" style="margin-top:14px"><b>আশ্বাস লাইন (${toBn(assureData().length)})</b>
+    <p style="color:var(--grey);font-size:12px;margin-top:6px">বুকিং বাটনের নিচে দেখানো ছোট আশ্বাস বাক্যগুলো (যেমন "নিরাপদ পেমেন্ট")।</p>
+    ${assureData().map((a,i)=>`<div style="border-top:1px solid var(--line);padding-top:14px;margin-top:14px">
+      ${biField('লাইন '+toBn(i+1),a,lang=>`setAssureItem(${i},'${lang}',this.value)`)}
+      <button class="btn btn-ghost" style="color:var(--clay);margin-top:6px" onclick="removeAssureItem(${i})">মুছে ফেলুন</button>
+    </div>`).join('')}
+    <button class="btn btn-line" style="margin-top:16px" onclick="addAssureItem()">+ নতুন লাইন যোগ করুন</button>
+  </div>
   <div class="dcard" style="margin-top:14px"><b>হিরো রোটেটিং স্লাইড (${toBn(h.slides.length)})</b>
     <p style="color:var(--grey);font-size:12px;margin-top:6px">হেডলাইন ও সাবটেক্সট প্রতি কয়েক সেকেন্ড পরপর পালাক্রমে দেখানো হয়।</p>
     ${h.slides.map((s,i)=>`<div style="border-top:1px solid var(--line);padding-top:14px;margin-top:14px">
@@ -2243,6 +2255,9 @@ function admHero(){
 function setHeroBadge(i,lang,v){const h=JSON.parse(JSON.stringify(heroData()));h.badges[i][lang]=v;store.set('ns_hero',h);renderHeroBadges();showToast(t('savedToast'))}
 function setHeroBadgeLink(i,v){const h=JSON.parse(JSON.stringify(heroData()));h.badges[i].link=v;store.set('ns_hero',h);renderHeroBadges();showToast(t('savedToast'))}
 function addHeroBadge(){const h=JSON.parse(JSON.stringify(heroData()));h.badges.push({bn:'🔧 নতুন ব্যাজ',en:'🔧 New badge'});store.set('ns_hero',h);renderHeroBadges();renderAdmin()}
+function setAssureItem(i,lang,v){const a=JSON.parse(JSON.stringify(assureData()));a[i][lang]=v;store.set('ns_assure',a);renderAssure();showToast(t('savedToast'))}
+function addAssureItem(){const a=JSON.parse(JSON.stringify(assureData()));a.push({bn:'নতুন লাইন',en:'New line'});store.set('ns_assure',a);renderAssure();renderAdmin()}
+function removeAssureItem(i){const a=JSON.parse(JSON.stringify(assureData()));a.splice(i,1);store.set('ns_assure',a);renderAssure();renderAdmin()}
 function removeHeroBadge(i){const h=JSON.parse(JSON.stringify(heroData()));h.badges.splice(i,1);store.set('ns_hero',h);renderHeroBadges();renderAdmin()}
 function setHeroSlideField(i,field,lang,v){const h=JSON.parse(JSON.stringify(heroData()));h.slides[i][field][lang]=v;store.set('ns_hero',h);clearInterval(heroT);startHeroCarousel();showToast(t('savedToast'))}
 function addHeroSlide(){

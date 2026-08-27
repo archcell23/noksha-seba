@@ -24,7 +24,7 @@ if ($method === 'POST') {
     // fields into the content store.
     $allowed = array(
         'hero', 'services', 'trust', 'team', 'faq', 'reviews', 'gallery',
-        'prices', 'slots', 'pkg_dur', 'pkg_feat', 'nav_order', 'nav_mobile', 'site', 'mobile_vis', 'contact', 'bot_nav',
+        'prices', 'slots', 'pkg_dur', 'pkg_feat', 'nav_order', 'nav_mobile', 'site', 'mobile_vis', 'contact', 'bot_nav', 'assure',
     );
     if (!in_array($key, $allowed, true)) {
         ns_json_response(array('error' => 'invalid_key'), 400);
