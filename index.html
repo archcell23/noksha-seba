@@ -1245,8 +1245,9 @@ function renderGallery(){
   const activeType=_galleryFilterIdx>=0?bi(types[_galleryFilterIdx]):null;
   const visible=arr.map((item,i)=>({item,i})).filter(({item})=>activeType===null||(item.type&&bi(item.type)===activeType));
   grid.innerHTML=visible.map(({item,i})=>{const extra=(item.images||[]).length;
+    const coverSrc=item.cover||(item.images&&item.images[0])||'';
     return `<div class="gallery-item" onclick="openGalleryItem(${i})">
-    ${item.cover?`<img src="${esc(item.cover)}" alt="${esc(bi(item.title))}">`:''}
+    ${coverSrc?`<img src="${esc(coverSrc)}" alt="${esc(bi(item.title))}">`:''}
     ${extra?`<span class="gi-count">+${toBn(extra)}</span>`:''}
     ${item.type?`<span class="gi-type">${esc(bi(item.type))}</span>`:''}
     ${item.title?`<span class="gi-label">${esc(bi(item.title))}</span>`:''}
@@ -2222,7 +2223,7 @@ function admGallery(){
   return `<div class="dcard"><b>প্রকল্প গ্যালারি (${toBn(arr.length)})</b>
     <p style="color:var(--grey);font-size:12px;margin-top:6px">শুধু প্রকৃত সম্পন্ন প্রকল্পের ছবি যোগ করুন। কোনো ছবি না থাকলে গ্যালারি সেকশনটি হোমপেজে দেখানো হবে না — শুধু প্রকল্পের ধরনের তালিকা দেখাবে।</p>
     ${arr.length?arr.map((x,i)=>{const imgs=x.images||[];return `<div style="border-top:1px solid var(--line);padding-top:14px;margin-top:14px">
-      ${galleryCoverField(i,x.cover)}
+      ${galleryCoverField(i,x.cover,imgs.length>0)}
       ${biField('প্রকল্পের নাম',x.title,lang=>`setGalleryField(${i},'title','${lang}',this.value)`)}
       <div class="field"><label>প্রকল্পের ধরন</label>
         <select onchange="setGalleryType(${i},this.value)">
@@ -2236,8 +2237,8 @@ function admGallery(){
           ${imgs.map((im,gi)=>`<div style="position:relative"><img src="${esc(im)}" style="width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:8px">
             <button style="position:absolute;top:-6px;right:-6px;width:22px;height:22px;border-radius:50%;background:var(--clay);color:#fff;font-size:12px;line-height:1" onclick="removeGalleryImage(${i},${gi})">✕</button>
             <div style="position:absolute;bottom:4px;left:4px;right:4px;display:flex;justify-content:space-between;gap:4px">
-              <button ${gi===0?'disabled style="opacity:.35"':''} style="width:22px;height:22px;border-radius:6px;background:rgba(17,24,39,.72);color:#fff;font-size:12px;line-height:1" onclick="moveGalleryImage(${i},${gi},-1)" aria-label="আগে সরান">◀</button>
-              <button ${gi===imgs.length-1?'disabled style="opacity:.35"':''} style="width:22px;height:22px;border-radius:6px;background:rgba(17,24,39,.72);color:#fff;font-size:12px;line-height:1" onclick="moveGalleryImage(${i},${gi},1)" aria-label="পরে সরান">▶</button>
+              <button ${gi===0?'disabled':''} style="width:22px;height:22px;border-radius:6px;background:rgba(17,24,39,.72);color:#fff;font-size:12px;line-height:1;opacity:${gi===0?'.35':'1'}" onclick="moveGalleryImage(${i},${gi},-1)" aria-label="আগে সরান">◀</button>
+              <button ${gi===imgs.length-1?'disabled':''} style="width:22px;height:22px;border-radius:6px;background:rgba(17,24,39,.72);color:#fff;font-size:12px;line-height:1;opacity:${gi===imgs.length-1?'.35':'1'}" onclick="moveGalleryImage(${i},${gi},1)" aria-label="পরে সরান">▶</button>
             </div>
           </div>`).join('')}
         </div>`:''}
@@ -2250,7 +2251,7 @@ function admGallery(){
     <button class="btn btn-line" style="margin-top:16px" onclick="addGalleryItem()">+ নতুন প্রকল্প যোগ করুন</button>
   </div>`;
 }
-function galleryCoverField(i,val){
+function galleryCoverField(i,val,hasImages){
   if(val){
     return `<div class="field"><label>কভার ছবি</label>
       <div style="display:flex;align-items:center;gap:12px;background:var(--field);border-radius:10px;padding:10px">
@@ -2260,10 +2261,13 @@ function galleryCoverField(i,val){
       </div>
     </div>`;
   }
-  return `<div class="field"><label>কভার ছবি <span class="opt">(গ্যালারিতে থাম্বনেইল হিসেবে দেখাবে)</span></label>
-    <label class="btn btn-line btn-sm inline" style="cursor:pointer">কম্পিউটার থেকে আপলোড
-      <input type="file" accept="image/*" style="display:none" onchange="uploadGalleryCover(${i},this.files[0])">
-    </label>
+  return `<div class="field"><label>কভার ছবি <span class="opt">(গ্যালারিতে থাম্বনেইল হিসেবে দেখাবে — কভার না দিলে প্রথম অতিরিক্ত ছবিটি স্বয়ংক্রিয়ভাবে দেখানো হবে)</span></label>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <label class="btn btn-line btn-sm inline" style="cursor:pointer">কম্পিউটার থেকে আপলোড
+        <input type="file" accept="image/*" style="display:none" onchange="uploadGalleryCover(${i},this.files[0])">
+      </label>
+      ${hasImages?`<button class="btn btn-line btn-sm" onclick="useFirstImageAsCover(${i})">প্রথম ছবিটি কভার করুন</button>`:''}
+    </div>
   </div>`;
 }
 function galleryImgTooBig(){openModal(`<h3>ছবিটি অনেক বড়</h3><p style="color:var(--graphite);margin-top:10px">অনুগ্রহ করে ২০ মেগাবাইটের ছোট একটি ছবি বেছে নিন।</p><button class="btn btn-ink" style="margin-top:16px" onclick="closeModal()">${t('okBtn')}</button>`)}
@@ -2280,6 +2284,12 @@ function setGalleryCover(i,val){
   store.set('ns_gallery',a);renderGallery();renderAdmin();showToast(t('savedToast'));
 }
 function clearGalleryCover(i){setGalleryCover(i,'')}
+function useFirstImageAsCover(i){
+  const a=JSON.parse(JSON.stringify(galleryData()));
+  if(!a[i].images||!a[i].images.length)return;
+  a[i].cover=a[i].images[0];
+  store.set('ns_gallery',a);renderGallery();renderAdmin();showToast(t('savedToast'));
+}
 function readFileAsDataURL(file){
   return new Promise((resolve,reject)=>{
     const reader=new FileReader();
