@@ -409,6 +409,22 @@ footer .fine{margin-top:14px;font-size:12px;color:var(--faint)}
 .sheet h3{font-size:20px}
 .sheet .safe-ic{width:46px;height:46px;border-radius:12px;background:var(--clay);color:#fff;display:grid;place-items:center;font-size:24px;margin-bottom:14px}
 
+/* ---------- fullscreen photo lightbox ---------- */
+.lightbox{position:fixed;inset:0;z-index:70;background:rgba(8,10,9,.97);display:none;flex-direction:column}
+.lightbox.on{display:flex}
+.lb-stage{position:relative;flex:1;display:flex;align-items:center;justify-content:center;overflow:hidden;touch-action:pan-y}
+.lb-stage img{max-width:100%;max-height:100%;object-fit:contain;user-select:none;-webkit-user-drag:none}
+.lb-close{position:absolute;top:calc(14px + env(safe-area-inset-top));right:14px;width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.14);color:#fff;font-size:17px;z-index:2}
+.lb-counter{position:absolute;top:calc(20px + env(safe-area-inset-top));left:16px;color:#fff;font-size:12.5px;background:rgba(255,255,255,.14);padding:4px 12px;border-radius:20px;z-index:2}
+.lb-counter.hidden,.lb-nav.hidden{display:none}
+.lb-nav{position:absolute;top:50%;transform:translateY(-50%);width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,.14);color:#fff;font-size:24px;line-height:1;z-index:2}
+.lb-prev{left:8px}.lb-next{right:8px}
+.lb-caption{padding:14px 22px calc(14px + env(safe-area-inset-bottom));color:#fff;text-align:center}
+.lb-caption:empty{padding:0}
+.lb-caption .lb-type{color:var(--green-tint2);font-size:12px;font-weight:700;letter-spacing:.02em}
+.lb-caption .lb-title{font-size:15px;font-weight:700;margin-top:2px}
+.lb-caption .lb-desc{font-size:13px;color:var(--faint);margin-top:6px;line-height:1.5}
+
 /* ---------- toast ---------- */
 .toast{position:fixed;left:50%;bottom:84px;transform:translateX(-50%) translateY(20px);z-index:70;
   background:var(--ink);color:var(--paper);font-size:13px;font-weight:600;padding:9px 18px;border-radius:30px;
@@ -719,6 +735,16 @@ footer .fine{margin-top:14px;font-size:12px;color:var(--faint)}
 
 <!-- ================= MODAL ================= -->
 <div class="modal" id="modal"><div class="sheet" id="sheet" role="dialog" aria-modal="true"></div></div>
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true">
+  <button class="lb-close" id="lbClose" aria-label="বন্ধ করুন">✕</button>
+  <div class="lb-counter" id="lbCounter"></div>
+  <div class="lb-stage" id="lbStage">
+    <img id="lbImg" alt="">
+    <button class="lb-nav lb-prev" id="lbPrev" aria-label="আগের ছবি">‹</button>
+    <button class="lb-nav lb-next" id="lbNext" aria-label="পরের ছবি">›</button>
+  </div>
+  <div class="lb-caption" id="lbCaption"></div>
+</div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script>
@@ -1259,12 +1285,8 @@ function setGalleryFilter(i){_galleryFilterIdx=i;renderGallery()}
 function openGalleryItem(i){
   const item=galleryData()[i];if(!item)return;
   const photos=[item.cover].concat(item.images||[]).filter(Boolean);
-  openModal(`<h3>${esc(bi(item.title))}</h3>
-    ${item.type?`<div style="color:var(--green-dark);font-size:12.5px;font-weight:700;margin-top:4px">${esc(bi(item.type))}</div>`:''}
-    ${item.desc&&bi(item.desc)?`<p style="color:var(--graphite);font-size:14px;margin-top:10px">${esc(bi(item.desc))}</p>`:''}
-    ${photos.length?`<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:14px">
-      ${photos.map((p,pi)=>`<img src="${esc(p)}" alt="${esc(bi(item.title))} ${toBn(pi+1)}" style="width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:10px">`).join('')}
-    </div>`:''}`);
+  if(!photos.length)return;
+  openLightbox(photos,0,bi(item.title),item.type?bi(item.type):'',item.desc?bi(item.desc):'');
 }
 function renderContactPoints(){
   const c=contactData();
@@ -2528,7 +2550,55 @@ function removeSlot(i){const arr=slotsCfg().slice();arr.splice(i,1);store.set('n
 function openModal(html){$("#sheet").innerHTML=html;$("#modal").classList.add("on")}
 function closeModal(){$("#modal").classList.remove("on")}
 $("#modal").addEventListener("click",e=>{if(e.target.id==="modal")closeModal()});
-document.addEventListener("keydown",e=>{if(e.key==="Escape"){closeModal();closeMobilePreview()}});
+
+/* ---------- fullscreen photo lightbox ---------- */
+let _lb={photos:[],idx:0,title:'',type:'',desc:''};
+function openLightbox(photos,idx,title,type,desc){
+  if(!photos||!photos.length)return;
+  _lb={photos,idx:Math.max(0,Math.min(idx||0,photos.length-1)),title:title||'',type:type||'',desc:desc||''};
+  renderLightbox();
+  $("#lightbox").classList.add('on');
+  document.body.style.overflow='hidden';
+}
+function closeLightbox(){
+  $("#lightbox").classList.remove('on');
+  document.body.style.overflow='';
+}
+function renderLightbox(){
+  const img=$("#lbImg");
+  img.src=_lb.photos[_lb.idx];
+  img.alt=_lb.title||'';
+  const multi=_lb.photos.length>1;
+  $("#lbCounter").textContent=`${toBn(_lb.idx+1)} / ${toBn(_lb.photos.length)}`;
+  $("#lbCounter").classList.toggle('hidden',!multi);
+  $("#lbPrev").classList.toggle('hidden',!multi);
+  $("#lbNext").classList.toggle('hidden',!multi);
+  $("#lbCaption").innerHTML=(_lb.title||_lb.type||_lb.desc)?
+    `${_lb.type?`<div class="lb-type">${esc(_lb.type)}</div>`:''}${_lb.title?`<div class="lb-title">${esc(_lb.title)}</div>`:''}${_lb.desc?`<div class="lb-desc">${esc(_lb.desc)}</div>`:''}`:'';
+}
+function lightboxNext(){_lb.idx=(_lb.idx+1)%_lb.photos.length;renderLightbox()}
+function lightboxPrev(){_lb.idx=(_lb.idx-1+_lb.photos.length)%_lb.photos.length;renderLightbox()}
+$("#lbClose").addEventListener('click',closeLightbox);
+$("#lbNext").addEventListener('click',lightboxNext);
+$("#lbPrev").addEventListener('click',lightboxPrev);
+$("#lbStage").addEventListener('click',e=>{if(e.target===e.currentTarget)closeLightbox()});
+let _lbSwipeX=null;
+$("#lbStage").addEventListener('pointerdown',e=>{_lbSwipeX=e.clientX});
+$("#lbStage").addEventListener('pointerup',e=>{
+  if(_lbSwipeX===null)return;
+  const dx=e.clientX-_lbSwipeX;
+  _lbSwipeX=null;
+  if(Math.abs(dx)>40)(dx>0?lightboxPrev:lightboxNext)();
+});
+document.addEventListener("keydown",e=>{
+  if($("#lightbox").classList.contains('on')){
+    if(e.key==="Escape")closeLightbox();
+    else if(e.key==="ArrowRight")lightboxNext();
+    else if(e.key==="ArrowLeft")lightboxPrev();
+    return;
+  }
+  if(e.key==="Escape"){closeModal();closeMobilePreview()}
+});
 
 /* hide the floating WhatsApp button while actively scrolling so it never
    sits visually on top of page content mid-scroll; reappears once
