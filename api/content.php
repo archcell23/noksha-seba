@@ -23,7 +23,7 @@ if ($method === 'POST') {
     // Allowlist keeps this endpoint from being used to write arbitrary
     // fields into the content store.
     $allowed = array(
-        'hero', 'services', 'trust', 'team', 'faq', 'reviews',
+        'hero', 'services', 'trust', 'team', 'faq', 'reviews', 'gallery',
         'prices', 'slots', 'pkg_dur', 'pkg_feat', 'nav_order', 'nav_mobile', 'site', 'mobile_vis', 'contact',
     );
     if (!in_array($key, $allowed, true)) {
