@@ -924,12 +924,20 @@ const I18N={
   sumTime:{bn:"সময়",en:"Time"}, sumMode:{bn:"মাধ্যম",en:"Mode"}, sumTotal:{bn:"মোট ফি",en:"Total fee"},
   labelPayMethod:{bn:"পেমেন্ট মাধ্যম",en:"Payment method"},
   paySslTitle:{bn:"SSLCOMMERZ",en:"SSLCOMMERZ"}, paySslDesc:{bn:"কার্ড ও ব্যাংক চ্যানেল",en:"Card & bank channels"},
-  payBkashTitle:{bn:"bKash",en:"bKash"}, payBkashDesc:{bn:"মোবাইল পেমেন্ট",en:"Mobile payment"},
+  payBkashTitle:{bn:"bKash",en:"bKash"}, payBkashDesc:{bn:"Send Money",en:"Send Money"},
+  payNagadTitle:{bn:"Nagad",en:"Nagad"}, payNagadDesc:{bn:"Send Money",en:"Send Money"},
   paynote:{bn:"🔒 আপনার পেমেন্ট নিরাপদ গেটওয়েতে যাচাই করা হয়। কোনো কার্ড তথ্য, PIN বা OTP এই সাইটে সংরক্ষণ করা হয় না।",en:"🔒 Your payment is verified through a secure gateway. No card details, PIN or OTP are stored on this site."},
-  demoNote:{bn:"⚙ <b>ডেমো:</b> প্রকৃত পেমেন্ট SSLCOMMERZ/bKash সার্ভার-সাইডে যাচাই হবে। এখানে ফলাফল সিমুলেট করা হচ্ছে।",en:"⚙ <b>Demo:</b> real payments would be verified server-side via SSLCOMMERZ/bKash. The result here is simulated."},
+  demoNote:{bn:"⚙ <b>ডেমো:</b> প্রকৃত পেমেন্ট SSLCOMMERZ সার্ভার-সাইডে যাচাই হবে। এখানে ফলাফল সিমুলেট করা হচ্ছে।",en:"⚙ <b>Demo:</b> real payments would be verified server-side via SSLCOMMERZ. The result here is simulated."},
   payBtn:{bn:" — পে করুন",en:" — Pay now"},
   payFailSim:{bn:"পেমেন্ট ব্যর্থ (ডেমো)",en:"Simulate payment failure (demo)"},
   payVerifying:{bn:"যাচাই হচ্ছে…",en:"Verifying…"},
+  sendMoneyTitle:{bn:"Send Money করুন",en:"Send Money"},
+  sendMoneyHelp:{bn:"অ্যাপে <b>\"Send Money\"</b> অপশনটি বেছে নিন (Payment নয়) এবং নিচের ব্যক্তিগত নম্বরে টাকা পাঠান। রেফারেন্স হিসেবে আপনার নাম লিখুন।",en:"In the app, choose <b>\"Send Money\"</b> (not Payment) and send to the personal number below. Add your name as the reference."},
+  sendMoneyAmount:{bn:"পাঠানোর পরিমাণ",en:"Amount to send"},
+  copyNumber:{bn:"কপি করুন",en:"Copy"},
+  copiedToast:{bn:"নম্বর কপি হয়েছে",en:"Number copied"},
+  manualPaidBtn:{bn:"টাকা পাঠিয়েছি — বুকিং সম্পন্ন করুন",en:"I've sent the money — complete booking"},
+  manualPayNote:{bn:"⚠ এই মুহূর্তে Send Money লেনদেন স্বয়ংক্রিয়ভাবে যাচাই করা হয় না — টাকা পাঠানোর পর আমরা হাতে-কলমে যাচাই করে WhatsApp-এ বুকিং নিশ্চিত করব।",en:"⚠ Send Money transfers aren't verified automatically right now — after you send it, we'll verify it manually and confirm your booking over WhatsApp."},
   needInfoT:{bn:"কিছু তথ্য প্রয়োজন",en:"A few details are needed"},
   needInfoP:{bn:"অনুগ্রহ করে অন্তত <b>নাম</b> ও <b>মোবাইল নম্বর</b> দিন — বুকিং নিশ্চিত করতে এগুলো প্রয়োজন।",en:"Please provide at least your <b>name</b> and <b>mobile number</b> — these are needed to confirm the booking."},
   okBtn:{bn:"ঠিক আছে",en:"OK"},
@@ -948,7 +956,9 @@ const I18N={
   payFailP:{bn:"লেনদেন যাচাই করা যায়নি। অনুগ্রহ করে আবার চেষ্টা করুন।",en:"The transaction could not be verified. Please try again."},
   payRetry:{bn:"পুনরায় পেমেন্ট করুন",en:"Retry payment"},
   successHeading:{bn:"আপনার অ্যাপয়েন্টমেন্ট নিশ্চিত হয়েছে",en:"Your appointment is confirmed"},
+  successHeadingPending:{bn:"আপনার বুকিং সংরক্ষিত হয়েছে",en:"Your booking has been saved"},
   paidFee:{bn:"পরিশোধিত ফি",en:"Fee paid"},
+  feeDue:{bn:"প্রদেয় ফি",en:"Fee due"},
   waOpen:{bn:"WhatsApp খুলুন",en:"Open WhatsApp"},
   zoomView:{bn:"Zoom দেখুন",en:"View Zoom"},
   callNow:{bn:"এখনই কল করুন",en:"Call now"},
@@ -957,6 +967,7 @@ const I18N={
   downloadReceipt:{bn:"রসিদ ডাউনলোড করুন",en:"Download receipt"},
   goToDash:{bn:"আমার প্রকল্পে যান",en:"Go to my bookings"},
   successNote:{bn:"একটি WhatsApp নিশ্চিতকরণ বার্তা প্রস্তুত করা হয়েছে। উপরের বাটনে ট্যাপ করে পাঠিয়ে দিন।",en:"A WhatsApp confirmation message has been prepared. Tap the button above to send it."},
+  successNotePending:{bn:"টাকা প্রাপ্তি যাচাই করার পর আমরা WhatsApp-এ বুকিং নিশ্চিত করব। উপরের বাটনে ট্যাপ করে এখনই আমাদের জানিয়ে রাখুন, তাহলে দ্রুত যাচাই করা যাবে।",en:"We'll confirm your booking over WhatsApp after verifying the payment. Tap the button above to let us know now so we can verify quickly."},
   statConfirmed:{bn:"বুকিং নিশ্চিত",en:"Confirmed"}, statDone:{bn:"সম্পন্ন",en:"Completed"}, statWait:{bn:"পেমেন্ট অপেক্ষমাণ",en:"Payment pending"},
   receiptBtn:{bn:"রসিদ",en:"Receipt"},
 };
@@ -977,7 +988,7 @@ function setLang(l){if(l===LANG)return;LANG=l;store.set('ns_lang',l);applyLang()
 const DEFAULT_PRICES={quick:800,detail:1500,project:3500};
 
 /* ---------- editable site content (admin-managed, localStorage-backed) ---------- */
-const DEF_CONTACT={wa:"8801711034941",call:"+8801711034941",email:"arch_cell@yahoo.com",ref:"archcellbd.com"};
+const DEF_CONTACT={wa:"8801711034941",call:"+8801711034941",email:"arch_cell@yahoo.com",ref:"archcellbd.com",payNumber:"01711034941"};
 const DEF_HERO={
   badges:[
     {bn:"🏠 স্থাপত্য পরামর্শ",en:"🏠 Architecture consultation"},
@@ -1601,6 +1612,8 @@ function renderFlow(){
   else if(STEPS[step]==="payment"){
     const pk=PKGS.find(x=>x.id===D.package)||PKGS[0];
     const fee=p[D.package]||0;
+    const c=contactData();
+    const manual=D.pay==='bkash'||D.pay==='nagad';
     body.innerHTML=`<div class="flowstep">
       <div class="dim left"><span class="tick"></span>${stepOf(7)}</div>
       <h2>${t('step7Title')}</h2>
@@ -1616,15 +1629,37 @@ function renderFlow(){
         <div class="pickgrid">
           <button class="pick ${D.pay==='sslc'?'on':''}" onclick="setField('pay','sslc');renderFlow()"><span class="ic">🏦</span><span><b>${t('paySslTitle')}</b><span>${t('paySslDesc')}</span></span></button>
           <button class="pick ${D.pay==='bkash'?'on':''}" onclick="setField('pay','bkash');renderFlow()"><span class="ic">📱</span><span><b>${t('payBkashTitle')}</b><span>${t('payBkashDesc')}</span></span></button>
+          <button class="pick ${D.pay==='nagad'?'on':''}" onclick="setField('pay','nagad');renderFlow()"><span class="ic">📱</span><span><b>${t('payNagadTitle')}</b><span>${t('payNagadDesc')}</span></span></button>
         </div>
       </div>
+      ${manual?`
+      <div class="field" style="margin-top:16px"><label>${t('sendMoneyTitle')} — ${D.pay==='nagad'?t('payNagadTitle'):t('payBkashTitle')}</label>
+        <p style="color:var(--graphite);font-size:13.5px;margin-top:4px">${t('sendMoneyHelp')}</p>
+        <div style="display:flex;align-items:center;gap:10px;background:var(--field);border-radius:12px;padding:14px;margin-top:10px">
+          <div style="flex:1">
+            <div style="font-size:11.5px;color:var(--grey)">${t('sendMoneyAmount')}: ${taka(fee)}</div>
+            <div style="font-size:20px;font-weight:800;direction:ltr;letter-spacing:.02em;margin-top:2px">${esc(c.payNumber)}</div>
+          </div>
+          <button class="btn btn-line btn-sm" style="width:auto;padding:10px 14px;flex:none" onclick="copyPayNumber('${esc(c.payNumber)}')">${t('copyNumber')}</button>
+        </div>
+      </div>
+      <div class="demo-ribbon">⚠ <span>${t('manualPayNote')}</span></div>
+      <div class="flow-actions"><button class="back-min" onclick="prev()">${t('prevStep')}</button>
+        <button class="btn btn-ink" onclick="confirmBookingManual()">${t('manualPaidBtn')}</button></div>
+      `:`
       <div class="paynote">${t('paynote')}</div>
       <div class="demo-ribbon">⚙ <span>${t('demoNote')}</span></div>
       <div class="flow-actions"><button class="back-min" onclick="prev()">${t('prevStep')}</button>
-        <button class="btn btn-ink" onclick="pay()" ${D.pay?'':'disabled style=opacity:.4'}>${taka(fee)}${t('payBtn')}</button></div>
+        <button class="btn btn-ink" onclick="pay()" ${D.pay==='sslc'?'':'disabled style=opacity:.4'}>${taka(fee)}${t('payBtn')}</button></div>
       <button class="btn-ghost" style="margin:12px auto 0;display:block" onclick="payFail()">${t('payFailSim')}</button>
+      `}
     </div>`;
   }
+}
+function copyPayNumber(num){
+  (navigator.clipboard&&navigator.clipboard.writeText?navigator.clipboard.writeText(num):Promise.reject())
+    .then(()=>showToast(t('copiedToast')))
+    .catch(()=>{});
 }
 function svcIcon(k){const m={
  arch:'<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#1B1E22" stroke-width="1.6"><path d="M3 21h18M5 21V9l7-5 7 5v12"/></svg>',
@@ -1702,10 +1737,10 @@ function nextId(){
   const r=Math.random().toString(36).slice(2,5).toUpperCase();
   return"NS-"+y+"-"+t+r;
 }
-function confirmBooking(){
+function confirmBooking(status){
   const p=prices();
   const b={
-    id:nextId(), created:Date.now(), status:"confirmed",
+    id:nextId(), created:Date.now(), status:status||"confirmed",
     service:D.service, serviceName:SVC()[D.service],
     package:D.package, packageName:bi((PKGS.find(x=>x.id===D.package)||{}).name),
     fee:p[D.package]||0, name:D.name, mobile:D.mobile,
@@ -1714,7 +1749,7 @@ function confirmBooking(){
     ptype:D.ptype||"", land:(D.land?D.land+" "+(D.landUnit||""):""), area:D.area||"",
     problem:D.problem||"", files:(D.files||[]).map(f=>f.name),
     date:D.date, dateLabel:D.dateLabel, time:D.time, mode:D.mode,
-    emergency:!!D.emergency,
+    emergency:!!D.emergency, payMethod:D.pay||"",
     zoom:D.mode==='zoom'?{id:zoomId(),url:"https://zoom.us/j/"+zoomId()}:null
   };
   const all=bookings(); all.unshift(b); store.set('ns_bookings',all);
@@ -1724,13 +1759,21 @@ function confirmBooking(){
     .catch(()=>showToast(t('syncFailed')));
   renderSuccess(b); go('success');
 }
+// bKash/Nagad personal-number Send Money can't be verified automatically
+// (unlike a real merchant gateway), so this books as "pending" and relies
+// on manual verification instead of pretending the payment is confirmed.
+function confirmBookingManual(){confirmBooking("pending")}
 function zoomId(){return String(Math.floor(1e9+Math.random()*8e9))}
 
 function renderSuccess(b){
-  const waMsg=`নকশা সেবা\nআপনার পরামর্শ বুকিং নিশ্চিত হয়েছে।\nবুকিং নম্বর: ${b.id}\nসেবা: ${b.serviceName}\nতারিখ: ${b.dateLabel}\nসময়: ${b.time} (বাংলাদেশ সময়)\nমাধ্যম: ${modeLabelShort(b.mode)}${b.zoom?'\nZoom: '+b.zoom.url:''}`;
+  const pending=b.status==='pending';
+  const payLabel=b.payMethod==='nagad'?'Nagad':(b.payMethod==='bkash'?'bKash':'');
+  const waMsg=pending
+    ?`নকশা সেবা\nআমার বুকিং সম্পন্ন হয়েছে এবং ${payLabel} Send Money-এর মাধ্যমে টাকা পাঠানো হয়েছে।\nবুকিং নম্বর: ${b.id}\nসেবা: ${b.serviceName}\nপরিমাণ: ৳${b.fee}\nঅনুগ্রহ করে যাচাই করে নিশ্চিত করুন।`
+    :`নকশা সেবা\nআপনার পরামর্শ বুকিং নিশ্চিত হয়েছে।\nবুকিং নম্বর: ${b.id}\nসেবা: ${b.serviceName}\nতারিখ: ${b.dateLabel}\nসময়: ${b.time} (বাংলাদেশ সময়)\nমাধ্যম: ${modeLabelShort(b.mode)}${b.zoom?'\nZoom: '+b.zoom.url:''}`;
   $("#successBody").innerHTML=`<div class="success">
     <div class="check"><svg viewBox="0 0 24 24"><path d="M4 12l5 5L20 6"/></svg></div>
-    <h2>${t('successHeading')}</h2>
+    <h2>${pending?t('successHeadingPending'):t('successHeading')}</h2>
     <div class="bid">${b.id}</div>
     <div class="summary grid" style="text-align:right">
       <div class="r"><span>${t('sumService')}</span><b>${b.serviceName}</b></div>
@@ -1739,7 +1782,7 @@ function renderSuccess(b){
       <div class="r"><span>${t('sumTime')}</span><b>${b.time} · ${t('bdTime')}</b></div>
       <div class="r"><span>${t('sumMode')}</span><b>${modeLabel(b.mode)}</b></div>
       ${b.zoom?`<div class="r"><span>Zoom</span><b style="direction:ltr;font-size:12.5px">${b.zoom.url}</b></div>`:''}
-      <div class="r total"><span>${t('paidFee')}</span><b>${taka(b.fee)}</b></div>
+      <div class="r total"><span>${pending?t('feeDue'):t('paidFee')}</span><b>${taka(b.fee)}</b></div>
     </div>
     <div class="actions">
       <a class="btn btn-wa" href="${waHref(waMsg)}">${t('waOpen')}</a>
@@ -1750,7 +1793,7 @@ function renderSuccess(b){
       <button class="btn btn-line" onclick='receipt(${JSON.stringify(b.id)})'>${t('downloadReceipt')}</button>
       <button class="btn btn-ink" onclick="go('dashboard')">${t('goToDash')}</button>
     </div>
-    <p style="color:var(--grey);font-size:12.5px;margin-top:16px">${t('successNote')}</p>
+    <p style="color:var(--grey);font-size:12.5px;margin-top:16px">${pending?t('successNotePending'):t('successNote')}</p>
   </div>`;
 }
 
@@ -1805,7 +1848,7 @@ function receipt(id){
     <div class="rr"><span class="mut">মোবাইল</span><b>${esc(b.mobile)}</b></div>
     <div class="rr"><span class="mut">তারিখ ও সময়</span><b>${b.dateLabel} · ${b.time}</b></div>
     <div class="rr"><span class="mut">মাধ্যম</span><b>${modeLabelShort(b.mode)}</b></div>
-    <div class="rr t"><span>পরিশোধিত ফি</span><b>${taka(b.fee)}</b></div>
+    <div class="rr t"><span>${b.status==='pending'?'প্রদেয় ফি':'পরিশোধিত ফি'}</span><b>${taka(b.fee)}</b></div>
     <p class="mut" style="margin-top:16px;font-size:12px">এই রসিদটি নকশা সেবা কর্তৃক স্বয়ংক্রিয়ভাবে তৈরি। VAT/AIT প্রযোজ্য ক্ষেত্রে NBR বিধি অনুযায়ী।</p>
     <button onclick="print()" style="margin-top:10px;padding:10px 18px">প্রিন্ট / PDF</button></body></html>`);
   w.document.close();
@@ -2471,6 +2514,7 @@ function admContact(){
     <div class="field"><label>কল নম্বর <span class="opt">(যেমন +8801XXXXXXXXX)</span></label><input value="${esc(c.call)}" onchange="setContactField('call',this.value)"></div>
     <div class="field"><label>ই-মেইল</label><input type="email" value="${esc(c.email)}" onchange="setContactField('email',this.value)"></div>
     <div class="field"><label>রেফারেন্স ওয়েবসাইট</label><input value="${esc(c.ref)}" onchange="setContactField('ref',this.value)"></div>
+    <div class="field"><label>bKash / Nagad ব্যক্তিগত নম্বর <span class="opt">(Send Money-এর মাধ্যমে বুকিং পেমেন্টের জন্য দেখানো হবে)</span></label><input value="${esc(c.payNumber)}" onchange="setContactField('payNumber',this.value)"></div>
   </div>`;
 }
 function setContactField(f,v){
@@ -2524,9 +2568,11 @@ function admBookings(){
       <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap">
         <div><b>${b.id}</b> · ${esc(b.serviceName)}<br><span style="color:var(--grey)">${esc(b.name)} · ${esc(b.mobile)} · ${b.dateLabel} ${b.time} · ${taka(b.fee)}${b.emergency?' · <span style="color:var(--clay)">জরুরি</span>':''}</span></div>
         <select style="background:var(--field);border:1.5px solid var(--line2);border-radius:8px;padding:7px 9px;font-size:12.5px;font-weight:600" onchange="setBookingStatus('${b.id}',this.value)">
-          <option value="confirmed" ${b.status==='confirmed'?'selected':''}>নিশ্চিত</option>
+          <option value="pending" ${b.status==='pending'?'selected':''}>পেমেন্ট অপেক্ষমাণ</option>
+          <option value="confirmed" ${b.status==='confirmed'||!b.status?'selected':''}>নিশ্চিত</option>
           <option value="done" ${b.status==='done'?'selected':''}>সম্পন্ন</option>
         </select>
+        ${b.payMethod==='bkash'||b.payMethod==='nagad'?`<span style="color:var(--grey);font-size:11.5px">(${b.payMethod==='nagad'?'Nagad':'bKash'} Send Money)</span>`:''}
       </div></div>`).join(''):'<p style="color:var(--grey);font-size:13px;margin-top:8px">কোনো বুকিং নেই।</p>'}
   </div>`;
 }
