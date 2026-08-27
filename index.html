@@ -138,6 +138,25 @@ h1,h2,h3{font-family:var(--serif);font-weight:700;line-height:1.28;letter-spacin
 .hero-wave{position:absolute;left:0;right:0;bottom:-1px;line-height:0;z-index:1}
 .hero-wave svg{width:100%;height:56px;display:block}
 @media(min-width:760px){.hero{padding-top:70px}.hero-wave svg{height:80px}}
+/* tighter hero on mobile: badges scroll in one row instead of wrapping
+   (which used to leave an odd lone badge centered on its own line), and
+   the stack of vertical margins between elements is trimmed down so the
+   whole hero reads as one compact block instead of a long scroll */
+@media(max-width:759px){
+  .hero{padding-top:36px}
+  .hero-in{padding-bottom:40px}
+  .hero-badges{flex-wrap:nowrap;overflow-x:auto;justify-content:flex-start;gap:7px;
+    margin:0 calc(-1 * var(--sp)) 16px;padding:0 var(--sp) 2px;scrollbar-width:none}
+  .hero-badges::-webkit-scrollbar{display:none}
+  .hbadge{flex:none;font-size:12px;padding:6px 12px}
+  .hero h1{font-size:clamp(24px,7.2vw,32px)}
+  .hero p.sub{font-size:14.5px;margin-top:12px}
+  .hero .actions{margin-top:20px;gap:9px}
+  .hero-call{margin-top:12px}
+  .hero .assure{margin-top:16px;gap:6px 14px;font-size:12.5px}
+  .hero-dots{margin-top:20px}
+  .scrolldown{margin-top:18px}
+}
 
 /* ---------- section frame ---------- */
 .section{padding:38px 0;border-top:1px solid var(--line)}
