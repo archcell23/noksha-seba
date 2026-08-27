@@ -147,8 +147,10 @@ h1,h2,h3{font-family:var(--serif);font-weight:700;line-height:1.28;letter-spacin
 /* ---------- service cards ---------- */
 .svc-grid{display:grid;grid-template-columns:1fr;gap:12px;margin-top:20px}
 .svc{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:20px;
-  display:flex;gap:15px;align-items:flex-start;transition:border-color .15s, transform .1s;text-align:left}
+  display:flex;gap:15px;align-items:flex-start;transition:border-color .15s, transform .1s;text-align:left;position:relative;cursor:pointer}
 .svc:hover{border-color:var(--green-tint2);transform:translateY(-2px);box-shadow:var(--shadow)}
+.item-share{position:absolute;top:10px;right:10px;width:30px;height:30px;border-radius:50%;background:var(--field);color:var(--grey);font-size:13px;display:grid;place-items:center;z-index:2}
+.item-share:hover{background:var(--green-tint);color:var(--green-dark)}
 .svc .ic{width:46px;height:46px;border-radius:12px;background:var(--green-tint);display:grid;place-items:center;flex:none}
 .svc .ic svg{width:24px;height:24px;stroke:var(--green-dark);fill:none;stroke-width:1.6}
 .svc h3{font-size:19px;font-family:var(--sans);font-weight:700}
@@ -1326,10 +1328,11 @@ function renderServices(){
   const d=servicesData();
   $("#svcGrid").innerHTML=Object.keys(DEF_SERVICES).map(k=>{
     const s=d[k]||DEF_SERVICES[k];
-    return `<button class="svc" onclick="startBooking('${k}')">
+    return `<div class="svc" onclick="startBooking('${k}')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();startBooking('${k}')}" role="button" tabindex="0">
+      <button class="item-share" onclick="event.stopPropagation();shareServiceLink('${k}')" aria-label="${esc(t('shareLinkBtn'))}">🔗</button>
       <span class="ic"><svg viewBox="0 0 24 24">${SVC_ICONS[k]}</svg></span>
       <span><h3>${esc(bi(s.title))}</h3><p>${esc(bi(s.desc))}</p><span class="go">${t('svcGo')}</span></span>
-    </button>`;
+    </div>`;
   }).join('');
 }
 function renderTrust(){
@@ -1371,16 +1374,29 @@ function renderReviews(){
     </div>`;
   }).join('')+ctaHtml;
 }
-async function shareFeedbackLink(){
-  const url=location.origin+location.pathname+'#/feedback';
+function siteUrl(hashPath){return location.origin+location.pathname+'#'+hashPath}
+async function shareLink(url,title){
   if(navigator.share){
-    try{await navigator.share({title:t('fbModalTitle'),url});return}
+    try{await navigator.share({title,url});return}
     catch(e){return} // user cancelled the native share sheet -- don't also fall through to a copy toast
   }
   try{
     await navigator.clipboard.writeText(url);
     showToast(t('linkCopiedToast'));
   }catch(e){}
+}
+function shareFeedbackLink(){shareLink(siteUrl('/feedback'),t('fbModalTitle'))}
+function shareServiceLink(key){
+  const d=servicesData();const s=(d[key]||DEF_SERVICES[key]);if(!s)return;
+  shareLink(siteUrl('/service/'+key),bi(s.title));
+}
+function sharePackageLink(id){
+  const pk=PKGS.find(x=>x.id===id);if(!pk)return;
+  shareLink(siteUrl('/package/'+id),bi(pk.name));
+}
+function shareGalleryLink(i){
+  const item=galleryData()[i];if(!item)return;
+  shareLink(siteUrl('/project/'+i),bi(item.title));
 }
 function openFeedbackForm(){
   openModal(`<h3>${esc(t('fbModalTitle'))}</h3>
@@ -1455,7 +1471,8 @@ function openGalleryItem(i){
     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:16px">
       ${photos.map((p,pi)=>`<img src="${esc(p)}" alt="${esc(bi(item.title))} ${toBn(pi+1)}" style="width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:10px;cursor:pointer" onclick="openGalleryPhotoAt(${i},${pi})">`).join('')}
     </div>
-    <a class="btn btn-wa" style="margin-top:18px" href="${waHref(waMsg)}">${esc(t('projectCtaBtn'))}</a>`);
+    <a class="btn btn-wa" style="margin-top:18px" href="${waHref(waMsg)}">${esc(t('projectCtaBtn'))}</a>
+    <button class="btn btn-ghost" style="margin-top:10px" onclick="shareGalleryLink(${i})">${esc(t('shareLinkBtn'))}</button>`);
 }
 function openGalleryPhotoAt(i,idx){
   const item=galleryData()[i];if(!item)return;
@@ -1615,6 +1632,7 @@ function renderPkgCards(){
   $("#pkgCards").innerHTML=PKGS.map(pk=>`
     <div class="pkg ${pk.pop?'pop':''}">
       ${pk.pop?`<span class="badge">${t('pkgPopular')}</span>`:''}
+      <button class="item-share" onclick="sharePackageLink('${pk.id}')" aria-label="${esc(t('shareLinkBtn'))}">🔗</button>
       <div class="dur">${bi(pkgDur(pk))}</div>
       <h3>${bi(pk.name)}</h3>
       <div class="price">${taka(p[pk.id])}<small>${t('pkgPerSession')}</small></div>
@@ -3217,9 +3235,20 @@ async function boot(){
   tickClock();setInterval(tickClock,1000);
   renderNow();
   const h=(location.hash||"").replace("#/","");
-  if(h==='feedback'){go('home',{replace:true});openFeedbackForm();}
-  else if(h&&document.getElementById("view-"+h))go(h,{replace:true});
+  const isProjectLink=h.indexOf('project/')===0;
+  if(h&&document.getElementById("view-"+h))go(h,{replace:true});
   else go('home',{replace:true});
+
+  if(isProjectLink){
+    // A shared project link needs gallery data specifically, so fetch
+    // everything (including gallery) up front here instead of deferring
+    // it like the normal fast path below does.
+    await pullFromServer();
+    renderNow();
+    renderGallery();
+    openGalleryItem(+h.slice(8));
+    return;
+  }
   // Gallery photos are megabytes of base64 images -- the overwhelming
   // majority of the content payload's size, versus a few KB for
   // everything else combined. Fetching everything-but-gallery first keeps
@@ -3228,6 +3257,9 @@ async function boot(){
   // load separately afterward, without holding up the rest of the page.
   await pullFromServer('exclude=gallery');
   renderNow();
+  if(h==='feedback')openFeedbackForm();
+  else if(h.indexOf('service/')===0)jump('services');
+  else if(h.indexOf('package/')===0)jump('pkgs');
   pullFromServer('only=gallery',15000).then(()=>{
     renderGallery();
     if(current==='admin')renderAdmin();
