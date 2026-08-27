@@ -1268,7 +1268,20 @@ window.addEventListener('popstate',e=>{
   const view=(e.state&&e.state.view)||(location.hash||"").replace("#/","")||'home';
   if(document.getElementById("view-"+view))go(view,{replace:true});
 });
-function jump(id){const e=$("#"+id);if(e)setTimeout(()=>e.scrollIntoView({behavior:"smooth",block:"start"}),60)}
+function jump(id){
+  const e=$("#"+id);if(!e)return;
+  setTimeout(()=>{
+    // plain scrollIntoView doesn't know about the sticky header, so it
+    // lands the target right at the viewport top -- where the header then
+    // sits on top of it, hiding the first bit of content (e.g. the first
+    // service card). Measure the header's actual current height (it
+    // varies: 1 row vs 2, custom logo size, language) and offset for it.
+    const header=$(".topbar");
+    const headerH=header?header.offsetHeight:0;
+    const top=e.getBoundingClientRect().top+window.pageYOffset-headerH-12;
+    window.scrollTo({top,behavior:"smooth"});
+  },60);
+}
 function contactWa(){location.href=waHref("আসসালামু আলাইকুম, নকশা সেবা সম্পর্কে জানতে চাই।")}
 
 /* ---------- packages on home ---------- */
