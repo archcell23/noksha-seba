@@ -64,6 +64,33 @@ if ($method === 'POST') {
         ns_json_response(array('ok' => true));
     }
 
+    if ($action === 'delete') {
+        ns_require_admin();
+        $id = isset($body['id']) ? $body['id'] : '';
+        $found = false;
+        $result = ns_locked_update('bookings.php', array(), function($bookings) use ($id, &$found) {
+            if (!is_array($bookings)) {
+                $bookings = array();
+            }
+            $keep = array();
+            foreach ($bookings as $b) {
+                if (isset($b['id']) && $b['id'] === $id) {
+                    $found = true;
+                } else {
+                    $keep[] = $b;
+                }
+            }
+            return $keep;
+        });
+        if (!$found) {
+            ns_json_response(array('error' => 'not_found'), 404);
+        }
+        if ($result === false) {
+            ns_json_response(array('error' => 'write_failed'), 500);
+        }
+        ns_json_response(array('ok' => true));
+    }
+
     // Creating a booking is public — any visitor completing the booking
     // flow needs to be able to do this without being an admin.
     $booking = isset($body['booking']) ? $body['booking'] : null;

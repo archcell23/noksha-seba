@@ -3063,8 +3063,26 @@ function admBookings(){
           <option value="done" ${b.status==='done'?'selected':''}>সম্পন্ন</option>
         </select>
         ${b.payMethod==='bkash'||b.payMethod==='nagad'?`<span style="color:var(--grey);font-size:11.5px">(${b.payMethod==='nagad'?'Nagad':'bKash'} Send Money)</span>`:''}
+        <button class="btn btn-ghost btn-sm" style="width:auto;padding:6px 10px;color:var(--clay)" onclick="deleteBooking('${b.id}')">মুছুন</button>
       </div></div>`).join(''):'<p style="color:var(--grey);font-size:13px;margin-top:8px">কোনো বুকিং নেই।</p>'}
   </div>`;
+}
+function deleteBooking(id){
+  openModal(`<h3>বুকিং মুছে ফেলবেন?</h3><p style="color:var(--graphite);margin-top:10px">এই বুকিংটি স্থায়ীভাবে মুছে যাবে — এটি পূর্বাবস্থায় ফেরানো যাবে না।</p>
+    <div class="row-btns" style="margin-top:16px">
+      <button class="btn btn-line" onclick="closeModal()">বাতিল</button>
+      <button class="btn btn-clay" onclick="closeModal();confirmDeleteBooking('${id}')">মুছে ফেলুন</button>
+    </div>`);
+}
+async function confirmDeleteBooking(id){
+  if(_adminBookings)_adminBookings=_adminBookings.filter(x=>x.id!==id);
+  renderAdmin();
+  try{
+    const res=await fetch('api/bookings.php',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'include',
+      body:JSON.stringify({action:'delete',id})});
+    if(!res.ok)throw new Error('failed');
+    showToast(t('savedToast'));
+  }catch(e){showToast(t('syncFailed'));fetchAdminBookings();}
 }
 function setBookingStatus(id,status){
   if(_adminBookings){const b=_adminBookings.find(x=>x.id===id);if(b)b.status=status}
