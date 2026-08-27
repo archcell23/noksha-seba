@@ -1647,6 +1647,17 @@ function go(view,opts){
   else{history.pushState({view},"",url)}
 }
 window.addEventListener('popstate',e=>{
+  // If a modal sheet or the fullscreen lightbox is open, the back button
+  // should close just that (most-recently-opened first) instead of
+  // navigating the page underneath -- otherwise pressing back while
+  // browsing a project's photos would silently exit the site, or jump
+  // the page behind it while the overlay stayed visibly open on top.
+  if(_overlayStack.length){
+    const top=_overlayStack[_overlayStack.length-1];
+    if(top==='lightbox')closeLightbox(true);
+    else if(top==='modal')closeModal(true);
+    return;
+  }
   const view=(e.state&&e.state.view)||(location.hash||"").replace("#/","")||'home';
   if(document.getElementById("view-"+view))go(view,{replace:true});
 });
@@ -3072,8 +3083,24 @@ function addSlot(){const arr=slotsCfg().slice();arr.push('12:00 PM');store.set('
 function removeSlot(i){const arr=slotsCfg().slice();arr.splice(i,1);store.set('ns_slots',arr.length?arr:SLOT_TIMES.slice());renderAdmin()}
 
 /* modal */
-function openModal(html){$("#sheet").innerHTML=html;$("#modal").classList.add("on")}
-function closeModal(){$("#modal").classList.remove("on")}
+// Tracks which overlays (modal sheet / fullscreen lightbox) have pushed a
+// history entry, in open order, so the back button can close them one at
+// a time (most recent first) instead of navigating the underlying page --
+// see the popstate handler above.
+let _overlayStack=[];
+function openModal(html){
+  $("#sheet").innerHTML=html;
+  const wasOpen=$("#modal").classList.contains("on");
+  $("#modal").classList.add("on");
+  if(!wasOpen){_overlayStack.push('modal');history.pushState({overlay:'modal'},"",location.href)}
+}
+function closeModal(fromBack){
+  if(!$("#modal").classList.contains("on"))return;
+  $("#modal").classList.remove("on");
+  const idx=_overlayStack.lastIndexOf('modal');
+  if(idx!==-1)_overlayStack.splice(idx,1);
+  if(!fromBack&&idx!==-1)history.back();
+}
 $("#modal").addEventListener("click",e=>{if(e.target.id==="modal")closeModal()});
 
 /* ---------- fullscreen photo lightbox ---------- */
@@ -3082,13 +3109,19 @@ function openLightbox(photos,idx,title,type,desc){
   if(!photos||!photos.length)return;
   _lb={photos,idx:Math.max(0,Math.min(idx||0,photos.length-1)),title:title||'',type:type||'',desc:desc||''};
   renderLightbox();
+  const wasOpen=$("#lightbox").classList.contains('on');
   $("#lightbox").classList.add('on');
   document.body.style.overflow='hidden';
+  if(!wasOpen){_overlayStack.push('lightbox');history.pushState({overlay:'lightbox'},"",location.href)}
 }
-function closeLightbox(){
+function closeLightbox(fromBack){
+  if(!$("#lightbox").classList.contains('on'))return;
   $("#lightbox").classList.remove('on');
   document.body.style.overflow='';
   lbResetZoom(false);
+  const idx=_overlayStack.lastIndexOf('lightbox');
+  if(idx!==-1)_overlayStack.splice(idx,1);
+  if(!fromBack&&idx!==-1)history.back();
 }
 function renderLightbox(){
   const img=$("#lbImg");
