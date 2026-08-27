@@ -622,7 +622,7 @@ footer .fine{margin-top:14px;font-size:12px;color:var(--faint)}
       <div>
         <div data-i18n="footerContactLabel">যোগাযোগ</div>
         <div class="fine" id="footerContact"></div>
-        <div class="fine" data-i18n="footerDemo">© ২০২৬ নকশা সেবা। এই সংস্করণটি একটি কার্যকরী ডেমো প্রোটোটাইপ — পেমেন্ট, Zoom ও WhatsApp API সার্ভার-সাইড সংযোগ প্রয়োজন।</div>
+        <div class="fine" data-i18n="footerCopyright">© ২০২৬ নকশা সেবা।</div>
       </div>
     </div>
   </footer>
@@ -819,7 +819,7 @@ const I18N={
   linkPrivacy:{bn:"গোপনীয়তা নীতি",en:"Privacy Policy"}, linkTerms:{bn:"সেবার শর্তাবলি",en:"Terms of Service"},
   linkRefund:{bn:"ফেরত নীতি",en:"Refund Policy"}, linkAdmin:{bn:"অ্যাডমিন",en:"Admin"},
   footerContactLabel:{bn:"যোগাযোগ",en:"Contact"},
-  footerDemo:{bn:"© ২০২৬ নকশা সেবা। এই সংস্করণটি একটি কার্যকরী ডেমো প্রোটোটাইপ — পেমেন্ট, Zoom ও WhatsApp API সার্ভার-সাইড সংযোগ প্রয়োজন।",en:"© 2026 Noksha Seba. This build is a working demo prototype — payment, Zoom and WhatsApp APIs need server-side integration."},
+  footerCopyright:{bn:"© ২০২৬ নকশা সেবা।",en:"© 2026 Noksha Seba."},
   backBtn:{bn:"← ফিরে যান",en:"← Go back"},
   eyebrowProblem:{bn:"সমস্যা নির্বাচন",en:"Select Problem"},
   problemHeading:{bn:"আপনার সমস্যাটি কী?",en:"What's your problem?"},
@@ -1119,7 +1119,12 @@ function bookedKeys(){
   const local=bookings().map(b=>b.date+"|"+b.time);
   return new Set(local.concat(_serverBusyKeys||[]));
 }
-function waHref(msg){return"https://wa.me/"+contactData().wa+(msg?("?text="+encodeURIComponent(msg)):"")}
+function waHref(msg){
+  // wa.me requires digits only -- no +, spaces, or dashes. Strip
+  // whatever format the admin entered it in, so it works either way.
+  const digits=(contactData().wa||'').replace(/\D/g,'');
+  return"https://wa.me/"+digits+(msg?("?text="+encodeURIComponent(msg)):"");
+}
 function bdPhoneValid(v){return /^(?:\+?880|0)1[3-9]\d{8}$/.test((v||"").replace(/[\s-]/g,''))}
 function modeLabel(m){return m==='zoom'?'Zoom Meeting':(m==='call'?'সরাসরি ফোন কল':'WhatsApp Call')}
 function modeLabelShort(m){return m==='zoom'?'Zoom':(m==='call'?'ফোন কল':'WhatsApp')}
