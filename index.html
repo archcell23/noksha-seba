@@ -19,31 +19,8 @@
   --wa:#25D366; --ok:#16A34A; --warn:#D97706;
   --r:18px; --r-s:12px;
   --sp:clamp(16px,4.5vw,22px);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
--ms-high-contrast-adjust: ';iuytrr
-'
-';8jl79kh6j5h74g3f52ad[poiy|][poiuyrry][opouipoitutee\][poiuyte\][poiuyterry\][poiuytr\]
-';ljkjf7h6g5sfdsw[\p]o[ipuoyih;
-;l'k;jlhkgjh
-o'i;pulykjturhg]';  --serif:'Hind Siliguri',system-ui,'Noto Sans Bengali',sans-serif;
+  --shadow:0 1px 0 rgba(15,26,18,.05), 0 14px 30px -18px rgba(15,26,18,.35);
+  --serif:'Hind Siliguri',system-ui,'Noto Sans Bengali',sans-serif;
   --sans:'Hind Siliguri',system-ui,'Noto Sans Bengali',sans-serif;
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -645,7 +622,7 @@ footer .fine{margin-top:14px;font-size:12px;color:var(--faint)}
 <!-- ================= BOOKING FLOW ================= -->
 <section id="view-booking" class="view hidden">
   <div class="wrap flow">
-    <button class="back-min" data-i18n="cancelBtn" onclick="go('home')">← বাতিল</button>
+    <button class="back-min" data-i18n="cancelBtn" onclick="cancelBooking()">← বাতিল</button>
     <div class="dimbar" id="dimbar"></div>
     <div id="flowBody"></div>
   </div>
@@ -1340,6 +1317,15 @@ function startBooking(svc,pkg,problemText){
   saveDraft(D);
   step = D.service?(D.package?2:1):0;
   go('booking'); renderFlow();
+}
+function cancelBooking(){
+  // "Cancel" should actually discard progress, not just navigate away —
+  // otherwise the next "Book a Consultation" click silently resumes this
+  // same (possibly stale/forgotten) draft instead of starting at step 1.
+  D={files:[]};
+  saveDraft(D);
+  step=0;
+  go('home');
 }
 function emergency(){
   openModal(`<div class="safe-ic">⚠</div>
