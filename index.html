@@ -2435,6 +2435,7 @@ async function uploadGalleryCover(i,file){
   if(!file)return;
   if(!file.type.startsWith('image/')){galleryImgWrongType();return}
   if(file.size>20*1024*1024){galleryImgTooBig();return}
+  await pullFromServer();
   try{
     const dataUrl=await resizeImageFile(file);
     setGalleryCover(i,dataUrl);
@@ -2497,6 +2498,7 @@ function resizeImageFile(file,maxDim=1600,quality=0.82){
 async function uploadGalleryImage(i,fileList){
   const files=Array.from(fileList||[]);
   if(!files.length)return;
+  await pullFromServer();
   const existing=galleryData()[i];
   if(!existing)return;
   const remaining=GALLERY_MAX_IMAGES-(existing.images||[]).length;
@@ -2613,7 +2615,8 @@ function setGalleryType(i,ptIndexStr){
   a[i].type=(ptIndex>=0&&PTYPES[ptIndex])?JSON.parse(JSON.stringify(PTYPES[ptIndex])):null;
   store.set('ns_gallery',a);renderGallery();showToast(t('savedToast'));
 }
-function addGalleryItem(){
+async function addGalleryItem(){
+  await pullFromServer();
   const a=JSON.parse(JSON.stringify(galleryData()));
   a.push({cover:'',images:[],title:{bn:'প্রকল্পের নাম লিখুন',en:'Enter project name'},type:null,desc:{bn:'',en:''}});
   store.set('ns_gallery',a);renderGallery();
@@ -2624,7 +2627,10 @@ function removeGalleryItem(i){
   store.set('ns_gallery',a);renderGallery();
   _galleryEditIdx=null;renderAdmin();
 }
-function editGalleryProject(i){_galleryEditIdx=i;renderAdmin()}
+async function editGalleryProject(i){
+  await pullFromServer();
+  _galleryEditIdx=i;renderAdmin();
+}
 async function refreshGalleryFromServer(){
   await pullFromServer();
   renderGallery();renderAdmin();
