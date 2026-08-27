@@ -221,6 +221,7 @@ h1,h2,h3{font-family:var(--serif);font-weight:700;line-height:1.28;letter-spacin
 .review-who{display:flex;align-items:center;gap:12px;margin-top:18px;padding-top:16px;border-top:1px solid var(--line)}
 .review-av{width:40px;height:40px;border-radius:50%;background:var(--green);color:#fff;display:grid;place-items:center;
   font-weight:700;font-size:13px;flex:none;font-family:var(--serif)}
+.review-av-photo{object-fit:cover;background:var(--field)}
 .review-who b{font-size:14.5px;font-family:var(--sans);display:block}
 .review-who span{color:var(--grey);font-size:12.5px}
 
@@ -1149,10 +1150,13 @@ function renderReviews(){
   sec.classList.remove('hidden');
   grid.innerHTML=arr.map(r=>{
     const st=Math.max(1,Math.min(5,+r.stars||5));
+    const avatarHtml=r.photo
+      ?`<img src="${esc(r.photo)}" class="review-av review-av-photo" alt="">`
+      :`<span class="review-av">${esc(bi(r.avatar))}</span>`;
     return `<div class="review">
       <div class="review-top"><span class="stars">${'★'.repeat(st)}${'☆'.repeat(5-st)}</span><span class="review-quote-mark">"</span></div>
       <p class="review-text">${esc(bi(r.quote))}</p>
-      <div class="review-who"><span class="review-av">${esc(bi(r.avatar))}</span><div><b>${esc(bi(r.name))}</b><span>${esc(bi(r.title))}</span></div></div>
+      <div class="review-who">${avatarHtml}<div><b>${esc(bi(r.name))}</b><span>${esc(bi(r.title))}</span></div></div>
     </div>`;
   }).join('');
 }
@@ -1214,14 +1218,22 @@ function unitHelp(){
 }
 
 /* ---------- search ---------- */
+function biBoth(v){
+  // For search matching only: combine BOTH languages regardless of which
+  // one is currently displayed, so typing "Interior" still finds
+  // "ইন্টেরিয়র পরামর্শ" while browsing in Bengali, and vice versa.
+  if(v==null)return'';
+  if(typeof v==='string')return v;
+  return (v.bn||'')+' '+(v.en||'');
+}
 function searchIndex(){
   const idx=[];
   const d=servicesData();
   Object.keys(DEF_SERVICES).forEach(k=>{const s=d[k]||DEF_SERVICES[k];
-    idx.push({title:bi(s.title),sub:bi(s.desc),go:()=>{closeModal();go('home');jump('services')}})});
-  PKGS.forEach(pk=>idx.push({title:bi(pk.name),sub:bi(pkgDur(pk))+" · "+taka(prices()[pk.id]),go:()=>{closeModal();go('home');jump('pkgs')}}));
-  teamData().forEach(x=>idx.push({title:bi(x.t),sub:bi(x.s),go:()=>{closeModal();go('home');jump('about')}}));
-  faqDataGet().forEach(x=>idx.push({title:bi(x.q),sub:bi(x.a),go:()=>{closeModal();go('home');jump('faq')}}));
+    idx.push({title:bi(s.title),sub:bi(s.desc),searchText:biBoth(s.title)+' '+biBoth(s.desc),go:()=>{closeModal();go('home');jump('services')}})});
+  PKGS.forEach(pk=>idx.push({title:bi(pk.name),sub:bi(pkgDur(pk))+" · "+taka(prices()[pk.id]),searchText:biBoth(pk.name)+' '+biBoth(pkgDur(pk)),go:()=>{closeModal();go('home');jump('pkgs')}}));
+  teamData().forEach(x=>idx.push({title:bi(x.t),sub:bi(x.s),searchText:biBoth(x.t)+' '+biBoth(x.s),go:()=>{closeModal();go('home');jump('about')}}));
+  faqDataGet().forEach(x=>idx.push({title:bi(x.q),sub:bi(x.a),searchText:biBoth(x.q)+' '+biBoth(x.a),go:()=>{closeModal();go('home');jump('faq')}}));
   return idx;
 }
 function openSearch(){
@@ -1234,7 +1246,7 @@ function runSearch(q){
   const el=$("#searchResults");if(!el)return;
   q=(q||"").trim().toLowerCase();
   if(!q){el.innerHTML=`<p style="color:var(--grey);font-size:13px;padding:10px 2px">${t('searchHint')}</p>`;return}
-  const results=searchIndex().filter(x=>(x.title+" "+x.sub).toLowerCase().includes(q));
+  const results=searchIndex().filter(x=>x.searchText.toLowerCase().includes(q));
   window._searchResults=results;
   if(!results.length){el.innerHTML=`<p style="color:var(--grey);font-size:13px;padding:10px 2px">${t('searchNoResult')}</p>`;return}
   el.innerHTML=results.slice(0,8).map((r,i)=>`<button style="display:block;width:100%;text-align:left;padding:12px 4px;border-top:1px solid var(--line)" onclick="searchGo(${i})">
@@ -2050,11 +2062,13 @@ function admReviews(){
   return `<div class="dcard"><b>গ্রাহক মতামত (${toBn(arr.length)})</b>
     <p style="color:var(--grey);font-size:12px;margin-top:6px">শুধু প্রকৃত গ্রাহকের কাছ থেকে পাওয়া মতামত যোগ করুন — কাল্পনিক নাম বা রিভিউ লিখবেন না। কোনো মতামত না থাকলে এই সেকশনটি হোমপেজে দেখানো হবে না।</p>
     ${arr.length?arr.map((x,i)=>`<div style="border-top:1px solid var(--line);padding-top:14px;margin-top:14px">
+      ${reviewPhotoField(i,x.photo)}
       <div class="field"><label>রেটিং (১–৫)</label><input type="number" min="1" max="5" value="${x.stars||5}" onchange="setReviewStars(${i},this.value)" style="max-width:100px"></div>
       ${biField('মতামত',x.quote,lang=>`setReviewField(${i},'quote','${lang}',this.value)`,true)}
       ${biField('নাম',x.name,lang=>`setReviewField(${i},'name','${lang}',this.value)`)}
       ${biField('পদবি / প্রতিষ্ঠান',x.title,lang=>`setReviewField(${i},'title','${lang}',this.value)`)}
       ${biField('সংক্ষিপ্ত আদ্যক্ষর',x.avatar,lang=>`setReviewField(${i},'avatar','${lang}',this.value)`)}
+      <p style="color:var(--grey);font-size:11.5px;margin-top:2px">ছবি না দিলে উপরের আদ্যক্ষর দেখানো হবে।</p>
       <button class="btn btn-ghost" style="color:var(--clay);margin-top:6px" onclick="removeReview(${i})">মুছে ফেলুন</button>
     </div>`).join(''):'<p style="color:var(--grey);font-size:13px;margin-top:10px">এখনো কোনো মতামত যোগ করা হয়নি।</p>'}
     <button class="btn btn-line" style="margin-top:16px" onclick="addReview()">+ নতুন মতামত যোগ করুন</button>
@@ -2062,9 +2076,38 @@ function admReviews(){
 }
 function setReviewField(i,f,lang,v){const a=JSON.parse(JSON.stringify(reviewsData()));a[i][f][lang]=v;store.set('ns_reviews',a);renderReviews();showToast(t('savedToast'))}
 function setReviewStars(i,v){const a=JSON.parse(JSON.stringify(reviewsData()));a[i].stars=Math.max(1,Math.min(5,+v||5));store.set('ns_reviews',a);renderReviews();showToast(t('savedToast'))}
+function reviewPhotoField(i,val){
+  if(val){
+    return `<div class="field"><label>গ্রাহকের ছবি</label>
+      <div style="display:flex;align-items:center;gap:12px;background:var(--field);border-radius:10px;padding:10px">
+        <img src="${esc(val)}" style="width:48px;height:48px;border-radius:50%;object-fit:cover;flex:none">
+        <span style="flex:1;font-size:12.5px;color:var(--grey)">ছবি সেট করা আছে</span>
+        <button class="btn btn-ghost" style="color:var(--clay);width:auto;padding:8px" onclick="clearReviewPhoto(${i})">সরান</button>
+      </div>
+    </div>`;
+  }
+  return `<div class="field"><label>গ্রাহকের ছবি <span class="opt">(ঐচ্ছিক)</span></label>
+    <label class="btn btn-line btn-sm inline" style="cursor:pointer">কম্পিউটার থেকে আপলোড
+      <input type="file" accept="image/*" style="display:none" onchange="uploadReviewPhoto(${i},this.files[0])">
+    </label>
+  </div>`;
+}
+function uploadReviewPhoto(i,file){
+  if(!file)return;
+  if(!file.type.startsWith('image/')){openModal(`<h3>শুধু ছবি ফাইল</h3><p style="color:var(--graphite);margin-top:10px">অনুগ্রহ করে JPG, PNG বা WEBP ফরম্যাটের একটি ছবি বেছে নিন।</p><button class="btn btn-ink" style="margin-top:16px" onclick="closeModal()">${t('okBtn')}</button>`);return}
+  if(file.size>800*1024){openModal(`<h3>ছবিটি অনেক বড়</h3><p style="color:var(--graphite);margin-top:10px">অনুগ্রহ করে ৮০০ কিলোবাইটের ছোট একটি ছবি বেছে নিন।</p><button class="btn btn-ink" style="margin-top:16px" onclick="closeModal()">${t('okBtn')}</button>`);return}
+  const reader=new FileReader();
+  reader.onload=()=>setReviewPhoto(i,reader.result);
+  reader.readAsDataURL(file);
+}
+function setReviewPhoto(i,val){
+  const a=JSON.parse(JSON.stringify(reviewsData()));a[i].photo=val;
+  store.set('ns_reviews',a);renderReviews();renderAdmin();showToast(t('savedToast'));
+}
+function clearReviewPhoto(i){setReviewPhoto(i,'')}
 function addReview(){
   const a=JSON.parse(JSON.stringify(reviewsData()));
-  a.push({stars:5,quote:{bn:"গ্রাহকের প্রকৃত মতামত এখানে লিখুন",en:"Write the client's real quote here"},name:{bn:"নাম",en:"Name"},title:{bn:"পদবি / প্রতিষ্ঠান",en:"Title / organization"},avatar:{bn:"??",en:"??"}});
+  a.push({stars:5,photo:'',quote:{bn:"গ্রাহকের প্রকৃত মতামত এখানে লিখুন",en:"Write the client's real quote here"},name:{bn:"নাম",en:"Name"},title:{bn:"পদবি / প্রতিষ্ঠান",en:"Title / organization"},avatar:{bn:"??",en:"??"}});
   store.set('ns_reviews',a);renderReviews();renderAdmin();
 }
 function removeReview(i){const a=JSON.parse(JSON.stringify(reviewsData()));a.splice(i,1);store.set('ns_reviews',a);renderReviews();renderAdmin()}
