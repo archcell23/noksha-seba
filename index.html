@@ -2426,9 +2426,9 @@ function resizeImageFile(file,maxDim=1600,quality=0.82){
 async function uploadGalleryImage(i,fileList){
   const files=Array.from(fileList||[]);
   if(!files.length)return;
-  const a=JSON.parse(JSON.stringify(galleryData()));
-  if(!a[i].images)a[i].images=[];
-  const remaining=GALLERY_MAX_IMAGES-a[i].images.length;
+  const existing=galleryData()[i];
+  if(!existing)return;
+  const remaining=GALLERY_MAX_IMAGES-(existing.images||[]).length;
   if(remaining<=0){
     openModal(`<h3>সর্বোচ্চ সীমায় পৌঁছেছে</h3><p style="color:var(--graphite);margin-top:10px">একটি প্রকল্পে সর্বোচ্চ ${toBn(GALLERY_MAX_IMAGES)}টি অতিরিক্ত ছবি যোগ করা যায়।</p><button class="btn btn-ink" style="margin-top:16px" onclick="closeModal()">${t('okBtn')}</button>`);
     return;
@@ -2445,6 +2445,14 @@ async function uploadGalleryImage(i,fileList){
   const results=settled.filter(r=>r.status==='fulfilled').map(r=>r.value);
   const failed=settled.length-results.length;
   if(results.length){
+    // Re-read the gallery fresh here instead of reusing a snapshot taken
+    // before compression: compressing several photos can take a few
+    // seconds, and if the project's name/type/description (or any other
+    // gallery edit) was changed during that window, writing back a stale
+    // pre-compression snapshot would silently discard those changes.
+    const a=JSON.parse(JSON.stringify(galleryData()));
+    if(!a[i])return;
+    if(!a[i].images)a[i].images=[];
     a[i].images.push(...results);
     store.set('ns_gallery',a);renderGallery();renderAdmin();
   }
