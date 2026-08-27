@@ -143,19 +143,20 @@ h1,h2,h3{font-family:var(--serif);font-weight:700;line-height:1.28;letter-spacin
    the stack of vertical margins between elements is trimmed down so the
    whole hero reads as one compact block instead of a long scroll */
 @media(max-width:759px){
-  .hero{padding-top:36px}
-  .hero-in{padding-bottom:40px}
+  .hero{padding-top:28px}
+  .hero-in{padding-bottom:30px}
   .hero-badges{flex-wrap:nowrap;overflow-x:auto;justify-content:flex-start;gap:7px;
-    margin:0 calc(-1 * var(--sp)) 16px;padding:0 var(--sp) 2px;scrollbar-width:none}
+    margin:0 calc(-1 * var(--sp)) 12px;padding:0 var(--sp) 2px;scrollbar-width:none}
   .hero-badges::-webkit-scrollbar{display:none}
   .hbadge{flex:none;font-size:12px;padding:6px 12px}
-  .hero h1{font-size:clamp(24px,7.2vw,32px)}
-  .hero p.sub{font-size:14.5px;margin-top:12px}
-  .hero .actions{margin-top:20px;gap:9px}
-  .hero-call{margin-top:12px}
-  .hero .assure{margin-top:16px;gap:6px 14px;font-size:12.5px}
-  .hero-dots{margin-top:20px}
-  .scrolldown{margin-top:18px}
+  .hero h1{font-size:clamp(23px,7vw,30px);line-height:1.16}
+  .hero p.sub{font-size:14px;margin-top:9px}
+  .hero .actions{margin-top:14px;gap:8px}
+  .hero-call{margin-top:9px}
+  .hero-call a{font-size:12.5px}
+  .hero .assure{margin-top:12px;gap:5px 12px;font-size:12px}
+  .hero-dots{margin-top:14px}
+  .scrolldown{margin-top:12px}
 }
 
 /* ---------- section frame ---------- */
