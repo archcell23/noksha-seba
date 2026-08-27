@@ -994,7 +994,7 @@ function applyLang(){
 function setLang(l){if(l===LANG)return;LANG=l;store.set('ns_lang',l);applyLang()}
 
 /* ---------- config ---------- */
-const DEFAULT_PRICES={quick:800,detail:1500,project:3500};
+const DEFAULT_PRICES={quick:800,detail:1500,project:3500,site_dhk:5000,site_out:8000};
 
 /* ---------- editable site content (admin-managed, localStorage-backed) ---------- */
 const DEF_CONTACT={wa:"8801711034941",call:"+8801711034941",email:"arch_cell@yahoo.com",ref:"archcellbd.com",payNumber:"01711034941"};
@@ -1093,7 +1093,11 @@ const PKGS=[
   {id:"detail",name:{bn:"বিস্তারিত পরামর্শ",en:"Detailed Consultation"},dur:{bn:"৪৫ মিনিট",en:"45 minutes"},pop:true,
    feat:[{bn:"ফ্লোর প্ল্যান পর্যালোচনা",en:"Floor plan review"},{bn:"সংস্কার",en:"Renovation"},{bn:"কাঠামোগত উদ্বেগ",en:"Structural concerns"},{bn:"ইলেকট্রিক্যাল/প্লাম্বিং পরিকল্পনা",en:"Electrical/plumbing planning"},{bn:"একাধিক প্রশ্ন",en:"Multiple questions"}]},
   {id:"project",name:{bn:"প্রকল্প পরামর্শ",en:"Project Consultation"},dur:{bn:"৬০–৯০ মিনিট",en:"60–90 minutes"},
-   feat:[{bn:"নতুন ভবন",en:"New building"},{bn:"জটিল renovation",en:"Complex renovation"},{bn:"স্থাপত্য+স্ট্রাকচার+MEP সমন্বয়",en:"Architecture+Structure+MEP coordination"},{bn:"multidisciplinary পরামর্শ",en:"Multidisciplinary consultation"}]}
+   feat:[{bn:"নতুন ভবন",en:"New building"},{bn:"জটিল renovation",en:"Complex renovation"},{bn:"স্থাপত্য+স্ট্রাকচার+MEP সমন্বয়",en:"Architecture+Structure+MEP coordination"},{bn:"multidisciplinary পরামর্শ",en:"Multidisciplinary consultation"}]},
+  {id:"site_dhk",name:{bn:"সাইট ভিজিট পরামর্শ",en:"Site Visit Consultation"},dur:{bn:"ঢাকার মধ্যে",en:"Within Dhaka"},
+   feat:[{bn:"সরেজমিন পরিদর্শন",en:"On-site inspection"},{bn:"সরাসরি পরিমাপ ও পর্যবেক্ষণ",en:"Direct measurement & observation"},{bn:"বিস্তারিত সুপারিশ",en:"Detailed recommendations"}]},
+  {id:"site_out",name:{bn:"সাইট ভিজিট পরামর্শ",en:"Site Visit Consultation"},dur:{bn:"ঢাকার বাইরে",en:"Outside Dhaka"},
+   feat:[{bn:"সরেজমিন পরিদর্শন",en:"On-site inspection"},{bn:"ভ্রমণ খরচসহ",en:"Travel cost included"},{bn:"বিস্তারিত সুপারিশ",en:"Detailed recommendations"}]}
 ];
 function pkgDurData(){return store.get('ns_pkg_dur',{})}
 function pkgDur(pk){return pkgDurData()[pk.id]||pk.dur}
