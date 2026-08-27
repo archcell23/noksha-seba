@@ -66,6 +66,20 @@ function ns_read_guarded_json($file, $default) {
     return $data === null ? $default : $data;
 }
 
+// Truncates a UTF-8 string to at most $maxBytes bytes without cutting a
+// multi-byte character (e.g. Bengali) in half. Avoids depending on the
+// mbstring extension, which isn't guaranteed to be enabled everywhere.
+function ns_utf8_safe_truncate($s, $maxBytes) {
+    if (strlen($s) <= $maxBytes) {
+        return $s;
+    }
+    $s = substr($s, 0, $maxBytes);
+    while ($s !== '' && (ord(substr($s, -1)) & 0xC0) === 0x80) {
+        $s = substr($s, 0, -1);
+    }
+    return $s;
+}
+
 function ns_write_guarded_json($file, $data) {
     $path = NS_DATA_DIR . '/' . $file;
     $guard = "<?php http_response_code(403); exit('Forbidden'); ?>\n";

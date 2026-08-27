@@ -818,6 +818,21 @@ const I18N={
   searchHint:{bn:"টাইপ করা শুরু করুন...",en:"Start typing..."},
   reviewsEyebrow:{bn:"গ্রাহক মতামত",en:"Client Reviews"},
   reviewsHeading:{bn:"যাঁরা আমাদের সেবা নিয়েছেন",en:"What our clients say"},
+  reviewsEmptyMsg:{bn:"এখনো কোনো মতামত প্রকাশ করা হয়নি।",en:"No reviews have been published yet."},
+  reviewsCtaBtn:{bn:"আপনার মতামত জানান",en:"Share your feedback"},
+  fbModalTitle:{bn:"আপনার মতামত জানান",en:"Share your feedback"},
+  fbModalDesc:{bn:"আপনি যদি আমাদের সেবা নিয়ে থাকেন, আপনার অভিজ্ঞতা শেয়ার করুন। প্রকাশের আগে আমরা যাচাই করে দেখব।",en:"If you've used our service, share your experience. We'll review it before it's published."},
+  fbNameLabel:{bn:"আপনার নাম",en:"Your name"},
+  fbTitleLabel:{bn:"পদবি / প্রতিষ্ঠান (ঐচ্ছিক)",en:"Title / organization (optional)"},
+  fbStarsLabel:{bn:"রেটিং",en:"Rating"},
+  fbQuoteLabel:{bn:"আপনার মতামত",en:"Your feedback"},
+  fbSubmitBtn:{bn:"পাঠিয়ে দিন",en:"Submit"},
+  fbMissingT:{bn:"কিছু তথ্য প্রয়োজন",en:"A few details are needed"},
+  fbMissingP:{bn:"অনুগ্রহ করে আপনার নাম ও মতামত লিখুন।",en:"Please enter your name and feedback."},
+  fbThanksT:{bn:"ধন্যবাদ!",en:"Thank you!"},
+  fbThanksP:{bn:"আপনার মতামত পাঠানো হয়েছে। যাচাইয়ের পর এটি সাইটে প্রকাশ করা হবে।",en:"Your feedback has been submitted. It will appear on the site after we review it."},
+  fbFailT:{bn:"পাঠানো যায়নি",en:"Couldn't submit"},
+  fbFailP:{bn:"দুঃখিত, একটি সমস্যা হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।",en:"Sorry, something went wrong. Please try again."},
   autoSaveBadge:{bn:"স্বয়ংক্রিয়ভাবে সংরক্ষিত হয়",en:"Auto-saves"},
   syncFailed:{bn:"⚠ সার্ভারে সংরক্ষণ ব্যর্থ হয়েছে — ইন্টারনেট সংযোগ পরীক্ষা করুন",en:"⚠ Could not save to the server — check your connection"},
   pushedAll:{bn:"✓ সব ডেটা সার্ভারে পাঠানো হয়েছে",en:"✓ All data sent to the server"},
@@ -1061,7 +1076,7 @@ const DEF_SITE={logoUrl:'',logoSize:42,faviconUrl:'',footerDesc:{bn:"আপন�
 const LOGO_PRESETS=[[32,'S'],[42,'M'],[52,'L'],[64,'XL'],[80,'2XL']];
 const SECTION_LIST=[
   {id:'services',tkey:'eyebrowServices'},{id:'how',tkey:'eyebrowProcess'},{id:'pkgs',tkey:'eyebrowFees'},
-  {id:'projects',tkey:'projectsEyebrow'},{id:'about',tkey:'aboutEyebrow'},{id:'research',tkey:'researchEyebrow'},{id:'faq',tkey:'navFaq'}
+  {id:'projects',tkey:'projectsEyebrow'},{id:'reviewsSection',tkey:'reviewsEyebrow'},{id:'about',tkey:'aboutEyebrow'},{id:'research',tkey:'researchEyebrow'},{id:'faq',tkey:'navFaq'}
 ];
 function navOrderData(){
   const saved=store.get('ns_nav_order',null);
@@ -1326,8 +1341,20 @@ function renderFaqList(){
 function renderReviews(){
   const sec=$("#reviewsSection"),grid=$("#reviewsGrid");if(!sec||!grid)return;
   const arr=reviewsData();
-  if(!arr.length){sec.classList.add('hidden');return}
+  // Unlike the gallery, this section stays visible even with zero reviews
+  // (with an honest "none yet" message) instead of hiding completely --
+  // otherwise there'd be nowhere for the first real piece of feedback to
+  // ever come in from, since the "share your feedback" CTA lives here too.
   sec.classList.remove('hidden');
+  const ctaHtml=`<div style="grid-column:1/-1;text-align:center;margin-top:${arr.length?'10px':'4px'}">
+    <button class="btn btn-line" style="width:auto;padding:12px 24px" onclick="openFeedbackForm()">${esc(t('reviewsCtaBtn'))}</button>
+  </div>`;
+  if(!arr.length){
+    grid.innerHTML=`<div style="grid-column:1/-1;text-align:center;padding:10px">
+      <p style="color:var(--grey);font-size:14px">${esc(t('reviewsEmptyMsg'))}</p>
+    </div>${ctaHtml}`;
+    return;
+  }
   grid.innerHTML=arr.map(r=>{
     const st=Math.max(1,Math.min(5,+r.stars||5));
     const avatarHtml=r.photo
@@ -1338,7 +1365,41 @@ function renderReviews(){
       <p class="review-text">${esc(bi(r.quote))}</p>
       <div class="review-who">${avatarHtml}<div><b>${esc(bi(r.name))}</b><span>${esc(bi(r.title))}</span></div></div>
     </div>`;
-  }).join('');
+  }).join('')+ctaHtml;
+}
+function openFeedbackForm(){
+  openModal(`<h3>${esc(t('fbModalTitle'))}</h3>
+    <p style="color:var(--graphite);font-size:13.5px;margin-top:8px">${esc(t('fbModalDesc'))}</p>
+    <div class="field" style="margin-top:14px"><label>${esc(t('fbNameLabel'))}</label><input id="fbName"></div>
+    <div class="field"><label>${esc(t('fbTitleLabel'))}</label><input id="fbTitle"></div>
+    <div class="field"><label>${esc(t('fbStarsLabel'))}</label>
+      <select id="fbStars">
+        <option value="5">★★★★★</option>
+        <option value="4">★★★★☆</option>
+        <option value="3">★★★☆☆</option>
+        <option value="2">★★☆☆☆</option>
+        <option value="1">★☆☆☆☆</option>
+      </select>
+    </div>
+    <div class="field"><label>${esc(t('fbQuoteLabel'))}</label><textarea id="fbQuote" style="min-height:90px"></textarea></div>
+    <button class="btn btn-ink" style="margin-top:14px" onclick="submitFeedback()">${esc(t('fbSubmitBtn'))}</button>`);
+}
+async function submitFeedback(){
+  const name=$("#fbName").value.trim();
+  const title=$("#fbTitle").value.trim();
+  const stars=+$("#fbStars").value||5;
+  const quote=$("#fbQuote").value.trim();
+  if(!name||!quote){
+    openModal(`<h3>${esc(t('fbMissingT'))}</h3><p style="color:var(--graphite);margin-top:10px">${esc(t('fbMissingP'))}</p><button class="btn btn-ink" style="margin-top:16px" onclick="openFeedbackForm()">${t('okBtn')}</button>`);
+    return;
+  }
+  try{
+    const res=await fetch('api/feedback.php',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,title,stars,quote})});
+    if(!res.ok)throw new Error('failed');
+    openModal(`<h3>${esc(t('fbThanksT'))}</h3><p style="color:var(--graphite);margin-top:10px">${esc(t('fbThanksP'))}</p><button class="btn btn-ink" style="margin-top:16px" onclick="closeModal()">${t('okBtn')}</button>`);
+  }catch(e){
+    openModal(`<h3>${esc(t('fbFailT'))}</h3><p style="color:var(--graphite);margin-top:10px">${esc(t('fbFailP'))}</p><button class="btn btn-ink" style="margin-top:16px" onclick="closeModal()">${t('okBtn')}</button>`);
+  }
 }
 let _galleryFilterIdx=-1;
 function renderGallery(){
@@ -1969,7 +2030,7 @@ const ADM_TABS=[
   ['slots','সময়সূচি'],['team','পরামর্শক দল'],['trust','বিশ্বাসযোগ্যতা'],['faq','প্রশ্নোত্তর'],['reviews','গ্রাহক মতামত'],
   ['contact','যোগাযোগ তথ্য'],['bookings','বুকিং তালিকা']
 ];
-let _adm=false,_admTab='dash',_adminBookings=null;
+let _adm=false,_admTab='dash',_adminBookings=null,_adminFeedback=null;
 function sessionFlag(){return _adm}
 async function enterAdmin(){
   if(!_adm){
@@ -1985,7 +2046,7 @@ async function enterAdmin(){
   // Re-pulling fresh on every admin entry keeps that staleness window short.
   if(_adm)await pullFromServer();
   renderAdmin();
-  if(_adm)fetchAdminBookings();
+  if(_adm){fetchAdminBookings();fetchAdminFeedback();}
 }
 async function admLogin(){
   const btn=event?event.target:null;const pass=$("#admPass").value;
@@ -1993,13 +2054,13 @@ async function admLogin(){
   try{
     const res=await fetch('api/auth.php',{method:'POST',headers:{'Content-Type':'application/json'},
       credentials:'include',body:JSON.stringify({password:pass})});
-    if(res.ok){_adm=true;_admTab='dash';renderAdmin();fetchAdminBookings();return}
+    if(res.ok){_adm=true;_admTab='dash';renderAdmin();fetchAdminBookings();fetchAdminFeedback();return}
   }catch(e){}
   if(btn)btn.disabled=false;
   openModal(`<h3>ভুল পাসকোড</h3><p style="margin-top:8px">আবার চেষ্টা করুন, অথবা ইন্টারনেট সংযোগ পরীক্ষা করুন।</p><button class="btn btn-ink" style="margin-top:14px" onclick="closeModal()">ঠিক আছে</button>`);
 }
 function admLogout(){
-  _adm=false;_adminBookings=null;renderAdmin();
+  _adm=false;_adminBookings=null;_adminFeedback=null;renderAdmin();
   fetch('api/auth.php',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'include',
     body:JSON.stringify({action:'logout'})}).catch(()=>{});
 }
@@ -2011,6 +2072,35 @@ async function fetchAdminBookings(){
   }catch(e){ /* keep showing whatever we had (or the local fallback) */ }
 }
 function adminBookingsData(){return _adminBookings!==null?_adminBookings:bookings()}
+async function fetchAdminFeedback(){
+  try{
+    const res=await fetch('api/feedback.php',{credentials:'include',cache:'no-store'});
+    if(res.ok){_adminFeedback=await res.json();if(_adm)renderAdmin()}
+  }catch(e){ /* keep showing whatever we had */ }
+}
+function adminFeedbackData(){return _adminFeedback||[]}
+async function approveFeedback(id){
+  try{
+    const res=await fetch('api/feedback.php',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'include',
+      body:JSON.stringify({action:'approve',id})});
+    if(!res.ok)throw new Error('failed');
+    // The server just appended to the shared reviews list -- pull fresh
+    // so this admin session's own local copy doesn't go on to silently
+    // overwrite that addition the next time anything else here saves.
+    await pullFromServer();
+    await fetchAdminFeedback();
+    renderReviews();renderAdmin();showToast(t('savedToast'));
+  }catch(e){showToast(t('syncFailed'))}
+}
+async function rejectFeedback(id){
+  try{
+    const res=await fetch('api/feedback.php',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'include',
+      body:JSON.stringify({action:'reject',id})});
+    if(!res.ok)throw new Error('failed');
+    await fetchAdminFeedback();
+    renderAdmin();showToast(t('savedToast'));
+  }catch(e){showToast(t('syncFailed'))}
+}
 
 function renderAdmin(){
   const authed=sessionFlag();
@@ -2416,8 +2506,26 @@ function removeFaqItem(i){const a=JSON.parse(JSON.stringify(faqDataGet()));a.spl
 /* reviews editor */
 function admReviews(){
   const arr=reviewsData();
-  return `<div class="dcard"><b>গ্রাহক মতামত (${toBn(arr.length)})</b>
-    <p style="color:var(--grey);font-size:12px;margin-top:6px">শুধু প্রকৃত গ্রাহকের কাছ থেকে পাওয়া মতামত যোগ করুন — কাল্পনিক নাম বা রিভিউ লিখবেন না। কোনো মতামত না থাকলে এই সেকশনটি হোমপেজে দেখানো হবে না।</p>
+  const pending=adminFeedbackData();
+  return `<div class="dcard"><b>অপেক্ষমাণ মতামত (${toBn(pending.length)})</b>
+    <p style="color:var(--grey);font-size:12px;margin-top:6px">সাইট থেকে ভিজিটররা যেসব মতামত পাঠিয়েছেন — প্রকাশ করার আগে যাচাই করে নিন।</p>
+    ${pending.length?pending.map(p=>{const st=Math.max(1,Math.min(5,+p.stars||5));return `<div style="border-top:1px solid var(--line);padding-top:14px;margin-top:14px">
+      <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap">
+        <div>
+          <span class="stars" style="color:var(--warn)">${'★'.repeat(st)}${'☆'.repeat(5-st)}</span>
+          <b style="display:block;margin-top:4px">${esc(p.name)}</b>
+          ${p.title?`<span style="color:var(--grey);font-size:12.5px">${esc(p.title)}</span>`:''}
+        </div>
+      </div>
+      <p style="color:var(--graphite);font-size:14px;margin-top:8px;line-height:1.6">${esc(p.quote)}</p>
+      <div style="display:flex;gap:10px;margin-top:10px;flex-wrap:wrap">
+        <button class="btn btn-ink btn-sm" style="width:auto;padding:10px 18px" onclick="approveFeedback('${esc(p.id)}')">প্রকাশ করুন</button>
+        <button class="btn btn-ghost" style="color:var(--clay);width:auto" onclick="rejectFeedback('${esc(p.id)}')">প্রত্যাখ্যান করুন</button>
+      </div>
+    </div>`;}).join(''):'<p style="color:var(--grey);font-size:13px;margin-top:10px">এখন কোনো অপেক্ষমাণ মতামত নেই।</p>'}
+  </div>
+  <div class="dcard" style="margin-top:14px"><b>গ্রাহক মতামত (${toBn(arr.length)})</b>
+    <p style="color:var(--grey);font-size:12px;margin-top:6px">শুধু প্রকৃত গ্রাহকের কাছ থেকে পাওয়া মতামত — কাল্পনিক নাম বা রিভিউ লিখবেন না। কোনো মতামত না থাকলে সেকশনটি "এখনো কোনো মতামত নেই" বার্তাসহ দেখাবে।</p>
     ${arr.length?arr.map((x,i)=>`<div style="border-top:1px solid var(--line);padding-top:14px;margin-top:14px">
       ${reviewPhotoField(i,x.photo)}
       <div class="field"><label>রেটিং (১–৫)</label><input type="number" min="1" max="5" value="${x.stars||5}" onchange="setReviewStars(${i},this.value)" style="max-width:100px"></div>
@@ -2426,13 +2534,25 @@ function admReviews(){
       ${biField('পদবি / প্রতিষ্ঠান',x.title,lang=>`setReviewField(${i},'title','${lang}',this.value)`)}
       ${biField('সংক্ষিপ্ত আদ্যক্ষর',x.avatar,lang=>`setReviewField(${i},'avatar','${lang}',this.value)`)}
       <p style="color:var(--grey);font-size:11.5px;margin-top:2px">ছবি না দিলে উপরের আদ্যক্ষর দেখানো হবে।</p>
-      <button class="btn btn-ghost" style="color:var(--clay);margin-top:6px" onclick="removeReview(${i})">মুছে ফেলুন</button>
+      <div style="display:flex;gap:10px;margin-top:12px;flex-wrap:wrap">
+        <button class="btn btn-ink btn-sm" style="width:auto;padding:11px 20px" onclick="saveReview(${i})">সংরক্ষণ করুন</button>
+        <button class="btn btn-ghost" style="color:var(--clay);width:auto" onclick="removeReview(${i})">মুছে ফেলুন</button>
+      </div>
     </div>`).join(''):'<p style="color:var(--grey);font-size:13px;margin-top:10px">এখনো কোনো মতামত যোগ করা হয়নি।</p>'}
     <button class="btn btn-line" style="margin-top:16px" onclick="addReview()">+ নতুন মতামত যোগ করুন</button>
   </div>`;
 }
 function setReviewField(i,f,lang,v){const a=JSON.parse(JSON.stringify(reviewsData()));a[i][f][lang]=v;store.set('ns_reviews',a);renderReviews();showToast(t('savedToast'))}
 function setReviewStars(i,v){const a=JSON.parse(JSON.stringify(reviewsData()));a[i].stars=Math.max(1,Math.min(5,+v||5));store.set('ns_reviews',a);renderReviews();showToast(t('savedToast'))}
+// Every field already auto-saves on change, but this gives an explicit,
+// visible confirmation per review (and a manual retry if a sync attempt
+// failed), matching the same pattern used for gallery projects.
+function saveReview(i){
+  const a=JSON.parse(JSON.stringify(reviewsData()));
+  if(!a[i])return;
+  store.set('ns_reviews',a);
+  showToast(t('savedToast'));
+}
 function reviewPhotoField(i,val){
   if(val){
     return `<div class="field"><label>গ্রাহকের ছবি</label>
