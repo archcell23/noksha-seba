@@ -2334,7 +2334,10 @@ function admGallery(){
           <input type="file" accept="image/*" multiple style="display:none" onchange="uploadGalleryImage(${i},this.files)">
         </label>`:''}
       </div>
-      <button class="btn btn-ghost" style="color:var(--clay);margin-top:10px" onclick="removeGalleryItem(${i})">প্রকল্পটি মুছে ফেলুন</button>
+      <div style="display:flex;gap:10px;margin-top:12px;flex-wrap:wrap">
+        <button class="btn btn-ink btn-sm" style="width:auto;padding:11px 20px" onclick="saveGalleryItem(${i})">সংরক্ষণ করুন</button>
+        <button class="btn btn-ghost" style="color:var(--clay);width:auto" onclick="removeGalleryItem(${i})">প্রকল্পটি মুছে ফেলুন</button>
+      </div>
     </div>`;}).join(''):'<p style="color:var(--grey);font-size:13px;margin-top:10px">এখনো কোনো প্রকল্প যোগ করা হয়নি।</p>'}
     <button class="btn btn-line" style="margin-top:16px" onclick="addGalleryItem()">+ নতুন প্রকল্প যোগ করুন</button>
   </div>`;
@@ -2550,6 +2553,15 @@ function addGalleryItem(){
 function removeGalleryItem(i){
   const a=JSON.parse(JSON.stringify(galleryData()));a.splice(i,1);
   store.set('ns_gallery',a);renderGallery();renderAdmin();
+}
+// Every field/photo action already auto-saves on change, but this gives
+// an explicit, visible confirmation per project (and a manual retry if a
+// sync attempt failed) rather than relying purely on the silent autosave.
+function saveGalleryItem(i){
+  const a=JSON.parse(JSON.stringify(galleryData()));
+  if(!a[i])return;
+  store.set('ns_gallery',a);
+  showToast(t('savedToast'));
 }
 
 /* contact editor */
