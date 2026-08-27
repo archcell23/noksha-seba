@@ -212,6 +212,27 @@ h1,h2,h3{font-family:var(--serif);font-weight:700;line-height:1.28;letter-spacin
 .pkg li{font-size:14.5px;color:var(--graphite);display:flex;gap:9px;align-items:flex-start}
 .pkg li::before{content:"";width:16px;height:16px;flex:none;margin-top:3px;border-radius:50%;
   background:var(--field);position:relative}
+/* tighter section/steps/packages spacing on mobile: same idea as the
+   hero compaction -- smaller headings and less padding/margin between
+   elements so a section reads as one compact block, not a long scroll */
+@media(max-width:759px){
+  .section{padding:26px 0}
+  .section h2{font-size:clamp(20px,6.4vw,26px)}
+  .section .lead{margin-top:6px;font-size:14px}
+  .svc-grid{margin-top:14px;gap:10px}
+  .svc{padding:16px}
+  .steps{margin-top:14px}
+  .step{padding:14px;gap:12px}
+  .step .n{width:26px;height:26px;font-size:13px;border-radius:8px}
+  .step h3{font-size:15px}
+  .step p{font-size:13px}
+  .pkgs{margin-top:14px;gap:10px}
+  .pkg{padding:16px}
+  .pkg h3{font-size:19px}
+  .pkg .price{font-size:28px;margin:8px 0 2px}
+  .pkg ul{margin:10px 0 14px;gap:6px}
+  .pkg li{font-size:13.5px}
+}
 .pkg li::after{content:"✓";position:absolute;margin-left:-14px;margin-top:1px;font-size:11px;color:var(--ok)}
 .pkg .btn{margin-top:auto}
 
