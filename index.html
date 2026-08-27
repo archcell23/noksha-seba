@@ -2202,7 +2202,7 @@ function addReview(){
 function removeReview(i){const a=JSON.parse(JSON.stringify(reviewsData()));a.splice(i,1);store.set('ns_reviews',a);renderReviews();renderAdmin()}
 
 /* project gallery editor */
-const GALLERY_MAX_IMAGES=10;
+const GALLERY_MAX_IMAGES=25;
 function admGallery(){
   const arr=galleryData();
   return `<div class="dcard"><b>প্রকল্প গ্যালারি (${toBn(arr.length)})</b>
@@ -2248,15 +2248,14 @@ function galleryCoverField(i,val){
     </label>
   </div>`;
 }
-function galleryImgTooBig(){openModal(`<h3>ছবিটি অনেক বড়</h3><p style="color:var(--graphite);margin-top:10px">অনুগ্রহ করে ১.২ মেগাবাইটের ছোট একটি ছবি বেছে নিন।</p><button class="btn btn-ink" style="margin-top:16px" onclick="closeModal()">${t('okBtn')}</button>`)}
+function galleryImgTooBig(){openModal(`<h3>ছবিটি অনেক বড়</h3><p style="color:var(--graphite);margin-top:10px">অনুগ্রহ করে ২০ মেগাবাইটের ছোট একটি ছবি বেছে নিন।</p><button class="btn btn-ink" style="margin-top:16px" onclick="closeModal()">${t('okBtn')}</button>`)}
 function galleryImgWrongType(){openModal(`<h3>শুধু ছবি ফাইল</h3><p style="color:var(--graphite);margin-top:10px">অনুগ্রহ করে JPG, PNG বা WEBP ফরম্যাটের একটি ছবি বেছে নিন।</p><button class="btn btn-ink" style="margin-top:16px" onclick="closeModal()">${t('okBtn')}</button>`)}
-function uploadGalleryCover(i,file){
+async function uploadGalleryCover(i,file){
   if(!file)return;
   if(!file.type.startsWith('image/')){galleryImgWrongType();return}
-  if(file.size>1200*1024){galleryImgTooBig();return}
-  const reader=new FileReader();
-  reader.onload=()=>setGalleryCover(i,reader.result);
-  reader.readAsDataURL(file);
+  if(file.size>20*1024*1024){galleryImgTooBig();return}
+  const dataUrl=await resizeImageFile(file);
+  setGalleryCover(i,dataUrl);
 }
 function setGalleryCover(i,val){
   const a=JSON.parse(JSON.stringify(galleryData()));a[i].cover=val;
@@ -2267,6 +2266,33 @@ function readFileAsDataURL(file){
   return new Promise((resolve,reject)=>{
     const reader=new FileReader();
     reader.onload=()=>resolve(reader.result);
+    reader.onerror=reject;
+    reader.readAsDataURL(file);
+  });
+}
+/* Downscales/re-compresses an uploaded photo on the device before it's
+   stored as base64, so 25 gallery photos don't balloon the shared content
+   JSON that every visitor downloads on every page load. */
+function resizeImageFile(file,maxDim=1600,quality=0.82){
+  return new Promise((resolve,reject)=>{
+    const reader=new FileReader();
+    reader.onload=()=>{
+      const img=new Image();
+      img.onload=()=>{
+        let w=img.naturalWidth,h=img.naturalHeight;
+        if(w>maxDim||h>maxDim){
+          if(w>=h){h=Math.round(h*maxDim/w);w=maxDim}
+          else{w=Math.round(w*maxDim/h);h=maxDim}
+        }
+        const canvas=document.createElement('canvas');
+        canvas.width=w;canvas.height=h;
+        const ctx=canvas.getContext('2d');
+        ctx.drawImage(img,0,0,w,h);
+        resolve(canvas.toDataURL('image/jpeg',quality));
+      };
+      img.onerror=reject;
+      img.src=reader.result;
+    };
     reader.onerror=reject;
     reader.readAsDataURL(file);
   });
@@ -2283,18 +2309,18 @@ async function uploadGalleryImage(i,fileList){
   }
   const toProcess=files.slice(0,remaining);
   const skipped=files.length-toProcess.length;
-  const valid=toProcess.filter(f=>f.type.startsWith('image/')&&f.size<=1200*1024);
+  const valid=toProcess.filter(f=>f.type.startsWith('image/')&&f.size<=20*1024*1024);
   const rejected=toProcess.length-valid.length;
   if(!valid.length){
     if(rejected)galleryImgWrongType();
     return;
   }
-  const results=await Promise.all(valid.map(readFileAsDataURL));
+  const results=await Promise.all(valid.map(f=>resizeImageFile(f)));
   a[i].images.push(...results);
   store.set('ns_gallery',a);renderGallery();renderAdmin();
   if(rejected||skipped){
     const notes=[];
-    if(rejected)notes.push(`${toBn(rejected)}টি ছবি ফরম্যাট বা আকারের (১.২ মেগাবাইটের বেশি) কারণে বাদ পড়েছে`);
+    if(rejected)notes.push(`${toBn(rejected)}টি ছবি ফরম্যাট বা আকারের (২০ মেগাবাইটের বেশি) কারণে বাদ পড়েছে`);
     if(skipped)notes.push(`সর্বোচ্চ সীমার কারণে আরও ${toBn(skipped)}টি ছবি যোগ করা যায়নি`);
     openModal(`<h3>${toBn(valid.length)}টি ছবি যোগ হয়েছে</h3><p style="color:var(--graphite);margin-top:10px">${notes.join('; ')}।</p><button class="btn btn-ink" style="margin-top:16px" onclick="closeModal()">${t('okBtn')}</button>`);
   }else{
