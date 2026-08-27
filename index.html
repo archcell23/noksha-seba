@@ -2224,7 +2224,7 @@ function admGallery(){
           </div>`).join('')}
         </div>`:''}
         ${imgs.length<GALLERY_MAX_IMAGES?`<label class="btn btn-line btn-sm inline" style="cursor:pointer;margin-top:8px">+ ছবি যোগ করুন
-          <input type="file" accept="image/*" style="display:none" onchange="uploadGalleryImage(${i},this.files[0])">
+          <input type="file" accept="image/*" multiple style="display:none" onchange="uploadGalleryImage(${i},this.files)">
         </label>`:''}
       </div>
       <button class="btn btn-ghost" style="color:var(--clay);margin-top:10px" onclick="removeGalleryItem(${i})">প্রকল্পটি মুছে ফেলুন</button>
@@ -2263,19 +2263,43 @@ function setGalleryCover(i,val){
   store.set('ns_gallery',a);renderGallery();renderAdmin();showToast(t('savedToast'));
 }
 function clearGalleryCover(i){setGalleryCover(i,'')}
-function uploadGalleryImage(i,file){
-  if(!file)return;
-  if(!file.type.startsWith('image/')){galleryImgWrongType();return}
-  if(file.size>1200*1024){galleryImgTooBig();return}
-  const reader=new FileReader();
-  reader.onload=()=>{
-    const a=JSON.parse(JSON.stringify(galleryData()));
-    if(!a[i].images)a[i].images=[];
-    if(a[i].images.length>=GALLERY_MAX_IMAGES)return;
-    a[i].images.push(reader.result);
-    store.set('ns_gallery',a);renderGallery();renderAdmin();showToast(t('savedToast'));
-  };
-  reader.readAsDataURL(file);
+function readFileAsDataURL(file){
+  return new Promise((resolve,reject)=>{
+    const reader=new FileReader();
+    reader.onload=()=>resolve(reader.result);
+    reader.onerror=reject;
+    reader.readAsDataURL(file);
+  });
+}
+async function uploadGalleryImage(i,fileList){
+  const files=Array.from(fileList||[]);
+  if(!files.length)return;
+  const a=JSON.parse(JSON.stringify(galleryData()));
+  if(!a[i].images)a[i].images=[];
+  const remaining=GALLERY_MAX_IMAGES-a[i].images.length;
+  if(remaining<=0){
+    openModal(`<h3>সর্বোচ্চ সীমায় পৌঁছেছে</h3><p style="color:var(--graphite);margin-top:10px">একটি প্রকল্পে সর্বোচ্চ ${toBn(GALLERY_MAX_IMAGES)}টি অতিরিক্ত ছবি যোগ করা যায়।</p><button class="btn btn-ink" style="margin-top:16px" onclick="closeModal()">${t('okBtn')}</button>`);
+    return;
+  }
+  const toProcess=files.slice(0,remaining);
+  const skipped=files.length-toProcess.length;
+  const valid=toProcess.filter(f=>f.type.startsWith('image/')&&f.size<=1200*1024);
+  const rejected=toProcess.length-valid.length;
+  if(!valid.length){
+    if(rejected)galleryImgWrongType();
+    return;
+  }
+  const results=await Promise.all(valid.map(readFileAsDataURL));
+  a[i].images.push(...results);
+  store.set('ns_gallery',a);renderGallery();renderAdmin();
+  if(rejected||skipped){
+    const notes=[];
+    if(rejected)notes.push(`${toBn(rejected)}টি ছবি ফরম্যাট বা আকারের (১.২ মেগাবাইটের বেশি) কারণে বাদ পড়েছে`);
+    if(skipped)notes.push(`সর্বোচ্চ সীমার কারণে আরও ${toBn(skipped)}টি ছবি যোগ করা যায়নি`);
+    openModal(`<h3>${toBn(valid.length)}টি ছবি যোগ হয়েছে</h3><p style="color:var(--graphite);margin-top:10px">${notes.join('; ')}।</p><button class="btn btn-ink" style="margin-top:16px" onclick="closeModal()">${t('okBtn')}</button>`);
+  }else{
+    showToast(t('savedToast'));
+  }
 }
 function removeGalleryImage(i,gi){
   const a=JSON.parse(JSON.stringify(galleryData()));
