@@ -1247,7 +1247,14 @@ function startHeroCarousel(){
   heroT=setInterval(()=>renderHeroSlide((heroIdx+1)%n),4500);
 }
 function renderHeroBadges(){
-  $("#heroBadges").innerHTML=heroData().badges.map(b=>`<span class="hbadge">${esc(bi(b))}</span>`).join('');
+  $("#heroBadges").innerHTML=heroData().badges.map(b=>b.link
+    ?`<button class="hbadge" onclick="goHeroBadgeLink('${esc(b.link)}')">${esc(bi(b))}</button>`
+    :`<span class="hbadge">${esc(bi(b))}</span>`).join('');
+}
+function goHeroBadgeLink(link){
+  if(link==='booking'){startBooking();return}
+  if(link==='services'){go('home');jump('services');return}
+  if(link.indexOf('svc:')===0){startBooking(link.slice(4));return}
 }
 
 /* ---------- content section renderers ---------- */
@@ -1515,8 +1522,16 @@ let step=0, D={};
 
 function startBooking(svc,pkg,problemText){
   D=draft(); D.files=D.files||[];
-  if(svc)D.service=svc;
-  if(pkg)D.package=pkg;
+  if(svc){
+    D.service=svc;
+    if(pkg)D.package=pkg;
+  }else{
+    // The generic "Book a Consultation" CTA (used everywhere with no
+    // specific service in mind) must always land on the service-selection
+    // step, not silently resume/skip ahead because of a stale draft left
+    // over from an earlier attempt that was never explicitly cancelled.
+    delete D.service;delete D.package;
+  }
   if(problemText)D.problem=(D.problem?D.problem:problemText);
   if(D.emergency)delete D.emergency;
   saveDraft(D);
@@ -2199,6 +2214,18 @@ function admHero(){
     <p style="color:var(--grey);font-size:12px;margin-top:6px">হোমপেজের উপরের অংশে দেখানো ছোট ব্যাজগুলো।</p>
     ${h.badges.map((b,i)=>`<div style="border-top:1px solid var(--line);padding-top:14px;margin-top:14px">
       ${biField('ব্যাজ '+toBn(i+1),b,lang=>`setHeroBadge(${i},'${lang}',this.value)`)}
+      <div class="field"><label>ট্যাপ করলে কোথায় যাবে</label>
+        <select onchange="setHeroBadgeLink(${i},this.value)">
+          <option value="" ${!b.link?'selected':''}>কোনো লিংক নেই</option>
+          <option value="booking" ${b.link==='booking'?'selected':''}>বুকিং শুরু করুন</option>
+          <option value="services" ${b.link==='services'?'selected':''}>সেবাসমূহ সেকশনে যান</option>
+          <option value="svc:arch" ${b.link==='svc:arch'?'selected':''}>স্থাপত্য পরামর্শ বুকিং</option>
+          <option value="svc:struct" ${b.link==='svc:struct'?'selected':''}>স্ট্রাকচারাল পরামর্শ বুকিং</option>
+          <option value="svc:elec" ${b.link==='svc:elec'?'selected':''}>ইলেকট্রিক্যাল পরামর্শ বুকিং</option>
+          <option value="svc:plumb" ${b.link==='svc:plumb'?'selected':''}>প্লাম্বিং পরামর্শ বুকিং</option>
+          <option value="svc:interior" ${b.link==='svc:interior'?'selected':''}>ইন্টেরিয়র পরামর্শ বুকিং</option>
+        </select>
+      </div>
       <button class="btn btn-ghost" style="color:var(--clay);margin-top:6px" onclick="removeHeroBadge(${i})">মুছে ফেলুন</button>
     </div>`).join('')}
     <button class="btn btn-line" style="margin-top:16px" onclick="addHeroBadge()">+ নতুন ব্যাজ যোগ করুন</button>
@@ -2214,6 +2241,7 @@ function admHero(){
   </div>`;
 }
 function setHeroBadge(i,lang,v){const h=JSON.parse(JSON.stringify(heroData()));h.badges[i][lang]=v;store.set('ns_hero',h);renderHeroBadges();showToast(t('savedToast'))}
+function setHeroBadgeLink(i,v){const h=JSON.parse(JSON.stringify(heroData()));h.badges[i].link=v;store.set('ns_hero',h);renderHeroBadges();showToast(t('savedToast'))}
 function addHeroBadge(){const h=JSON.parse(JSON.stringify(heroData()));h.badges.push({bn:'🔧 নতুন ব্যাজ',en:'🔧 New badge'});store.set('ns_hero',h);renderHeroBadges();renderAdmin()}
 function removeHeroBadge(i){const h=JSON.parse(JSON.stringify(heroData()));h.badges.splice(i,1);store.set('ns_hero',h);renderHeroBadges();renderAdmin()}
 function setHeroSlideField(i,field,lang,v){const h=JSON.parse(JSON.stringify(heroData()));h.slides[i][field][lang]=v;store.set('ns_hero',h);clearInterval(heroT);startHeroCarousel();showToast(t('savedToast'))}
