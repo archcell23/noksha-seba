@@ -2158,18 +2158,31 @@ function admHero(){
     </div>`).join('')}
     <button class="btn btn-line" style="margin-top:16px" onclick="addHeroBadge()">+ নতুন ব্যাজ যোগ করুন</button>
   </div>
-  <div class="dcard" style="margin-top:14px"><b>হিরো রোটেটিং স্লাইড</b>
+  <div class="dcard" style="margin-top:14px"><b>হিরো রোটেটিং স্লাইড (${toBn(h.slides.length)})</b>
     <p style="color:var(--grey);font-size:12px;margin-top:6px">হেডলাইন ও সাবটেক্সট প্রতি কয়েক সেকেন্ড পরপর পালাক্রমে দেখানো হয়।</p>
     ${h.slides.map((s,i)=>`<div style="border-top:1px solid var(--line);padding-top:14px;margin-top:14px">
       ${biField('হাইলাইট লাইন '+toBn(i+1),s.accent,lang=>`setHeroSlideField(${i},'accent','${lang}',this.value)`)}
       ${biField('সাবটেক্সট',s.sub,lang=>`setHeroSlideField(${i},'sub','${lang}',this.value)`,true)}
+      ${h.slides.length>1?`<button class="btn btn-ghost" style="color:var(--clay);margin-top:6px" onclick="removeHeroSlide(${i})">এই স্লাইডটি মুছে ফেলুন</button>`:''}
     </div>`).join('')}
+    <button class="btn btn-line" style="margin-top:16px" onclick="addHeroSlide()">+ নতুন হাইলাইট লাইন যোগ করুন</button>
   </div>`;
 }
 function setHeroBadge(i,lang,v){const h=JSON.parse(JSON.stringify(heroData()));h.badges[i][lang]=v;store.set('ns_hero',h);renderHeroBadges();showToast(t('savedToast'))}
 function addHeroBadge(){const h=JSON.parse(JSON.stringify(heroData()));h.badges.push({bn:'🔧 নতুন ব্যাজ',en:'🔧 New badge'});store.set('ns_hero',h);renderHeroBadges();renderAdmin()}
 function removeHeroBadge(i){const h=JSON.parse(JSON.stringify(heroData()));h.badges.splice(i,1);store.set('ns_hero',h);renderHeroBadges();renderAdmin()}
 function setHeroSlideField(i,field,lang,v){const h=JSON.parse(JSON.stringify(heroData()));h.slides[i][field][lang]=v;store.set('ns_hero',h);clearInterval(heroT);startHeroCarousel();showToast(t('savedToast'))}
+function addHeroSlide(){
+  const h=JSON.parse(JSON.stringify(heroData()));
+  h.slides.push({accent:{bn:"নতুন হাইলাইট লাইন",en:"New highlight line"},sub:{bn:"",en:""}});
+  store.set('ns_hero',h);clearInterval(heroT);startHeroCarousel();renderAdmin();
+}
+function removeHeroSlide(i){
+  const h=JSON.parse(JSON.stringify(heroData()));
+  if(h.slides.length<=1)return;
+  h.slides.splice(i,1);
+  store.set('ns_hero',h);clearInterval(heroT);startHeroCarousel();renderAdmin();
+}
 
 /* services editor */
 function admServices(){
