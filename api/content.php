@@ -32,21 +32,27 @@ if ($method === 'POST') {
 
     // Merge into the existing stored object one key at a time, so two
     // admins (or two tabs) saving different sections at the same time
-    // can't clobber each other's unrelated changes.
-    $content = ns_read_guarded_json('content.php', array());
-    if (!is_array($content)) {
-        $content = array();
-    }
-    // Storing a literal null would make every future reader of this key
-    // get null instead of its normal default -- treat "save null" as
-    // "clear this key" instead, so it's as if nothing was ever saved here.
-    if ($value === null) {
-        unset($content[$key]);
-    } else {
-        $content[$key] = $value;
-    }
+    // can't clobber each other's unrelated changes. The whole read+merge
+    // +write happens under one lock (see ns_locked_update) so two
+    // near-simultaneous saves to the SAME key can't race each other and
+    // silently drop one of them either.
+    $result = ns_locked_update('content.php', array(), function($content) use ($key, $value) {
+        if (!is_array($content)) {
+            $content = array();
+        }
+        // Storing a literal null would make every future reader of this
+        // key get null instead of its normal default -- treat "save null"
+        // as "clear this key" instead, so it's as if nothing was ever
+        // saved here.
+        if ($value === null) {
+            unset($content[$key]);
+        } else {
+            $content[$key] = $value;
+        }
+        return $content;
+    });
 
-    if (!ns_write_guarded_json('content.php', $content)) {
+    if ($result === false) {
         ns_json_response(array('error' => 'write_failed'), 500);
     }
     ns_json_response(array('ok' => true));

@@ -72,3 +72,45 @@ function ns_write_guarded_json($file, $data) {
     $json = json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
     return file_put_contents($path, $guard . $json, LOCK_EX) !== false;
 }
+
+// Reads, modifies, and writes a guard-prefixed JSON file as one atomic,
+// locked operation. ns_read_guarded_json()+ns_write_guarded_json() used as
+// two separate steps left a gap where two near-simultaneous requests could
+// both read the same "before" state and then each write back a version
+// that silently discards the other's change (a lost-update race) -- this
+// is what was making gallery photos added in quick succession vanish.
+// $mutator receives the current decoded data (or $default) and returns
+// the new data to write; the whole read+mutate+write happens under a
+// single exclusive lock that blocks (rather than fails) when contended,
+// so concurrent requests queue up and apply in turn instead of racing.
+function ns_locked_update($file, $default, $mutator) {
+    $path = NS_DATA_DIR . '/' . $file;
+    $fp = fopen($path, 'c+');
+    if ($fp === false) {
+        return false;
+    }
+    if (!flock($fp, LOCK_EX)) {
+        fclose($fp);
+        return false;
+    }
+    $raw = stream_get_contents($fp);
+    $marker = '?>';
+    $pos = strpos($raw, $marker);
+    $data = $default;
+    if ($pos !== false) {
+        $decoded = json_decode(substr($raw, $pos + strlen($marker)), true);
+        if ($decoded !== null) {
+            $data = $decoded;
+        }
+    }
+    $data = $mutator($data);
+    $guard = "<?php http_response_code(403); exit('Forbidden'); ?>\n";
+    $out = $guard . json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
+    ftruncate($fp, 0);
+    rewind($fp);
+    fwrite($fp, $out);
+    fflush($fp);
+    flock($fp, LOCK_UN);
+    fclose($fp);
+    return $data;
+}
