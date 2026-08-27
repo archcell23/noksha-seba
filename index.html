@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#16A34A">
+<link rel="icon" id="faviconLink" href="data:,">
 <title>নকশা সেবা — আপনার নির্মাণ সমস্যার পেশাদার সমাধান</title>
 <meta name="description" content="স্থাপত্য, ইন্টেরিয়র, স্ট্রাকচার, ইলেকট্রিক্যাল ও প্লাম্বিং বিষয়ে অভিজ্ঞ স্থপতি ও প্রকৌশলীর অনলাইন পরামর্শ — বাংলাদেশের যেকোনো স্থান থেকে।">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1260,9 +1261,8 @@ function renderSiteSettingsPublic(){
   if(s.logoUrl){if(mk)mk.classList.add('hidden');if(img){img.src=s.logoUrl;img.style.height=(s.logoSize||42)+'px';img.classList.remove('hidden')}}
   else{if(mk)mk.classList.remove('hidden');if(img)img.classList.add('hidden')}
   if(s.faviconUrl){
-    let fav=$("#faviconLink");
-    if(!fav){fav=document.createElement('link');fav.id='faviconLink';fav.rel='icon';document.head.appendChild(fav)}
-    fav.href=s.faviconUrl;
+    const fav=$("#faviconLink");
+    if(fav)fav.href=s.faviconUrl;
   }
   const footTag=$("#footerTagText");if(footTag)footTag.textContent=bi(s.footerDesc);
 }
