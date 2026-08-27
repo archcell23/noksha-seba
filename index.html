@@ -412,7 +412,7 @@ footer .fine{margin-top:14px;font-size:12px;color:var(--faint)}
 /* ---------- fullscreen photo lightbox ---------- */
 .lightbox{position:fixed;inset:0;z-index:70;background:rgba(8,10,9,.97);display:none;flex-direction:column}
 .lightbox.on{display:flex}
-.lb-stage{position:relative;flex:1;display:flex;align-items:center;justify-content:center;overflow:hidden;touch-action:pan-y}
+.lb-stage{position:relative;flex:1;display:flex;align-items:center;justify-content:center;overflow:hidden;touch-action:none}
 .lb-stage img{max-width:100%;max-height:100%;object-fit:contain;user-select:none;-webkit-user-drag:none}
 .lb-close{position:absolute;top:calc(14px + env(safe-area-inset-top));right:14px;width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.14);color:#fff;font-size:17px;z-index:2}
 .lb-counter{position:absolute;top:calc(20px + env(safe-area-inset-top));left:16px;color:#fff;font-size:12.5px;background:rgba(255,255,255,.14);padding:4px 12px;border-radius:20px;z-index:2}
@@ -2622,6 +2622,7 @@ function openLightbox(photos,idx,title,type,desc){
 function closeLightbox(){
   $("#lightbox").classList.remove('on');
   document.body.style.overflow='';
+  lbResetZoom(false);
 }
 function renderLightbox(){
   const img=$("#lbImg");
@@ -2634,21 +2635,98 @@ function renderLightbox(){
   $("#lbNext").classList.toggle('hidden',!multi);
   $("#lbCaption").innerHTML=(_lb.title||_lb.type||_lb.desc)?
     `${_lb.type?`<div class="lb-type">${esc(_lb.type)}</div>`:''}${_lb.title?`<div class="lb-title">${esc(_lb.title)}</div>`:''}${_lb.desc?`<div class="lb-desc">${esc(_lb.desc)}</div>`:''}`:'';
+  lbResetZoom(false);
 }
 function lightboxNext(){_lb.idx=(_lb.idx+1)%_lb.photos.length;renderLightbox()}
 function lightboxPrev(){_lb.idx=(_lb.idx-1+_lb.photos.length)%_lb.photos.length;renderLightbox()}
 $("#lbClose").addEventListener('click',closeLightbox);
 $("#lbNext").addEventListener('click',lightboxNext);
 $("#lbPrev").addEventListener('click',lightboxPrev);
-$("#lbStage").addEventListener('click',e=>{if(e.target===e.currentTarget)closeLightbox()});
-let _lbSwipeX=null;
-$("#lbStage").addEventListener('pointerdown',e=>{_lbSwipeX=e.clientX});
-$("#lbStage").addEventListener('pointerup',e=>{
-  if(_lbSwipeX===null)return;
-  const dx=e.clientX-_lbSwipeX;
-  _lbSwipeX=null;
-  if(Math.abs(dx)>40)(dx>0?lightboxPrev:lightboxNext)();
+
+/* pinch-zoom, double-tap/double-click zoom, wheel zoom and panning for the
+   open image. Swiping to the next/prev photo and tap-to-close only fire
+   while at 1x zoom, so they don't fight with panning a zoomed-in image. */
+let _lbScale=1,_lbPanX=0,_lbPanY=0;
+let _lbPointers=new Map();
+let _lbPinch=null, _lbPanStart=null, _lbSwipeStart=null, _lbLastTap=0;
+function lbApplyTransform(withTransition){
+  const img=$("#lbImg");
+  img.style.transition=withTransition?'transform .18s ease':'none';
+  img.style.transform=`translate(${_lbPanX}px,${_lbPanY}px) scale(${_lbScale})`;
+}
+function lbResetZoom(withTransition){
+  _lbScale=1;_lbPanX=0;_lbPanY=0;_lbPointers.clear();_lbPinch=null;_lbPanStart=null;_lbSwipeStart=null;
+  lbApplyTransform(withTransition);
+}
+function lbClampPan(){
+  const st=$("#lbStage").getBoundingClientRect();
+  const maxX=(st.width*(_lbScale-1))/2+st.width*0.15;
+  const maxY=(st.height*(_lbScale-1))/2+st.height*0.15;
+  _lbPanX=Math.max(-maxX,Math.min(maxX,_lbPanX));
+  _lbPanY=Math.max(-maxY,Math.min(maxY,_lbPanY));
+}
+function lbDist(p1,p2){return Math.hypot(p1.x-p2.x,p1.y-p2.y)}
+$("#lbStage").addEventListener('pointerdown',e=>{
+  _lbPointers.set(e.pointerId,{x:e.clientX,y:e.clientY});
+  if(_lbPointers.size===2){
+    const [p1,p2]=[..._lbPointers.values()];
+    _lbPinch={startDist:lbDist(p1,p2),startScale:_lbScale};
+    _lbSwipeStart=null;_lbPanStart=null;
+  }else if(_lbPointers.size===1){
+    if(_lbScale>1)_lbPanStart={x:e.clientX,y:e.clientY,panX:_lbPanX,panY:_lbPanY};
+    else _lbSwipeStart={x:e.clientX,y:e.clientY};
+  }
 });
+$("#lbStage").addEventListener('pointermove',e=>{
+  if(!_lbPointers.has(e.pointerId))return;
+  _lbPointers.set(e.pointerId,{x:e.clientX,y:e.clientY});
+  if(_lbPointers.size===2&&_lbPinch){
+    const [p1,p2]=[..._lbPointers.values()];
+    _lbScale=Math.max(1,Math.min(4,_lbPinch.startScale*(lbDist(p1,p2)/_lbPinch.startDist)));
+    lbClampPan();lbApplyTransform(false);
+  }else if(_lbPanStart){
+    _lbPanX=_lbPanStart.panX+(e.clientX-_lbPanStart.x);
+    _lbPanY=_lbPanStart.panY+(e.clientY-_lbPanStart.y);
+    lbClampPan();lbApplyTransform(false);
+  }
+});
+function lbPointerEnd(e){
+  _lbPointers.delete(e.pointerId);
+  if(_lbPointers.size<2)_lbPinch=null;
+  if(_lbPointers.size>0)return;
+  if(_lbScale<=1.02&&_lbScale!==1){_lbScale=1;lbApplyTransform(true)}
+  if(_lbPanStart){_lbPanStart=null;return}
+  const onImage=e.target&&e.target.id==='lbImg';
+  if(_lbSwipeStart){
+    const dx=e.clientX-_lbSwipeStart.x,dy=e.clientY-_lbSwipeStart.y;
+    const moved=Math.hypot(dx,dy)>10;
+    _lbSwipeStart=null;
+    if(moved){
+      if(Math.abs(dx)>40&&Math.abs(dx)>Math.abs(dy))(dx>0?lightboxPrev:lightboxNext)();
+      return;
+    }
+  }
+  const now=Date.now();
+  if(onImage&&now-_lbLastTap<320){
+    _lbLastTap=0;
+    if(_lbScale>1)lbResetZoom(true);
+    else{_lbScale=2;lbClampPan();lbApplyTransform(true)}
+    return;
+  }
+  _lbLastTap=onImage?now:0;
+  // only the empty backdrop closes on tap — not the image, and not the
+  // prev/next buttons, which live inside #lbStage and would otherwise
+  // bubble a pointerup here too
+  if(e.target&&e.target.id==='lbStage'&&_lbScale===1)closeLightbox();
+}
+$("#lbStage").addEventListener('pointerup',lbPointerEnd);
+$("#lbStage").addEventListener('pointercancel',lbPointerEnd);
+$("#lbStage").addEventListener('wheel',e=>{
+  e.preventDefault();
+  _lbScale=Math.max(1,Math.min(4,_lbScale+(e.deltaY<0?0.25:-0.25)));
+  if(_lbScale===1){_lbPanX=0;_lbPanY=0}
+  lbClampPan();lbApplyTransform(false);
+},{passive:false});
 document.addEventListener("keydown",e=>{
   if($("#lightbox").classList.contains('on')){
     if(e.key==="Escape")closeLightbox();
