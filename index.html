@@ -694,7 +694,7 @@ const store=(()=>{let mem={};let ok=false;try{localStorage.setItem('__t','1');lo
 
 /* ---------- server sync (admin-editable content only; bookings have their own flow) ---------- */
 const SYNC_KEY_MAP={ns_hero:'hero',ns_services:'services',ns_trust:'trust',ns_team:'team',
-  ns_faq:'faq',ns_reviews:'reviews',ns_prices:'prices',ns_slots:'slots',ns_pkg_dur:'pkg_dur',
+  ns_faq:'faq',ns_reviews:'reviews',ns_prices:'prices',ns_slots:'slots',ns_pkg_dur:'pkg_dur',ns_pkg_feat:'pkg_feat',
   ns_nav_order:'nav_order',ns_nav_mobile:'nav_mobile',ns_site:'site',ns_mobile_vis:'mobile_vis',ns_contact:'contact'};
 function syncContentKey(key,value){
   fetch('api/content.php',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'include',
@@ -1009,6 +1009,29 @@ const PKGS=[
 function pkgDurData(){return store.get('ns_pkg_dur',{})}
 function pkgDur(pk){return pkgDurData()[pk.id]||pk.dur}
 function setPkgDur(id,lang,v){const d=JSON.parse(JSON.stringify(pkgDurData()));const pk=PKGS.find(x=>x.id===id);if(!d[id])d[id]=JSON.parse(JSON.stringify(pk.dur));d[id][lang]=v;store.set('ns_pkg_dur',d);renderPkgCards();showToast(t('savedToast'))}
+function pkgFeatData(){return store.get('ns_pkg_feat',{})}
+function pkgFeat(pk){return pkgFeatData()[pk.id]||pk.feat}
+function setPkgFeatItem(id,i,lang,v){
+  const s=JSON.parse(JSON.stringify(pkgFeatData()));const pk=PKGS.find(x=>x.id===id);
+  if(!s[id])s[id]=JSON.parse(JSON.stringify(pk.feat));
+  s[id][i][lang]=v;store.set('ns_pkg_feat',s);renderPkgCards();showToast(t('savedToast'));
+}
+function addPkgFeat(id){
+  const s=JSON.parse(JSON.stringify(pkgFeatData()));const pk=PKGS.find(x=>x.id===id);
+  if(!s[id])s[id]=JSON.parse(JSON.stringify(pk.feat));
+  s[id].push({bn:'নতুন সুবিধা',en:'New feature'});
+  store.set('ns_pkg_feat',s);renderPkgCards();renderAdmin();
+}
+function removePkgFeat(id,i){
+  const s=JSON.parse(JSON.stringify(pkgFeatData()));const pk=PKGS.find(x=>x.id===id);
+  if(!s[id])s[id]=JSON.parse(JSON.stringify(pk.feat));
+  s[id].splice(i,1);
+  store.set('ns_pkg_feat',s);renderPkgCards();renderAdmin();
+}
+function resetPkgFeat(id){
+  const s=JSON.parse(JSON.stringify(pkgFeatData()));delete s[id];
+  store.set('ns_pkg_feat',s);renderPkgCards();renderAdmin();
+}
 const DIVS={
  "ঢাকা":["ঢাকা","গাজীপুর","নারায়ণগঞ্জ","টাঙ্গাইল","নরসিংদী","মুন্সিগঞ্জ","মানিকগঞ্জ","কিশোরগঞ্জ","ফরিদপুর","গোপালগঞ্জ","মাদারীপুর","শরীয়তপুর","রাজবাড়ী"],
  "চট্টগ্রাম":["চট্টগ্রাম","কক্সবাজার","বান্দরবান","রাঙামাটি","খাগড়াছড়ি","ফেনী","নোয়াখালী","লক্ষ্মীপুর","কুমিল্লা","চাঁদপুর","ব্রাহ্মণবাড়িয়া"],
@@ -1305,7 +1328,7 @@ function renderPkgCards(){
       <div class="dur">${bi(pkgDur(pk))}</div>
       <h3>${bi(pk.name)}</h3>
       <div class="price">${taka(p[pk.id])}<small>${t('pkgPerSession')}</small></div>
-      <ul>${pk.feat.map(f=>`<li>${bi(f)}</li>`).join('')}</ul>
+      <ul>${pkgFeat(pk).map(f=>`<li>${bi(f)}</li>`).join('')}</ul>
       <button class="btn btn-ink" onclick="startBooking(null,'${pk.id}')">${t('pkgChooseTime')}</button>
     </div>`).join('');
 }
@@ -2133,13 +2156,23 @@ function setContactField(f,v){
 /* packages / slots / bookings */
 function admPkgs(){
   const p=prices();
-  return `<div class="dcard"><b>পরামর্শ ফি ও সময়কাল (সম্পাদনযোগ্য)</b>
-    ${PKGS.map(pk=>`<div style="border-top:1px solid var(--line);padding-top:14px;margin-top:14px">
+  return `<div class="dcard"><b>পরামর্শ ফি, সময়কাল ও সুবিধার তালিকা (সম্পাদনযোগ্য)</b>
+    ${PKGS.map(pk=>{const feat=pkgFeat(pk);return `<div style="border-top:1px solid var(--line);padding-top:14px;margin-top:14px">
       <b>${pk.name.bn}</b>
       ${biField('সময়কাল',pkgDur(pk),lang=>`setPkgDur('${pk.id}','${lang}',this.value)`)}
       <div class="adm-price" style="border-bottom:none;padding-bottom:0"><b style="flex:1;font-weight:400;color:var(--grey);font-size:13px">ফি</b>
         <span>৳</span><input type="number" value="${p[pk.id]}" onchange="setPrice('${pk.id}',this.value)"></div>
-    </div>`).join('')}
+      <div style="margin-top:14px"><label style="display:block;font-size:14px;font-weight:600;margin-bottom:8px">সুবিধার তালিকা (✓ বুলেট পয়েন্ট)</label>
+        ${feat.map((f,i)=>`<div style="background:var(--field);border-radius:10px;padding:12px;margin-top:8px">
+          ${biField('আইটেম '+toBn(i+1),f,lang=>`setPkgFeatItem('${pk.id}',${i},'${lang}',this.value)`)}
+          <button class="btn btn-ghost" style="color:var(--clay);margin-top:2px;padding:4px 0" onclick="removePkgFeat('${pk.id}',${i})">মুছে ফেলুন</button>
+        </div>`).join('')}
+        <div class="row-btns" style="margin-top:10px">
+          <button class="btn btn-line btn-sm inline" onclick="addPkgFeat('${pk.id}')">+ আইটেম যোগ করুন</button>
+          <button class="btn btn-ghost btn-sm inline" onclick="resetPkgFeat('${pk.id}')">ডিফল্টে ফিরুন</button>
+        </div>
+      </div>
+    </div>`;}).join('')}
     <p style="color:var(--grey);font-size:12px;margin-top:10px">পরিবর্তন সঙ্গে সঙ্গে হোমপেজ ও বুকিংয়ে প্রতিফলিত হবে।</p>
   </div>`;
 }
