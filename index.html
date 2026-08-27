@@ -3197,19 +3197,30 @@ function injectSeoSchema(){
   if(!tag){tag=document.createElement('script');tag.type='application/ld+json';tag.id='seoSchema';document.head.appendChild(tag)}
   tag.textContent=JSON.stringify(schema);
 }
-async function boot(){
-  await pullFromServer();
-  setTextSize(store.get('ns_textsize',1));
-  tickClock();setInterval(tickClock,1000);
+// Renders everything (nav, hero, gallery, etc.) from whatever's currently
+// cached locally (or the built-in defaults, for a first-ever visit).
+// Called twice: once immediately so the page — including the bottom nav,
+// which used to be static HTML and always appeared instantly — isn't
+// blank while pullFromServer()'s network round-trip is still in flight
+// (which can take a couple of seconds on a slow connection), and again
+// once that fresh data actually arrives.
+function renderNow(){
   applyLang();
   injectSeoSchema();
-  startHeroCarousel();
+  clearInterval(heroT);startHeroCarousel();
   const wa=waHref("আসসালামু আলাইকুম, নকশা সেবা থেকে পরামর্শ নিতে চাই।");
   ["heroWa","ctaWa","fabWa"].forEach(id=>{const e=document.getElementById(id);if(e)e.href=wa});
+}
+async function boot(){
+  setTextSize(store.get('ns_textsize',1));
+  tickClock();setInterval(tickClock,1000);
+  renderNow();
   const h=(location.hash||"").replace("#/","");
   if(h==='feedback'){go('home',{replace:true});openFeedbackForm();}
   else if(h&&document.getElementById("view-"+h))go(h,{replace:true});
   else go('home',{replace:true});
+  await pullFromServer();
+  renderNow();
 }
 boot();
 </script>
