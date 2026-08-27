@@ -2364,8 +2364,12 @@ async function uploadGalleryCover(i,file){
   if(!file)return;
   if(!file.type.startsWith('image/')){galleryImgWrongType();return}
   if(file.size>20*1024*1024){galleryImgTooBig();return}
-  const dataUrl=await resizeImageFile(file);
-  setGalleryCover(i,dataUrl);
+  try{
+    const dataUrl=await resizeImageFile(file);
+    setGalleryCover(i,dataUrl);
+  }catch(err){
+    openModal(`<h3>ছবি প্রসেস করা যায়নি</h3><p style="color:var(--graphite);margin-top:10px">এই ছবিটি লোড করা যায়নি। অনুগ্রহ করে অন্য একটি ছবি চেষ্টা করুন।</p><button class="btn btn-ink" style="margin-top:16px" onclick="closeModal()">${t('okBtn')}</button>`);
+  }
 }
 function setGalleryCover(i,val){
   const a=JSON.parse(JSON.stringify(galleryData()));a[i].cover=val;
@@ -2395,16 +2399,22 @@ function resizeImageFile(file,maxDim=1600,quality=0.82){
     reader.onload=()=>{
       const img=new Image();
       img.onload=()=>{
-        let w=img.naturalWidth,h=img.naturalHeight;
-        if(w>maxDim||h>maxDim){
-          if(w>=h){h=Math.round(h*maxDim/w);w=maxDim}
-          else{w=Math.round(w*maxDim/h);h=maxDim}
-        }
-        const canvas=document.createElement('canvas');
-        canvas.width=w;canvas.height=h;
-        const ctx=canvas.getContext('2d');
-        ctx.drawImage(img,0,0,w,h);
-        resolve(canvas.toDataURL('image/jpeg',quality));
+        // img.onload isn't inside a try/catch by default, so a throw from
+        // drawImage/toDataURL (large photos on low-memory phones, odd
+        // color profiles, etc.) would otherwise leave this promise
+        // hanging forever — neither resolved nor rejected, no error shown.
+        try{
+          let w=img.naturalWidth,h=img.naturalHeight;
+          if(w>maxDim||h>maxDim){
+            if(w>=h){h=Math.round(h*maxDim/w);w=maxDim}
+            else{w=Math.round(w*maxDim/h);h=maxDim}
+          }
+          const canvas=document.createElement('canvas');
+          canvas.width=w;canvas.height=h;
+          const ctx=canvas.getContext('2d');
+          ctx.drawImage(img,0,0,w,h);
+          resolve(canvas.toDataURL('image/jpeg',quality));
+        }catch(err){reject(err)}
       };
       img.onerror=reject;
       img.src=reader.result;
@@ -2431,14 +2441,23 @@ async function uploadGalleryImage(i,fileList){
     if(rejected)galleryImgWrongType();
     return;
   }
-  const results=await Promise.all(valid.map(f=>resizeImageFile(f)));
-  a[i].images.push(...results);
-  store.set('ns_gallery',a);renderGallery();renderAdmin();
-  if(rejected||skipped){
+  const settled=await Promise.allSettled(valid.map(f=>resizeImageFile(f)));
+  const results=settled.filter(r=>r.status==='fulfilled').map(r=>r.value);
+  const failed=settled.length-results.length;
+  if(results.length){
+    a[i].images.push(...results);
+    store.set('ns_gallery',a);renderGallery();renderAdmin();
+  }
+  if(failed||rejected||skipped){
     const notes=[];
+    if(failed)notes.push(`${toBn(failed)}টি ছবি প্রসেস করা যায়নি (ফাইলটি সমস্যাযুক্ত হতে পারে)`);
     if(rejected)notes.push(`${toBn(rejected)}টি ছবি ফরম্যাট বা আকারের (২০ মেগাবাইটের বেশি) কারণে বাদ পড়েছে`);
     if(skipped)notes.push(`সর্বোচ্চ সীমার কারণে আরও ${toBn(skipped)}টি ছবি যোগ করা যায়নি`);
-    openModal(`<h3>${toBn(valid.length)}টি ছবি যোগ হয়েছে</h3><p style="color:var(--graphite);margin-top:10px">${notes.join('; ')}।</p><button class="btn btn-ink" style="margin-top:16px" onclick="closeModal()">${t('okBtn')}</button>`);
+    if(results.length){
+      openModal(`<h3>${toBn(results.length)}টি ছবি যোগ হয়েছে</h3><p style="color:var(--graphite);margin-top:10px">${notes.join('; ')}।</p><button class="btn btn-ink" style="margin-top:16px" onclick="closeModal()">${t('okBtn')}</button>`);
+    }else{
+      openModal(`<h3>ছবি যোগ করা যায়নি</h3><p style="color:var(--graphite);margin-top:10px">${notes.join('; ')}। অনুগ্রহ করে অন্য একটি ছবি বা ফরম্যাট (JPG/PNG) দিয়ে আবার চেষ্টা করুন।</p><button class="btn btn-ink" style="margin-top:16px" onclick="closeModal()">${t('okBtn')}</button>`);
+    }
   }else{
     showToast(t('savedToast'));
   }
