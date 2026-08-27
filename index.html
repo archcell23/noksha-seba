@@ -230,12 +230,14 @@ h1,h2,h3{font-family:var(--serif);font-weight:700;line-height:1.28;letter-spacin
 .gallery-filters button:hover{border-color:var(--green)}
 .gallery-filters button.on{background:var(--green);color:#fff;border-color:var(--green)}
 .gallery-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:16px}
-.gallery-item{position:relative;border-radius:var(--r-s);overflow:hidden;aspect-ratio:1/1;background:var(--field);border:1px solid var(--line)}
+.gallery-item{position:relative;border-radius:var(--r-s);overflow:hidden;aspect-ratio:1/1;background:var(--field);border:1px solid var(--line);cursor:pointer}
 .gallery-item img{width:100%;height:100%;object-fit:cover;display:block}
 .gallery-item .gi-label{position:absolute;left:0;right:0;bottom:0;background:linear-gradient(0deg,rgba(15,26,18,.82),transparent);
   color:#fff;padding:22px 10px 9px;font-size:12.5px;font-weight:700;line-height:1.3}
 .gallery-item .gi-type{position:absolute;top:8px;left:8px;background:rgba(255,255,255,.94);color:var(--green-deep);
   font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px}
+.gallery-item .gi-count{position:absolute;top:8px;right:8px;background:rgba(15,26,18,.75);color:#fff;
+  font-size:10.5px;font-weight:700;padding:3px 8px;border-radius:20px}
 @media(min-width:600px){.gallery-grid{grid-template-columns:repeat(3,1fr)}}
 @media(min-width:760px){.gallery-grid{grid-template-columns:repeat(4,1fr)}}
 .review-who b{font-size:14.5px;font-family:var(--sans);display:block}
@@ -1227,14 +1229,26 @@ function renderGallery(){
   filtersEl.innerHTML=`<button class="${_galleryFilterIdx===-1?'on':''}" onclick="setGalleryFilter(-1)">${esc(t('galleryFilterAll'))}</button>`+
     types.map((ty,i)=>`<button class="${_galleryFilterIdx===i?'on':''}" onclick="setGalleryFilter(${i})">${esc(bi(ty))}</button>`).join('');
   const activeType=_galleryFilterIdx>=0?bi(types[_galleryFilterIdx]):null;
-  const visible=arr.filter(item=>activeType===null||(item.type&&bi(item.type)===activeType));
-  grid.innerHTML=visible.map(item=>`<div class="gallery-item">
-    ${item.photo?`<img src="${esc(item.photo)}" alt="${esc(bi(item.title))}">`:''}
+  const visible=arr.map((item,i)=>({item,i})).filter(({item})=>activeType===null||(item.type&&bi(item.type)===activeType));
+  grid.innerHTML=visible.map(({item,i})=>{const extra=(item.images||[]).length;
+    return `<div class="gallery-item" onclick="openGalleryItem(${i})">
+    ${item.cover?`<img src="${esc(item.cover)}" alt="${esc(bi(item.title))}">`:''}
+    ${extra?`<span class="gi-count">+${toBn(extra)}</span>`:''}
     ${item.type?`<span class="gi-type">${esc(bi(item.type))}</span>`:''}
     ${item.title?`<span class="gi-label">${esc(bi(item.title))}</span>`:''}
-  </div>`).join('');
+  </div>`;}).join('');
 }
 function setGalleryFilter(i){_galleryFilterIdx=i;renderGallery()}
+function openGalleryItem(i){
+  const item=galleryData()[i];if(!item)return;
+  const photos=[item.cover].concat(item.images||[]).filter(Boolean);
+  openModal(`<h3>${esc(bi(item.title))}</h3>
+    ${item.type?`<div style="color:var(--green-dark);font-size:12.5px;font-weight:700;margin-top:4px">${esc(bi(item.type))}</div>`:''}
+    ${item.desc&&bi(item.desc)?`<p style="color:var(--graphite);font-size:14px;margin-top:10px">${esc(bi(item.desc))}</p>`:''}
+    ${photos.length?`<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:14px">
+      ${photos.map(p=>`<img src="${esc(p)}" style="width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:10px">`).join('')}
+    </div>`:''}`);
+}
 function renderContactPoints(){
   const c=contactData();
   const heroCall=$("#heroCallLink"),ctaCall=$("#ctaCallLink"),foot=$("#footerContact");
@@ -2188,12 +2202,13 @@ function addReview(){
 function removeReview(i){const a=JSON.parse(JSON.stringify(reviewsData()));a.splice(i,1);store.set('ns_reviews',a);renderReviews();renderAdmin()}
 
 /* project gallery editor */
+const GALLERY_MAX_IMAGES=10;
 function admGallery(){
   const arr=galleryData();
   return `<div class="dcard"><b>প্রকল্প গ্যালারি (${toBn(arr.length)})</b>
     <p style="color:var(--grey);font-size:12px;margin-top:6px">শুধু প্রকৃত সম্পন্ন প্রকল্পের ছবি যোগ করুন। কোনো ছবি না থাকলে গ্যালারি সেকশনটি হোমপেজে দেখানো হবে না — শুধু প্রকল্পের ধরনের তালিকা দেখাবে।</p>
-    ${arr.length?arr.map((x,i)=>`<div style="border-top:1px solid var(--line);padding-top:14px;margin-top:14px">
-      ${galleryPhotoField(i,x.photo)}
+    ${arr.length?arr.map((x,i)=>{const imgs=x.images||[];return `<div style="border-top:1px solid var(--line);padding-top:14px;margin-top:14px">
+      ${galleryCoverField(i,x.cover)}
       ${biField('প্রকল্পের নাম',x.title,lang=>`setGalleryField(${i},'title','${lang}',this.value)`)}
       <div class="field"><label>প্রকল্পের ধরন</label>
         <select onchange="setGalleryType(${i},this.value)">
@@ -2202,40 +2217,71 @@ function admGallery(){
         </select>
       </div>
       ${biField('বিবরণ',x.desc,lang=>`setGalleryField(${i},'desc','${lang}',this.value)`,true)}
-      <button class="btn btn-ghost" style="color:var(--clay);margin-top:6px" onclick="removeGalleryItem(${i})">মুছে ফেলুন</button>
-    </div>`).join(''):'<p style="color:var(--grey);font-size:13px;margin-top:10px">এখনো কোনো প্রকল্প যোগ করা হয়নি।</p>'}
+      <div style="margin-top:14px"><label style="display:block;font-size:14px;font-weight:600;margin-bottom:8px">অতিরিক্ত ছবি (${toBn(imgs.length)}/${toBn(GALLERY_MAX_IMAGES)}) <span class="opt">— প্রকল্পে ট্যাপ করলে সবগুলো ছবি দেখা যাবে</span></label>
+        ${imgs.length?`<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px">
+          ${imgs.map((im,gi)=>`<div style="position:relative"><img src="${esc(im)}" style="width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:8px">
+            <button style="position:absolute;top:-6px;right:-6px;width:22px;height:22px;border-radius:50%;background:var(--clay);color:#fff;font-size:12px;line-height:1" onclick="removeGalleryImage(${i},${gi})">✕</button>
+          </div>`).join('')}
+        </div>`:''}
+        ${imgs.length<GALLERY_MAX_IMAGES?`<label class="btn btn-line btn-sm inline" style="cursor:pointer;margin-top:8px">+ ছবি যোগ করুন
+          <input type="file" accept="image/*" style="display:none" onchange="uploadGalleryImage(${i},this.files[0])">
+        </label>`:''}
+      </div>
+      <button class="btn btn-ghost" style="color:var(--clay);margin-top:10px" onclick="removeGalleryItem(${i})">প্রকল্পটি মুছে ফেলুন</button>
+    </div>`;}).join(''):'<p style="color:var(--grey);font-size:13px;margin-top:10px">এখনো কোনো প্রকল্প যোগ করা হয়নি।</p>'}
     <button class="btn btn-line" style="margin-top:16px" onclick="addGalleryItem()">+ নতুন প্রকল্প যোগ করুন</button>
   </div>`;
 }
-function galleryPhotoField(i,val){
+function galleryCoverField(i,val){
   if(val){
-    return `<div class="field"><label>প্রকল্পের ছবি</label>
+    return `<div class="field"><label>কভার ছবি</label>
       <div style="display:flex;align-items:center;gap:12px;background:var(--field);border-radius:10px;padding:10px">
         <img src="${esc(val)}" style="width:56px;height:56px;border-radius:8px;object-fit:cover;flex:none">
-        <span style="flex:1;font-size:12.5px;color:var(--grey)">ছবি সেট করা আছে</span>
-        <button class="btn btn-ghost" style="color:var(--clay);width:auto;padding:8px" onclick="clearGalleryPhoto(${i})">সরান</button>
+        <span style="flex:1;font-size:12.5px;color:var(--grey)">গ্যালারিতে থাম্বনেইল হিসেবে দেখাবে</span>
+        <button class="btn btn-ghost" style="color:var(--clay);width:auto;padding:8px" onclick="clearGalleryCover(${i})">সরান</button>
       </div>
     </div>`;
   }
-  return `<div class="field"><label>প্রকল্পের ছবি</label>
+  return `<div class="field"><label>কভার ছবি <span class="opt">(গ্যালারিতে থাম্বনেইল হিসেবে দেখাবে)</span></label>
     <label class="btn btn-line btn-sm inline" style="cursor:pointer">কম্পিউটার থেকে আপলোড
-      <input type="file" accept="image/*" style="display:none" onchange="uploadGalleryPhoto(${i},this.files[0])">
+      <input type="file" accept="image/*" style="display:none" onchange="uploadGalleryCover(${i},this.files[0])">
     </label>
   </div>`;
 }
-function uploadGalleryPhoto(i,file){
+function galleryImgTooBig(){openModal(`<h3>ছবিটি অনেক বড়</h3><p style="color:var(--graphite);margin-top:10px">অনুগ্রহ করে ১.২ মেগাবাইটের ছোট একটি ছবি বেছে নিন।</p><button class="btn btn-ink" style="margin-top:16px" onclick="closeModal()">${t('okBtn')}</button>`)}
+function galleryImgWrongType(){openModal(`<h3>শুধু ছবি ফাইল</h3><p style="color:var(--graphite);margin-top:10px">অনুগ্রহ করে JPG, PNG বা WEBP ফরম্যাটের একটি ছবি বেছে নিন।</p><button class="btn btn-ink" style="margin-top:16px" onclick="closeModal()">${t('okBtn')}</button>`)}
+function uploadGalleryCover(i,file){
   if(!file)return;
-  if(!file.type.startsWith('image/')){openModal(`<h3>শুধু ছবি ফাইল</h3><p style="color:var(--graphite);margin-top:10px">অনুগ্রহ করে JPG, PNG বা WEBP ফরম্যাটের একটি ছবি বেছে নিন।</p><button class="btn btn-ink" style="margin-top:16px" onclick="closeModal()">${t('okBtn')}</button>`);return}
-  if(file.size>1200*1024){openModal(`<h3>ছবিটি অনেক বড়</h3><p style="color:var(--graphite);margin-top:10px">অনুগ্রহ করে ১.২ মেগাবাইটের ছোট একটি ছবি বেছে নিন।</p><button class="btn btn-ink" style="margin-top:16px" onclick="closeModal()">${t('okBtn')}</button>`);return}
+  if(!file.type.startsWith('image/')){galleryImgWrongType();return}
+  if(file.size>1200*1024){galleryImgTooBig();return}
   const reader=new FileReader();
-  reader.onload=()=>setGalleryPhoto(i,reader.result);
+  reader.onload=()=>setGalleryCover(i,reader.result);
   reader.readAsDataURL(file);
 }
-function setGalleryPhoto(i,val){
-  const a=JSON.parse(JSON.stringify(galleryData()));a[i].photo=val;
+function setGalleryCover(i,val){
+  const a=JSON.parse(JSON.stringify(galleryData()));a[i].cover=val;
   store.set('ns_gallery',a);renderGallery();renderAdmin();showToast(t('savedToast'));
 }
-function clearGalleryPhoto(i){setGalleryPhoto(i,'')}
+function clearGalleryCover(i){setGalleryCover(i,'')}
+function uploadGalleryImage(i,file){
+  if(!file)return;
+  if(!file.type.startsWith('image/')){galleryImgWrongType();return}
+  if(file.size>1200*1024){galleryImgTooBig();return}
+  const reader=new FileReader();
+  reader.onload=()=>{
+    const a=JSON.parse(JSON.stringify(galleryData()));
+    if(!a[i].images)a[i].images=[];
+    if(a[i].images.length>=GALLERY_MAX_IMAGES)return;
+    a[i].images.push(reader.result);
+    store.set('ns_gallery',a);renderGallery();renderAdmin();showToast(t('savedToast'));
+  };
+  reader.readAsDataURL(file);
+}
+function removeGalleryImage(i,gi){
+  const a=JSON.parse(JSON.stringify(galleryData()));
+  if(a[i].images)a[i].images.splice(gi,1);
+  store.set('ns_gallery',a);renderGallery();renderAdmin();
+}
 function setGalleryField(i,f,lang,v){
   const a=JSON.parse(JSON.stringify(galleryData()));a[i][f][lang]=v;
   store.set('ns_gallery',a);renderGallery();showToast(t('savedToast'));
@@ -2248,7 +2294,7 @@ function setGalleryType(i,ptIndexStr){
 }
 function addGalleryItem(){
   const a=JSON.parse(JSON.stringify(galleryData()));
-  a.push({photo:'',title:{bn:'প্রকল্পের নাম লিখুন',en:'Enter project name'},type:null,desc:{bn:'',en:''}});
+  a.push({cover:'',images:[],title:{bn:'প্রকল্পের নাম লিখুন',en:'Enter project name'},type:null,desc:{bn:'',en:''}});
   store.set('ns_gallery',a);renderGallery();renderAdmin();
 }
 function removeGalleryItem(i){
