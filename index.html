@@ -815,6 +815,8 @@ const I18N={
   projectsHeading:{bn:"যেসব ধরনের প্রকল্পে আমরা পরামর্শ দিই",en:"Types of projects we advise on"},
   projectsLead:{bn:"এখনো এখানে সম্পন্ন প্রকল্পের গ্যালারি যোগ হয়নি — নিচে আমরা যেসব ধরনের প্রকল্পে নিয়মিত পরামর্শ দিই তার তালিকা।",en:"A completed-projects gallery isn't added here yet — below are the project types we regularly advise on."},
   projectsLeadGallery:{bn:"আমাদের সাম্প্রতিক কিছু কাজ দেখুন, এবং আমরা যেসব ধরনের প্রকল্পে নিয়মিত পরামর্শ দিই তার তালিকা।",en:"See some of our recent work, and the project types we regularly advise on."},
+  projectSummaryLabel:{bn:"প্রজেক্ট সারসংক্ষেপ",en:"Project summary"},
+  projectCtaBtn:{bn:"আমাদের সাথে কাজ করতে চান?",en:"Want to work with us?"},
   galleryFilterAll:{bn:"সব",en:"All"},
   galleryTabTitle:{bn:"প্রকল্প গ্যালারি",en:"Project Gallery"},
   researchEyebrow:{bn:"গবেষণা ও কোড",en:"Research & Codes"},
@@ -1304,7 +1306,22 @@ function openGalleryItem(i){
   const item=galleryData()[i];if(!item)return;
   const photos=[item.cover].concat(item.images||[]).filter(Boolean);
   if(!photos.length)return;
-  openLightbox(photos,0,bi(item.title),item.type?bi(item.type):'',item.desc?bi(item.desc):'');
+  const waMsg=`আসসালামু আলাইকুম, "${bi(item.title)}" প্রকল্পটি দেখে যোগাযোগ করতে চাই।`;
+  openModal(`<h3>${esc(bi(item.title))}</h3>
+    ${item.type?`<div style="color:var(--green-dark);font-size:12.5px;font-weight:700;margin-top:4px">${esc(bi(item.type))}</div>`:''}
+    ${item.desc&&bi(item.desc)?`<div style="margin-top:14px">
+      <div style="font-size:11.5px;font-weight:700;color:var(--grey);letter-spacing:.05em;text-transform:uppercase">${esc(t('projectSummaryLabel'))}</div>
+      <p style="color:var(--graphite);font-size:14px;margin-top:6px;line-height:1.6">${esc(bi(item.desc))}</p>
+    </div>`:''}
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:16px">
+      ${photos.map((p,pi)=>`<img src="${esc(p)}" alt="${esc(bi(item.title))} ${toBn(pi+1)}" style="width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:10px;cursor:pointer" onclick="openGalleryPhotoAt(${i},${pi})">`).join('')}
+    </div>
+    <a class="btn btn-wa" style="margin-top:18px" href="${waHref(waMsg)}">${esc(t('projectCtaBtn'))}</a>`);
+}
+function openGalleryPhotoAt(i,idx){
+  const item=galleryData()[i];if(!item)return;
+  const photos=[item.cover].concat(item.images||[]).filter(Boolean);
+  openLightbox(photos,idx,bi(item.title),item.type?bi(item.type):'',item.desc?bi(item.desc):'');
 }
 function renderContactPoints(){
   const c=contactData();
