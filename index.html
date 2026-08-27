@@ -731,11 +731,11 @@ footer .fine{margin-top:14px;font-size:12px;color:var(--faint)}
 
 <!-- ================= BOTTOM NAV / FAB ================= -->
 <nav class="botnav" id="botnav">
-  <a data-nav="home" onclick="go('home')"><svg viewBox="0 0 24 24"><path d="M3 11l9-7 9 7M5 10v10h14V10"/></svg><span data-i18n="bnHome">হোম</span></a>
-  <a data-nav="services" onclick="go('home');jump('services')"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg><span data-i18n="bnServices">সেবা</span></a>
-  <a data-nav="booking" onclick="startBooking()"><svg viewBox="0 0 24 24"><path d="M7 3v4M17 3v4M4 8h16M5 6h14v14H5z"/></svg><span data-i18n="bnBooking">বুকিং</span></a>
-  <a data-nav="dashboard" onclick="go('dashboard')"><svg viewBox="0 0 24 24"><path d="M4 4h7v7H4zM13 4h7v4h-7zM13 12h7v8h-7zM4 15h7v5H4z"/></svg><span data-i18n="navDash">আমার প্রকল্প</span></a>
-  <a data-nav="policy" onclick="contactWa()"><svg viewBox="0 0 24 24"><path d="M4 4h16v12H7l-3 3z"/></svg><span data-i18n="bnContact">যোগাযোগ</span></a>
+  <a data-nav="home" data-botkey="home" onclick="go('home')"><svg viewBox="0 0 24 24"><path d="M3 11l9-7 9 7M5 10v10h14V10"/></svg><span data-i18n="bnHome">হোম</span></a>
+  <a data-nav="services" data-botkey="services" onclick="go('home');jump('services')"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg><span data-i18n="bnServices">সেবা</span></a>
+  <a data-nav="booking" data-botkey="booking" onclick="startBooking()"><svg viewBox="0 0 24 24"><path d="M7 3v4M17 3v4M4 8h16M5 6h14v14H5z"/></svg><span data-i18n="bnBooking">বুকিং</span></a>
+  <a data-nav="dashboard" data-botkey="dashboard" onclick="go('dashboard')"><svg viewBox="0 0 24 24"><path d="M4 4h7v7H4zM13 4h7v4h-7zM13 12h7v8h-7zM4 15h7v5H4z"/></svg><span data-i18n="navDash">আমার প্রকল্প</span></a>
+  <a data-nav="policy" data-botkey="contact" onclick="contactWa()"><svg viewBox="0 0 24 24"><path d="M4 4h16v12H7l-3 3z"/></svg><span data-i18n="bnContact">যোগাযোগ</span></a>
 </nav>
 <a class="fab" id="fabWa" aria-label="WhatsApp"><svg viewBox="0 0 24 24"><path d="M17.5 14.4c-.3-.1-1.7-.8-2-.9-.3-.1-.5-.1-.7.2-.2.3-.7.9-.9 1.1-.2.2-.3.2-.6.1-1.6-.8-2.6-1.4-3.7-3.2-.3-.5.3-.5.8-1.5.1-.2 0-.4 0-.5 0-.1-.7-1.6-.9-2.2-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.4s1 2.8 1.2 3c.1.2 2 3.1 4.9 4.3 2.9 1.2 2.9.8 3.4.8.5 0 1.7-.7 1.9-1.3.2-.7.2-1.2.2-1.3-.1-.2-.3-.2-.6-.4zM12 2a10 10 0 0 0-8.6 15l-1.3 4.8 4.9-1.3A10 10 0 1 0 12 2z"/></svg></a>
 
@@ -766,7 +766,7 @@ const store=(()=>{let mem={};let ok=false;try{localStorage.setItem('__t','1');lo
 /* ---------- server sync (admin-editable content only; bookings have their own flow) ---------- */
 const SYNC_KEY_MAP={ns_hero:'hero',ns_services:'services',ns_trust:'trust',ns_team:'team',
   ns_faq:'faq',ns_reviews:'reviews',ns_gallery:'gallery',ns_prices:'prices',ns_slots:'slots',ns_pkg_dur:'pkg_dur',ns_pkg_feat:'pkg_feat',
-  ns_nav_order:'nav_order',ns_nav_mobile:'nav_mobile',ns_site:'site',ns_mobile_vis:'mobile_vis',ns_contact:'contact'};
+  ns_nav_order:'nav_order',ns_nav_mobile:'nav_mobile',ns_site:'site',ns_mobile_vis:'mobile_vis',ns_contact:'contact',ns_botnav:'bot_nav'};
 function syncContentKey(key,value){
   fetch('api/content.php',{method:'POST',headers:{'Content-Type':'application/json'},credentials:'include',
     body:JSON.stringify({key,value})})
@@ -1078,6 +1078,11 @@ function navOrderData(){
 }
 function siteSettingsData(){return store.get('ns_site',DEF_SITE)}
 function navMobileVisData(){return store.get('ns_nav_mobile',{})}
+const DEF_BOTNAV={
+  home:{bn:"হোম",en:"Home"}, services:{bn:"সেবা",en:"Services"}, booking:{bn:"বুকিং",en:"Book"},
+  dashboard:{bn:"আমার প্রকল্প",en:"My Bookings"}, contact:{bn:"যোগাযোগ",en:"Contact"}
+};
+function botNavData(){return store.get('ns_botnav',DEF_BOTNAV)}
 function mobileVisData(){return store.get('ns_mobile_vis',{})}
 function contactData(){return store.get('ns_contact',DEF_CONTACT)}
 function heroData(){return store.get('ns_hero',DEF_HERO)}
@@ -1370,7 +1375,15 @@ function applyMobileVis(){
 }
 function renderSiteContent(){
   renderHeroBadges();renderServices();renderTrust();renderTeam();renderFaqList();renderReviews();renderGallery();renderContactPoints();renderProjectChips();
-  renderNavDesk();renderSiteSettingsPublic();applyMobileVis();
+  renderNavDesk();renderSiteSettingsPublic();applyMobileVis();renderBotNav();
+}
+function renderBotNav(){
+  const d=botNavData();
+  $$(".botnav a[data-botkey]").forEach(a=>{
+    const k=a.dataset.botkey;
+    const span=a.querySelector('span');
+    if(span&&d[k])span.textContent=bi(d[k]);
+  });
 }
 
 /* ---------- land unit help ---------- */
@@ -2104,6 +2117,11 @@ function admMenu(){
         </div>`;}).join('')}
     </div>
     <button class="btn btn-line" style="margin-top:16px" onclick="resetNavOrder()">ডিফল্ট ক্রমে ফিরুন</button>
+  </div>
+  <div class="dcard" style="margin-top:14px"><b>নিচের মেনু (বটম নেভিগেশন)</b>
+    <p style="color:var(--grey);font-size:12px;margin-top:6px">মোবাইলে সবসময় দেখানো ৫টি বাটনের লেখা এখান থেকে বদলানো যাবে।</p>
+    ${(()=>{const bn=botNavData();const labels={home:'হোম',services:'সেবা',booking:'বুকিং',dashboard:'আমার প্রকল্প',contact:'যোগাযোগ'};
+      return Object.keys(DEF_BOTNAV).map(k=>biField(labels[k],bn[k]||DEF_BOTNAV[k],lang=>`setBotNavLabel('${k}','${lang}',this.value)`)).join('');})()}
   </div>`;
 }
 function setNavMobileVis(key,checked){
@@ -2116,6 +2134,12 @@ function moveNav(i,dir){
   store.set('ns_nav_order',order);renderNavDesk();renderAdmin();
 }
 function resetNavOrder(){store.set('ns_nav_order',DEF_NAV.map(x=>x.key));renderNavDesk();renderAdmin()}
+function setBotNavLabel(key,lang,v){
+  const d=JSON.parse(JSON.stringify(botNavData()));
+  if(!d[key])d[key]=JSON.parse(JSON.stringify(DEF_BOTNAV[key]));
+  d[key][lang]=v;
+  store.set('ns_botnav',d);renderBotNav();showToast(t('savedToast'));
+}
 
 /* mobile section visibility */
 function admMobileVis(){
