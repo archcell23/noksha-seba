@@ -2322,11 +2322,49 @@ function removeReview(i){const a=JSON.parse(JSON.stringify(reviewsData()));a.spl
 
 /* project gallery editor */
 const GALLERY_MAX_IMAGES=25;
+let _galleryEditIdx=null;
 function admGallery(){
   const arr=galleryData();
+  if(_galleryEditIdx!==null&&arr[_galleryEditIdx])return admGalleryEdit(_galleryEditIdx,arr);
   return `<div class="dcard"><b>প্রকল্প গ্যালারি (${toBn(arr.length)})</b>
     <p style="color:var(--grey);font-size:12px;margin-top:6px">শুধু প্রকৃত সম্পন্ন প্রকল্পের ছবি যোগ করুন। কোনো ছবি না থাকলে গ্যালারি সেকশনটি হোমপেজে দেখানো হবে না — শুধু প্রকল্পের ধরনের তালিকা দেখাবে।</p>
-    ${arr.length?arr.map((x,i)=>{const imgs=x.images||[];return `<div style="border-top:1px solid var(--line);padding-top:14px;margin-top:14px">
+    <div style="overflow-x:auto;margin-top:14px">
+      <table style="width:100%;border-collapse:collapse;font-size:13px;min-width:600px">
+        <thead><tr style="text-align:left;color:var(--grey);font-size:11px;text-transform:uppercase;letter-spacing:.04em">
+          <th style="padding:8px 10px;border-bottom:1px solid var(--line)">কভার</th>
+          <th style="padding:8px 10px;border-bottom:1px solid var(--line)">প্রকল্পের নাম</th>
+          <th style="padding:8px 10px;border-bottom:1px solid var(--line)">ধরন</th>
+          <th style="padding:8px 10px;border-bottom:1px solid var(--line)">ছবি</th>
+          <th style="padding:8px 10px;border-bottom:1px solid var(--line)">কার্যক্রম</th>
+        </tr></thead>
+        <tbody>
+        ${arr.length?arr.map((x,i)=>{const thumb=x.cover||(x.images&&x.images[0])||'';return `<tr style="border-bottom:1px solid var(--line)">
+          <td style="padding:8px 10px">${thumb?`<img src="${esc(thumb)}" style="width:44px;height:44px;border-radius:8px;object-fit:cover">`:`<div style="width:44px;height:44px;border-radius:8px;background:var(--field)"></div>`}</td>
+          <td style="padding:8px 10px;font-weight:600">${esc(bi(x.title))||'—'}</td>
+          <td style="padding:8px 10px;color:var(--grey)">${x.type?esc(bi(x.type)):'—'}</td>
+          <td style="padding:8px 10px;color:var(--grey)">${toBn((x.images||[]).length)}</td>
+          <td style="padding:8px 10px">
+            <div style="display:flex;gap:6px;flex-wrap:wrap">
+              <button ${i===0?'disabled style="opacity:.35"':''} style="width:30px;height:30px;border-radius:8px;background:var(--field)" onclick="moveGalleryProject(${i},-1)" aria-label="উপরে সরান">▲</button>
+              <button ${i===arr.length-1?'disabled style="opacity:.35"':''} style="width:30px;height:30px;border-radius:8px;background:var(--field)" onclick="moveGalleryProject(${i},1)" aria-label="নিচে সরান">▼</button>
+              <button class="btn btn-line btn-sm" style="width:auto;padding:7px 14px" onclick="editGalleryProject(${i})">সম্পাদনা</button>
+              <button class="btn btn-ghost btn-sm" style="width:auto;padding:7px 10px;color:var(--clay)" onclick="removeGalleryItem(${i})">মুছুন</button>
+            </div>
+          </td>
+        </tr>`;}).join(''):`<tr><td colspan="5" style="padding:16px 10px;color:var(--grey)">এখনো কোনো প্রকল্প যোগ করা হয়নি।</td></tr>`}
+        </tbody>
+      </table>
+    </div>
+    <button class="btn btn-line" style="margin-top:16px" onclick="addGalleryItem()">+ নতুন প্রকল্প যোগ করুন</button>
+  </div>`;
+}
+function admGalleryEdit(i,arrParam){
+  const arr=arrParam||galleryData();
+  const x=arr[i];
+  const imgs=x.images||[];
+  return `<div class="dcard">
+    <button class="btn btn-ghost btn-sm" style="width:auto;padding:8px 4px;color:var(--green-dark)" onclick="_galleryEditIdx=null;renderAdmin()">← তালিকায় ফিরুন</button>
+    <b style="display:block;margin-top:10px">প্রকল্প সম্পাদনা</b>
       ${galleryCoverField(i,x.cover,imgs.length>0)}
       ${biField('প্রকল্পের নাম',x.title,lang=>`setGalleryField(${i},'title','${lang}',this.value)`)}
       <div class="field"><label>প্রকল্পের ধরন</label>
@@ -2355,8 +2393,6 @@ function admGallery(){
         <button class="btn btn-ink btn-sm" style="width:auto;padding:11px 20px" onclick="saveGalleryItem(${i})">সংরক্ষণ করুন</button>
         <button class="btn btn-ghost" style="color:var(--clay);width:auto" onclick="removeGalleryItem(${i})">প্রকল্পটি মুছে ফেলুন</button>
       </div>
-    </div>`;}).join(''):'<p style="color:var(--grey);font-size:13px;margin-top:10px">এখনো কোনো প্রকল্প যোগ করা হয়নি।</p>'}
-    <button class="btn btn-line" style="margin-top:16px" onclick="addGalleryItem()">+ নতুন প্রকল্প যোগ করুন</button>
   </div>`;
 }
 function galleryCoverField(i,val,hasImages){
@@ -2565,10 +2601,20 @@ function setGalleryType(i,ptIndexStr){
 function addGalleryItem(){
   const a=JSON.parse(JSON.stringify(galleryData()));
   a.push({cover:'',images:[],title:{bn:'প্রকল্পের নাম লিখুন',en:'Enter project name'},type:null,desc:{bn:'',en:''}});
-  store.set('ns_gallery',a);renderGallery();renderAdmin();
+  store.set('ns_gallery',a);renderGallery();
+  _galleryEditIdx=a.length-1;renderAdmin();
 }
 function removeGalleryItem(i){
   const a=JSON.parse(JSON.stringify(galleryData()));a.splice(i,1);
+  store.set('ns_gallery',a);renderGallery();
+  _galleryEditIdx=null;renderAdmin();
+}
+function editGalleryProject(i){_galleryEditIdx=i;renderAdmin()}
+function moveGalleryProject(i,dir){
+  const a=JSON.parse(JSON.stringify(galleryData()));
+  const ni=i+dir;
+  if(ni<0||ni>=a.length)return;
+  const tmp=a[i];a[i]=a[ni];a[ni]=tmp;
   store.set('ns_gallery',a);renderGallery();renderAdmin();
 }
 // Every field/photo action already auto-saves on change, but this gives
