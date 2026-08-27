@@ -4,9 +4,23 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#16A34A">
-<link rel="icon" id="faviconLink" href="data:,">
-<title>নকশা সেবা — আপনার নির্মাণ সমস্যার পেশাদার সমাধান</title>
-<meta name="description" content="স্থাপত্য, ইন্টেরিয়র, স্ট্রাকচার, ইলেকট্রিক্যাল ও প্লাম্বিং বিষয়ে অভিজ্ঞ স্থপতি ও প্রকৌশলীর অনলাইন পরামর্শ — বাংলাদেশের যেকোনো স্থান থেকে।">
+<link rel="icon" id="faviconLink" href="/assets/favicon.jpg">
+<link rel="canonical" href="https://nokshaseba.com/">
+<meta name="robots" content="index, follow">
+<title>নকশা সেবা | স্থাপত্য ও প্রকৌশল অনলাইন পরামর্শ, বাংলাদেশ</title>
+<meta name="description" content="স্থাপত্য, ইন্টেরিয়র, স্ট্রাকচারাল, ইলেকট্রিক্যাল ও প্লাম্বিং বিষয়ে অভিজ্ঞ স্থপতি ও প্রকৌশলীর সরাসরি অনলাইন পরামর্শ — WhatsApp বা Zoom-এ, বাংলাদেশের যেকোনো স্থান থেকে।">
+<meta name="keywords" content="স্থাপত্য পরামর্শ, আর্কিটেক্ট বাংলাদেশ, বাড়ির নকশা, স্ট্রাকচারাল ইঞ্জিনিয়ার, ইলেকট্রিক্যাল ডিজাইন, প্লাম্বিং ডিজাইন, ইন্টেরিয়র ডিজাইন বাংলাদেশ, online architect consultation Bangladesh">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="নকশা সেবা">
+<meta property="og:locale" content="bn_BD">
+<meta property="og:title" content="নকশা সেবা | স্থাপত্য ও প্রকৌশল অনলাইন পরামর্শ, বাংলাদেশ">
+<meta property="og:description" content="স্থাপত্য, ইন্টেরিয়র, স্ট্রাকচারাল, ইলেকট্রিক্যাল ও প্লাম্বিং বিষয়ে অভিজ্ঞ স্থপতি ও প্রকৌশলীর সরাসরি অনলাইন পরামর্শ — WhatsApp বা Zoom-এ, বাংলাদেশের যেকোনো স্থান থেকে।">
+<meta property="og:url" content="https://nokshaseba.com/">
+<meta property="og:image" content="https://nokshaseba.com/assets/logo.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="নকশা সেবা | স্থাপত্য ও প্রকৌশল অনলাইন পরামর্শ, বাংলাদেশ">
+<meta name="twitter:description" content="স্থাপত্য, ইন্টেরিয়র, স্ট্রাকচারাল, ইলেকট্রিক্যাল ও প্লাম্বিং বিষয়ে অভিজ্ঞ স্থপতি ও প্রকৌশলীর সরাসরি অনলাইন পরামর্শ — WhatsApp বা Zoom-এ, বাংলাদেশের যেকোনো স্থান থেকে।">
+<meta name="twitter:image" content="https://nokshaseba.com/assets/logo.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -442,7 +456,7 @@ footer .fine{margin-top:14px;font-size:12px;color:var(--faint)}
   <div class="wrap topbar-row1">
     <a class="brand" href="#/" onclick="go('home')">
       <span class="mk"></span>
-      <img id="brandLogoImg" class="hidden" alt="">
+      <img id="brandLogoImg" class="hidden" alt="নকশা সেবা">
       <span class="brand-txt"><b>নকশা সেবা</b><small data-i18n="brandTag">স্থপতি ও প্রকৌশলীর অনলাইন পরামর্শ</small><em id="clockLine"></em></span>
     </a>
     <div class="right">
@@ -1246,7 +1260,7 @@ function openGalleryItem(i){
     ${item.type?`<div style="color:var(--green-dark);font-size:12.5px;font-weight:700;margin-top:4px">${esc(bi(item.type))}</div>`:''}
     ${item.desc&&bi(item.desc)?`<p style="color:var(--graphite);font-size:14px;margin-top:10px">${esc(bi(item.desc))}</p>`:''}
     ${photos.length?`<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:14px">
-      ${photos.map(p=>`<img src="${esc(p)}" style="width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:10px">`).join('')}
+      ${photos.map((p,pi)=>`<img src="${esc(p)}" alt="${esc(bi(item.title))} ${toBn(pi+1)}" style="width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:10px">`).join('')}
     </div>`:''}`);
 }
 function renderContactPoints(){
@@ -2221,6 +2235,10 @@ function admGallery(){
         ${imgs.length?`<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px">
           ${imgs.map((im,gi)=>`<div style="position:relative"><img src="${esc(im)}" style="width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:8px">
             <button style="position:absolute;top:-6px;right:-6px;width:22px;height:22px;border-radius:50%;background:var(--clay);color:#fff;font-size:12px;line-height:1" onclick="removeGalleryImage(${i},${gi})">✕</button>
+            <div style="position:absolute;bottom:4px;left:4px;right:4px;display:flex;justify-content:space-between;gap:4px">
+              <button ${gi===0?'disabled style="opacity:.35"':''} style="width:22px;height:22px;border-radius:6px;background:rgba(17,24,39,.72);color:#fff;font-size:12px;line-height:1" onclick="moveGalleryImage(${i},${gi},-1)" aria-label="আগে সরান">◀</button>
+              <button ${gi===imgs.length-1?'disabled style="opacity:.35"':''} style="width:22px;height:22px;border-radius:6px;background:rgba(17,24,39,.72);color:#fff;font-size:12px;line-height:1" onclick="moveGalleryImage(${i},${gi},1)" aria-label="পরে সরান">▶</button>
+            </div>
           </div>`).join('')}
         </div>`:''}
         ${imgs.length<GALLERY_MAX_IMAGES?`<label class="btn btn-line btn-sm inline" style="cursor:pointer;margin-top:8px">+ ছবি যোগ করুন
@@ -2330,6 +2348,15 @@ async function uploadGalleryImage(i,fileList){
 function removeGalleryImage(i,gi){
   const a=JSON.parse(JSON.stringify(galleryData()));
   if(a[i].images)a[i].images.splice(gi,1);
+  store.set('ns_gallery',a);renderGallery();renderAdmin();
+}
+function moveGalleryImage(i,gi,dir){
+  const a=JSON.parse(JSON.stringify(galleryData()));
+  const imgs=a[i].images||[];
+  const ni=gi+dir;
+  if(ni<0||ni>=imgs.length)return;
+  const tmp=imgs[gi];imgs[gi]=imgs[ni];imgs[ni]=tmp;
+  a[i].images=imgs;
   store.set('ns_gallery',a);renderGallery();renderAdmin();
 }
 function setGalleryField(i,f,lang,v){
@@ -2457,11 +2484,30 @@ window.addEventListener('scroll',()=>{
 function esc(s){return(s==null?"":String(s)).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
 
 /* init */
+function injectSeoSchema(){
+  const c=contactData();
+  const schema={
+    "@context":"https://schema.org",
+    "@type":"ProfessionalService",
+    "name":"নকশা সেবা",
+    "alternateName":"Noksha Seba",
+    "description":"স্থাপত্য, ইন্টেরিয়র, স্ট্রাকচারাল, ইলেকট্রিক্যাল ও প্লাম্বিং বিষয়ে অনলাইন প্রকৌশল ও স্থাপত্য পরামর্শ সেবা।",
+    "url":"https://nokshaseba.com/",
+    "image":"https://nokshaseba.com/assets/logo.jpg",
+    "areaServed":{"@type":"Country","name":"Bangladesh"}
+  };
+  if(c.call)schema.telephone=c.call;
+  if(c.email)schema.email=c.email;
+  let tag=document.getElementById('seoSchema');
+  if(!tag){tag=document.createElement('script');tag.type='application/ld+json';tag.id='seoSchema';document.head.appendChild(tag)}
+  tag.textContent=JSON.stringify(schema);
+}
 async function boot(){
   await pullFromServer();
   setTextSize(store.get('ns_textsize',1));
   tickClock();setInterval(tickClock,1000);
   applyLang();
+  injectSeoSchema();
   startHeroCarousel();
   const wa=waHref("আসসালামু আলাইকুম, নকশা সেবা থেকে পরামর্শ নিতে চাই।");
   ["heroWa","ctaWa","fabWa"].forEach(id=>{const e=document.getElementById(id);if(e)e.href=wa});
