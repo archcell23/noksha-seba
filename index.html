@@ -820,6 +820,8 @@ const I18N={
   reviewsHeading:{bn:"যাঁরা আমাদের সেবা নিয়েছেন",en:"What our clients say"},
   reviewsEmptyMsg:{bn:"এখনো কোনো মতামত প্রকাশ করা হয়নি।",en:"No reviews have been published yet."},
   reviewsCtaBtn:{bn:"আপনার মতামত জানান",en:"Share your feedback"},
+  shareLinkBtn:{bn:"🔗 লিংক শেয়ার করুন",en:"🔗 Share link"},
+  linkCopiedToast:{bn:"✓ লিংক কপি হয়েছে",en:"✓ Link copied"},
   fbModalTitle:{bn:"আপনার মতামত জানান",en:"Share your feedback"},
   fbModalDesc:{bn:"আপনি যদি আমাদের সেবা নিয়ে থাকেন, আপনার অভিজ্ঞতা শেয়ার করুন। প্রকাশের আগে আমরা যাচাই করে দেখব।",en:"If you've used our service, share your experience. We'll review it before it's published."},
   fbNameLabel:{bn:"আপনার নাম",en:"Your name"},
@@ -1346,8 +1348,9 @@ function renderReviews(){
   // otherwise there'd be nowhere for the first real piece of feedback to
   // ever come in from, since the "share your feedback" CTA lives here too.
   sec.classList.remove('hidden');
-  const ctaHtml=`<div style="grid-column:1/-1;text-align:center;margin-top:${arr.length?'10px':'4px'}">
+  const ctaHtml=`<div style="grid-column:1/-1;text-align:center;margin-top:${arr.length?'10px':'4px'};display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
     <button class="btn btn-line" style="width:auto;padding:12px 24px" onclick="openFeedbackForm()">${esc(t('reviewsCtaBtn'))}</button>
+    <button class="btn btn-ghost" style="width:auto;padding:12px 18px" onclick="shareFeedbackLink()">${esc(t('shareLinkBtn'))}</button>
   </div>`;
   if(!arr.length){
     grid.innerHTML=`<div style="grid-column:1/-1;text-align:center;padding:10px">
@@ -1366,6 +1369,17 @@ function renderReviews(){
       <div class="review-who">${avatarHtml}<div><b>${esc(bi(r.name))}</b><span>${esc(bi(r.title))}</span></div></div>
     </div>`;
   }).join('')+ctaHtml;
+}
+async function shareFeedbackLink(){
+  const url=location.origin+location.pathname+'#/feedback';
+  if(navigator.share){
+    try{await navigator.share({title:t('fbModalTitle'),url});return}
+    catch(e){return} // user cancelled the native share sheet -- don't also fall through to a copy toast
+  }
+  try{
+    await navigator.clipboard.writeText(url);
+    showToast(t('linkCopiedToast'));
+  }catch(e){}
 }
 function openFeedbackForm(){
   openModal(`<h3>${esc(t('fbModalTitle'))}</h3>
@@ -3193,7 +3207,9 @@ async function boot(){
   const wa=waHref("আসসালামু আলাইকুম, নকশা সেবা থেকে পরামর্শ নিতে চাই।");
   ["heroWa","ctaWa","fabWa"].forEach(id=>{const e=document.getElementById(id);if(e)e.href=wa});
   const h=(location.hash||"").replace("#/","");
-  if(h&&document.getElementById("view-"+h))go(h,{replace:true});else go('home',{replace:true});
+  if(h==='feedback'){go('home',{replace:true});openFeedbackForm();}
+  else if(h&&document.getElementById("view-"+h))go(h,{replace:true});
+  else go('home',{replace:true});
 }
 boot();
 </script>
