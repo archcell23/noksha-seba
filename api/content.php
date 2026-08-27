@@ -7,6 +7,23 @@ $method = $_SERVER['REQUEST_METHOD'];
 // no auth. Only writing (POST) requires an admin session.
 if ($method === 'GET') {
     $data = ns_read_guarded_json('content.php', new stdClass());
+    // Gallery photos (base64 images) make up the overwhelming majority of
+    // this file's size -- multiple megabytes, versus a few KB for
+    // everything else combined. Letting the client ask for a subset keeps
+    // the page's initial, blocking content fetch small and fast; gallery
+    // images are then fetched separately, in the background, only once
+    // the rest of the page is already usable.
+    if (is_array($data)) {
+        if (isset($_GET['only']) && $_GET['only'] !== '') {
+            $only = explode(',', $_GET['only']);
+            $data = array_intersect_key($data, array_flip($only));
+        } elseif (isset($_GET['exclude']) && $_GET['exclude'] !== '') {
+            $exclude = explode(',', $_GET['exclude']);
+            foreach ($exclude as $k) {
+                unset($data[$k]);
+            }
+        }
+    }
     ns_json_response($data);
 }
 
