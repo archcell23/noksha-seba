@@ -307,6 +307,35 @@ if ($ns_review_count > 0) {
     $ns_schema_service['review'] = $ns_schema_reviews;
 }
 
+// ---- JSON-LD: one Service block per real service, each listing every
+// real package price/duration tier as an Offer. A service and a package
+// are two independent choices in the actual booking flow (any service
+// can be booked at any package tier), so this avoids implying a single
+// fixed price per service -- every real price point is listed instead.
+$ns_schema_offers = array();
+foreach ($ns_pkgs as $pk) {
+    $pkDur = isset($ns_pkg_dur_overrides[$pk['id']]) ? $ns_pkg_dur_overrides[$pk['id']] : $pk['dur'];
+    $pkPrice = isset($ns_prices[$pk['id']]) ? $ns_prices[$pk['id']] : 0;
+    $ns_schema_offers[] = array(
+        '@type' => 'Offer',
+        'price' => (string) $pkPrice,
+        'priceCurrency' => 'BDT',
+        'description' => ns_bi($pk['name']) . ' — ' . ns_bi($pkDur) . ' সেশন',
+    );
+}
+$ns_schema_services_list = array();
+foreach ($ns_def_services as $k => $defSvc) {
+    $s = isset($ns_services[$k]) ? $ns_services[$k] : $defSvc;
+    $ns_schema_services_list[] = array(
+        '@context' => 'https://schema.org',
+        '@type' => 'Service',
+        'serviceType' => ns_bi($s['title']),
+        'provider' => array('@type' => 'ProfessionalService', 'name' => 'নকশা সেবা'),
+        'areaServed' => array('@type' => 'Country', 'name' => 'Bangladesh'),
+        'offers' => $ns_schema_offers,
+    );
+}
+
 $ns_schema_faq_items = array();
 foreach ($ns_faq as $x) {
     $ns_schema_faq_items[] = array(
@@ -349,6 +378,7 @@ $ns_json_flags = JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES;
 <meta name="twitter:image" content="https://nokshaseba.com/assets/logo.jpg">
 <script type="application/ld+json" id="seoSchema"><?php echo json_encode($ns_schema_service, $ns_json_flags); ?></script>
 <script type="application/ld+json" id="seoSchemaFaq"><?php echo json_encode($ns_schema_faq, $ns_json_flags); ?></script>
+<script type="application/ld+json" id="seoSchemaServices"><?php echo json_encode($ns_schema_services_list, $ns_json_flags); ?></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700;800&display=swap" rel="stylesheet">
