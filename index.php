@@ -1952,7 +1952,9 @@ function go(view,opts){
   if(view==="dashboard")renderDash();
   if(view==="admin")enterAdmin();
   if(view==="problem")renderProblem();
-  const url="#/"+view;
+  // Home keeps a clean root URL (no #/home) -- every other view still gets
+  // its own hash so back/forward and direct links to it keep working.
+  const url=view==="home"?(location.pathname+location.search):"#/"+view;
   // Each real navigation pushes a new history entry so the phone/browser
   // back button steps back through app screens one at a time, instead of
   // immediately exiting the site (replaceState never grows history, so
