@@ -1104,11 +1104,35 @@ footer .fine{margin-top:14px;font-size:12px;color:var(--faint)}
 <script>
 "use strict";
 /* ---------- resilient store (localStorage + in-memory fallback) ---------- */
-const store=(()=>{let mem={};let ok=false;try{localStorage.setItem('__t','1');localStorage.removeItem('__t');ok=true}catch(e){}
-  return{get(k,d){try{if(ok){const v=localStorage.getItem(k);if(v==null)return d;const parsed=JSON.parse(v);return parsed===null?d:parsed}}catch(e){}return(k in mem)?mem[k]:d},
-  set(k,v){try{if(ok){localStorage.setItem(k,JSON.stringify(v))}}catch(e){}mem[k]=v;
+// ns_gallery can run to tens of MB once a real photo library builds up --
+// comfortably over every browser's ~5-10MB localStorage quota per origin.
+// Writing it there always failed silently (QuotaExceededError swallowed
+// by the catch below), so neither admin edits nor the background gallery
+// refresh ever actually stuck across a page load -- the site kept
+// re-showing whatever smaller gallery had fit before. This key now lives
+// in memory only for the current page session; pullFromServer() already
+// re-populates it fresh on every load, which is the only place it needs
+// to come from anyway.
+const _memOnlyStoreKeys={ns_gallery:true};
+let _storeMem={};
+let _storeOk=false;
+try{localStorage.setItem('__t','1');localStorage.removeItem('__t');_storeOk=true}catch(e){}
+function _storeWrite(k,v){
+  _storeMem[k]=v;
+  if(!_memOnlyStoreKeys[k]){try{if(_storeOk)localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+}
+function _storeRead(k,d){
+  if(_memOnlyStoreKeys[k])return(k in _storeMem)?_storeMem[k]:d;
+  try{if(_storeOk){const v=localStorage.getItem(k);if(v==null)return d;const parsed=JSON.parse(v);return parsed===null?d:parsed}}catch(e){}
+  return(k in _storeMem)?_storeMem[k]:d;
+}
+const store={
+  get:_storeRead,
+  set(k,v){
+    _storeWrite(k,v);
     if(SYNC_KEY_MAP[k])syncContentKey(SYNC_KEY_MAP[k],v);
-  }}})();
+  }
+};
 
 /* ---------- server sync (admin-editable content only; bookings have their own flow) ---------- */
 const SYNC_KEY_MAP={ns_hero:'hero',ns_services:'services',ns_trust:'trust',ns_team:'team',
@@ -1133,14 +1157,18 @@ async function pullFromServer(query,timeoutMs){
     Object.keys(SYNC_KEY_MAP).forEach(lsKey=>{
       const serverKey=SYNC_KEY_MAP[lsKey];
       if(Object.prototype.hasOwnProperty.call(data,serverKey)){
-        try{localStorage.setItem(lsKey,JSON.stringify(data[serverKey]))}catch(e){}
+        // _storeWrite (not store.set) -- this is a pull, not an edit, so
+        // it must not also immediately re-sync the same data straight
+        // back to the server it just came from.
+        _storeWrite(lsKey,data[serverKey]);
       }
     });
   }catch(e){ /* offline or server unreachable — fall back to whatever's cached locally */ }
 }
 function pushAllToServer(){
   Object.keys(SYNC_KEY_MAP).forEach(lsKey=>{
-    let has=false;try{has=localStorage.getItem(lsKey)!=null}catch(e){}
+    let has=_memOnlyStoreKeys[lsKey]&&(lsKey in _storeMem);
+    if(!has){try{has=localStorage.getItem(lsKey)!=null}catch(e){}}
     if(has)syncContentKey(SYNC_KEY_MAP[lsKey],store.get(lsKey,null));
   });
   showToast(t('pushedAll'));
