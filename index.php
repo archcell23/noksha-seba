@@ -272,6 +272,22 @@ $ns_schema_service = array(
 );
 if (!empty($ns_contact['call'])) $ns_schema_service['telephone'] = $ns_contact['call'];
 if (!empty($ns_contact['email'])) $ns_schema_service['email'] = $ns_contact['email'];
+$ns_schema_service['availableLanguage'] = array('bn', 'en');
+// Computed from the real package prices (not hardcoded) so it can't drift
+// out of sync with whatever the admin actually charges.
+$ns_price_values = array_values($ns_prices);
+if (!empty($ns_price_values)) {
+    $ns_schema_service['priceRange'] = '৳' . ns_toBn(number_format(min($ns_price_values)))
+        . '–৳' . ns_toBn(number_format(max($ns_price_values)));
+}
+if (!empty($ns_contact['call'])) {
+    $ns_schema_service['contactPoint'] = array(
+        '@type' => 'ContactPoint',
+        'telephone' => $ns_contact['call'],
+        'contactType' => 'customer service',
+        'availableLanguage' => array('bn', 'en'),
+    );
+}
 if ($ns_review_count > 0) {
     $ns_schema_service['aggregateRating'] = array(
         '@type' => 'AggregateRating',
@@ -3634,24 +3650,17 @@ window.addEventListener('scroll',()=>{
 function esc(s){return(s==null?"":String(s)).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
 
 /* init */
-function injectSeoSchema(){
-  const c=contactData();
-  const schema={
-    "@context":"https://schema.org",
-    "@type":"ProfessionalService",
-    "name":"নকশা সেবা",
-    "alternateName":"Noksha Seba",
-    "description":"স্থাপত্য, ইন্টেরিয়র, স্ট্রাকচারাল, ইলেকট্রিক্যাল ও প্লাম্বিং বিষয়ে অনলাইন প্রকৌশল ও স্থাপত্য পরামর্শ সেবা।",
-    "url":"https://nokshaseba.com/",
-    "image":"https://nokshaseba.com/assets/logo.jpg",
-    "areaServed":{"@type":"Country","name":"Bangladesh"}
-  };
-  if(c.call)schema.telephone=c.call;
-  if(c.email)schema.email=c.email;
-  let tag=document.getElementById('seoSchema');
-  if(!tag){tag=document.createElement('script');tag.type='application/ld+json';tag.id='seoSchema';document.head.appendChild(tag)}
-  tag.textContent=JSON.stringify(schema);
-}
+// injectSeoSchema() used to live here, rebuilding the JSON-LD block
+// client-side on every render. It's now generated server-side in PHP
+// instead (see the ns_schema_service/ns_schema_faq block near the top of
+// this file) from the same live data, which is strictly more complete
+// (includes aggregateRating/individual reviews, the full FAQPage, price
+// range, contactPoint) and -- unlike this function -- doesn't require a
+// crawler to execute JS to see it. This was left in place and still ran
+// on every page load, silently overwriting that richer server-rendered
+// schema with this older/thinner version for any JS-executing visitor
+// (including Google's own renderer), so it's removed rather than kept
+// as a redundant, actively-regressing duplicate.
 // Renders everything (nav, hero, gallery, etc.) from whatever's currently
 // cached locally (or the built-in defaults, for a first-ever visit).
 // Called twice: once immediately so the page — including the bottom nav,
@@ -3661,7 +3670,6 @@ function injectSeoSchema(){
 // once that fresh data actually arrives.
 function renderNow(){
   applyLang();
-  injectSeoSchema();
   clearInterval(heroT);startHeroCarousel();
   const wa=waHref("আসসালামু আলাইকুম, নকশা সেবা থেকে পরামর্শ নিতে চাই।");
   ["heroWa","ctaWa","fabWa"].forEach(id=>{const e=document.getElementById(id);if(e)e.href=wa});
