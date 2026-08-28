@@ -1,27 +1,337 @@
+<?php
+/* ---------------------------------------------------------------------
+ * Server-side render of the public content sections (services, packages,
+ * FAQ, reviews, trust, team, hero badges, contact links) plus the SEO
+ * JSON-LD block. Previously all of this lived only in the initial HTML
+ * as empty containers filled in by client-side JS after an async fetch
+ * to api/content.php -- invisible to any crawler that doesn't execute
+ * JavaScript (most AI/answer-engine bots, and a slower path even for
+ * ones that do). This block reads the same guarded content.php data
+ * store the API endpoints use and renders real markup into those
+ * containers up front. The client JS still runs on top of this exactly
+ * as before (renderSiteContent() etc. re-render the same containers from
+ * localStorage/a fresh server pull) so admin-edited content still
+ * updates live for visitors without a page reload -- this is additive,
+ * not a replacement for that.
+ * --------------------------------------------------------------------- */
+
+header('X-Content-Type-Options: nosniff');
+header('X-Frame-Options: SAMEORIGIN');
+header('Referrer-Policy: strict-origin-when-cross-origin');
+if (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') {
+    header('Strict-Transport-Security: max-age=31536000; includeSubDomains');
+}
+
+// Same "sibling of public_html, not inside it" location api/_lib.php uses
+// -- see DEPLOY.md. Read-only here, and deliberately not including
+// api/_lib.php itself, so rendering the homepage doesn't start a PHP
+// session (and send a Set-Cookie header) for every anonymous visitor.
+define('NS_DATA_DIR', dirname(__DIR__) . '/private_data');
+
+function ns_ssr_read_guarded_json($file, $default) {
+    $path = NS_DATA_DIR . '/' . $file;
+    if (!file_exists($path)) {
+        return $default;
+    }
+    $raw = file_get_contents($path);
+    $marker = '?>';
+    $pos = strpos($raw, $marker);
+    if ($pos === false) {
+        return $default;
+    }
+    $data = json_decode(substr($raw, $pos + strlen($marker)), true);
+    return $data === null ? $default : $data;
+}
+
+$ns_content = ns_ssr_read_guarded_json('content.php', array());
+if (!is_array($ns_content)) {
+    $ns_content = array();
+}
+
+// bn-only: this is what the raw (non-JS) HTML renders regardless of the
+// client-side language toggle, matching the default LANG='bn' the JS
+// itself starts from and the page's lang="bn" attribute.
+function ns_bi($o) {
+    if ($o === null) return '';
+    if (is_string($o)) return $o;
+    if (isset($o['bn'])) return $o['bn'];
+    if (isset($o['en'])) return $o['en'];
+    return '';
+}
+function ns_esc($s) { return htmlspecialchars((string)$s, ENT_QUOTES, 'UTF-8'); }
+function ns_toBn($s) {
+    static $bn = array('０'=>'０'); // unused placeholder to keep static array typed
+    $map = array('0'=>'০','1'=>'১','2'=>'২','3'=>'৩','4'=>'৪','5'=>'৫','6'=>'৬','7'=>'৭','8'=>'৮','9'=>'৯');
+    return strtr((string)$s, $map);
+}
+function ns_taka($n) { return "৳ " . ns_toBn(number_format((float)$n)); }
+function ns_fmtPhone($v) {
+    $d = preg_replace('/\D/', '', (string)$v);
+    if (strpos($d, '880') === 0) $d = substr($d, 3);
+    if (strlen($d) === 11 && $d[0] === '0') $d = substr($d, 1);
+    if (strlen($d) >= 10) return "+৮৮০ " . ns_toBn(substr($d, 0, 4)) . "-" . ns_toBn(substr($d, 4));
+    return ns_toBn($v);
+}
+
+$ns_def_contact = array('wa'=>'8801711034941','call'=>'+8801711034941','email'=>'arch_cell@yahoo.com','ref'=>'archcellbd.com','payNumber'=>'01711034941');
+$ns_contact = isset($ns_content['contact']) ? $ns_content['contact'] : $ns_def_contact;
+function ns_waHref($contact, $msg) {
+    $digits = preg_replace('/\D/', '', isset($contact['wa']) ? $contact['wa'] : '');
+    return "https://wa.me/" . $digits . ($msg ? ("?text=" . rawurlencode($msg)) : "");
+}
+$ns_wa_href = ns_waHref($ns_contact, "আসসালামু আলাইকুম, নকশা সেবা থেকে পরামর্শ নিতে চাই।");
+$ns_tel_href = "tel:" . (isset($ns_contact['call']) ? $ns_contact['call'] : '');
+$ns_footer_contact_html = "WhatsApp: " . ns_esc(ns_fmtPhone(isset($ns_contact['wa']) ? $ns_contact['wa'] : ''))
+    . "<br>ই-মেইল: " . ns_esc(isset($ns_contact['email']) ? $ns_contact['email'] : '')
+    . "<br>রেফারেন্স: " . ns_esc(isset($ns_contact['ref']) ? $ns_contact['ref'] : '');
+
+$ns_def_hero = array(
+    'badges' => array(
+        array('bn'=>'🏠 স্থাপত্য পরামর্শ','en'=>'🏠 Architecture consultation'),
+        array('bn'=>'🏗 স্ট্রাকচারাল সেবা','en'=>'🏗 Structural service'),
+        array('bn'=>'⚡ ইলেকট্রিক্যাল ও প্লাম্বিং','en'=>'⚡ Electrical & plumbing'),
+    ),
+    'slides' => array(
+        array('accent'=>array('bn'=>'সঠিক পরিকল্পনা'),'sub'=>array('bn'=>'স্থাপত্য, ইন্টেরিয়র, স্ট্রাকচার, ইলেকট্রিক্যাল ও প্লাম্বিং বিষয়ে অভিজ্ঞ স্থপতি ও প্রকৌশলীর পরামর্শ নিন — বাংলাদেশের যেকোনো স্থান থেকে, হাতের মুঠোয়।')),
+    ),
+);
+$ns_hero = isset($ns_content['hero']) ? $ns_content['hero'] : $ns_def_hero;
+$ns_hero_badges = isset($ns_hero['badges']) ? $ns_hero['badges'] : $ns_def_hero['badges'];
+$ns_hero_badges_html = '';
+foreach ($ns_hero_badges as $b) {
+    if (!empty($b['link'])) {
+        $ns_hero_badges_html .= '<button class="hbadge" onclick="goNavLink(\'' . ns_esc($b['link']) . '\')">' . ns_esc(ns_bi($b)) . '</button>';
+    } else {
+        $ns_hero_badges_html .= '<span class="hbadge">' . ns_esc(ns_bi($b)) . '</span>';
+    }
+}
+
+$ns_def_assure = array(
+    array('bn'=>'স্বচ্ছ পরামর্শ ফি'), array('bn'=>'নিরাপদ পেমেন্ট'), array('bn'=>'ড্রয়িং ডিজিটাল ডেলিভারি'),
+);
+$ns_assure = isset($ns_content['assure']) ? $ns_content['assure'] : $ns_def_assure;
+$ns_assure_html = '';
+foreach ($ns_assure as $a) {
+    $ns_assure_html .= '<span><i></i><span>' . ns_esc(ns_bi($a)) . '</span></span>';
+}
+
+$ns_svc_icons = array(
+    'arch' => '<path d="M3 21h18M5 21V9l7-5 7 5v12M9 21v-6h6v6"/>',
+    'struct' => '<path d="M4 20V6l8-3 8 3v14M4 20h16M8 20v-8h8v8M8 12V8m8 4V8"/>',
+    'elec' => '<path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z"/>',
+    'plumb' => '<path d="M7 3v7a5 5 0 0 0 10 0V3M7 7h10M12 15v6M9 21h6"/>',
+    'interior' => '<path d="M4 18v-5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v5M4 18a1 1 0 0 0 1 1h1a1 1 0 0 0 1-1v-1h10v1a1 1 0 0 0 1 1h1a1 1 0 0 0 1-1M6 11V8a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v3"/>',
+);
+$ns_def_services = array(
+    'arch' => array('title'=>array('bn'=>'স্থাপত্য পরামর্শ'),'desc'=>array('bn'=>'বাড়ি, ভবন, রুম বিন্যাস, আলো-বাতাস, ফ্যাসাড, সংস্কার ও জায়গার সর্বোত্তম ব্যবহার।')),
+    'struct' => array('title'=>array('bn'=>'স্ট্রাকচারাল পরামর্শ'),'desc'=>array('bn'=>'কলাম, বিম, ফাউন্ডেশন, ফাটল, পুরোনো ভবন, ভূমিকম্প নিরাপত্তা ও কাঠামোগত সমস্যা।')),
+    'elec' => array('title'=>array('bn'=>'ইলেকট্রিক্যাল পরামর্শ'),'desc'=>array('bn'=>'লোড পরিকল্পনা, আলো, পাওয়ার পয়েন্ট, DB, নিরাপত্তা ও বৈদ্যুতিক লেআউট।')),
+    'plumb' => array('title'=>array('bn'=>'প্লাম্বিং পরামর্শ'),'desc'=>array('bn'=>'পানি সরবরাহ, ড্রেনেজ, স্যানিটারি, সেপটিক ট্যাংক, রেইন ওয়াটার ও পাইপ লেআউট।')),
+    'interior' => array('title'=>array('bn'=>'ইন্টেরিয়র পরামর্শ'),'desc'=>array('bn'=>'ইন্টেরিয়র লেআউট, রঙ নির্বাচন, আসবাবপত্র বিন্যাস, লাইটিং ও ফিনিশিং নিয়ে পেশাদার পরামর্শ।')),
+);
+$ns_services = isset($ns_content['services']) && is_array($ns_content['services']) ? $ns_content['services'] : array();
+$ns_svc_grid_html = '';
+foreach ($ns_def_services as $k => $defSvc) {
+    $s = isset($ns_services[$k]) ? $ns_services[$k] : $defSvc;
+    $ns_svc_grid_html .= '<div class="svc" onclick="startBooking(\'' . $k . '\')" onkeydown="if(event.key===\'Enter\'||event.key===\' \'){event.preventDefault();startBooking(\'' . $k . '\')}" role="button" tabindex="0">'
+        . '<button class="item-share" onclick="event.stopPropagation();shareServiceLink(\'' . $k . '\')" aria-label="🔗 লিংক শেয়ার করুন">🔗</button>'
+        . '<span class="ic"><svg viewBox="0 0 24 24">' . $ns_svc_icons[$k] . '</svg></span>'
+        . '<span><h3>' . ns_esc(ns_bi($s['title'])) . '</h3><p>' . ns_esc(ns_bi($s['desc'])) . '</p><span class="go">এই সেবা →</span></span>'
+        . '</div>';
+}
+
+$ns_def_trust = array(
+    array('t'=>array('bn'=>'অভিজ্ঞ স্থপতি ও প্রকৌশলী'),'s'=>array('bn'=>'বহু বছরের বাস্তব অভিজ্ঞতা')),
+    array('t'=>array('bn'=>'বাংলাদেশের বাস্তবতা'),'s'=>array('bn'=>'স্থানীয় উপকরণ ও কোড অনুযায়ী')),
+    array('t'=>array('bn'=>'অনলাইনে সহজ পরামর্শ'),'s'=>array('bn'=>'ঘরে বসেই WhatsApp/Zoom')),
+    array('t'=>array('bn'=>'স্বচ্ছ পরামর্শ ফি'),'s'=>array('bn'=>'আগেই ফি জেনে নিন')),
+    array('t'=>array('bn'=>'নিরাপদ পেমেন্ট'),'s'=>array('bn'=>'যাচাইকৃত গেটওয়ে')),
+    array('t'=>array('bn'=>'ডিজিটাল ডেলিভারি'),'s'=>array('bn'=>'ড্রয়িং ও নথি অনলাইনে')),
+    array('t'=>array('bn'=>'পাঁচ সেবা এক জায়গায়'),'s'=>array('bn'=>'স্থাপত্য+ইন্টেরিয়র+স্ট্রাকচার+MEP')),
+    array('t'=>array('bn'=>'BNBC অনুযায়ী মতামত'),'s'=>array('bn'=>'বিধিসম্মত পরামর্শ')),
+);
+$ns_trust = isset($ns_content['trust']) ? $ns_content['trust'] : $ns_def_trust;
+$ns_trust_html = '';
+foreach ($ns_trust as $x) {
+    $ns_trust_html .= '<div class="t"><b>' . ns_esc(ns_bi($x['t'])) . '</b><span>' . ns_esc(ns_bi($x['s'])) . '</span></div>';
+}
+
+$ns_def_team = array(
+    array('av'=>array('bn'=>'স্থ'),'t'=>array('bn'=>'প্রধান স্থপতি'),'s'=>array('bn'=>'স্থাপত্য • ইন্টেরিয়র • নগর পরিকল্পনা')),
+    array('av'=>array('bn'=>'প্র'),'t'=>array('bn'=>'স্ট্রাকচারাল প্রকৌশলী'),'s'=>array('bn'=>'RCC • ফাউন্ডেশন • অ্যাসেসমেন্ট')),
+    array('av'=>array('bn'=>'MEP'),'t'=>array('bn'=>'ইলেকট্রিক্যাল ও প্লাম্বিং প্রকৌশলী'),'s'=>array('bn'=>'লোড • লেআউট • নিরাপত্তা')),
+);
+$ns_team = isset($ns_content['team']) ? $ns_content['team'] : $ns_def_team;
+$ns_team_html = '';
+foreach ($ns_team as $x) {
+    $ns_team_html .= '<div class="person"><span class="av">' . ns_esc(ns_bi($x['av'])) . '</span><div><b>' . ns_esc(ns_bi($x['t'])) . '</b><span>' . ns_esc(ns_bi($x['s'])) . '</span></div></div>';
+}
+
+$ns_def_faq = array(
+    array('q'=>array('bn'=>'অনলাইন পরামর্শে কী কী সমস্যা সমাধান করা যায়?'),'a'=>array('bn'=>'নকশা পর্যালোচনা, রুম বিন্যাস, ফাটল বা কাঠামোগত উদ্বেগ, বৈদ্যুতিক ও প্লাম্বিং পরিকল্পনা, সংস্কার এবং জায়গার ব্যবহার — বেশিরভাগ বিষয়েই দিকনির্দেশনা দেওয়া যায়। জটিল ক্ষেত্রে সাইট ভিজিট প্রয়োজন হতে পারে।')),
+    array('q'=>array('bn'=>'কোন ড্রয়িং আগে পাঠাতে হবে?'),'a'=>array('bn'=>'যা আছে তা-ই যথেষ্ট — সাইটের ছবি, হাতে আঁকা স্কেচ, পুরোনো প্ল্যান বা PDF ড্রয়িং। স্পষ্ট ছবি দিলে সমস্যা বুঝতে সুবিধা হয়।')),
+    array('q'=>array('bn'=>'জমির কাগজ প্রয়োজন কি?'),'a'=>array('bn'=>'পরামর্শের জন্য সাধারণত প্রয়োজন নেই। শুধু জমির পরিমাণ ও অবস্থান জানালেই চলে।')),
+    array('q'=>array('bn'=>'পরামর্শের পর ড্রয়িং পাওয়া যাবে কি?'),'a'=>array('bn'=>'প্রযোজ্য ক্ষেত্রে মার্কআপ ড্রয়িং, স্কেচ বা লিখিত সারাংশ আপনার ড্যাশবোর্ডে দেওয়া হয়। পূর্ণ ডিজাইন একটি আলাদা প্রকল্প সেবা।')),
+    array('q'=>array('bn'=>'সাইট ভিজিট প্রয়োজন হলে কী হবে?'),'a'=>array('bn'=>'প্রয়োজন হলে আমরা জানিয়ে দেব এবং আলাদা ব্যবস্থা করা হবে। অনলাইন পরামর্শ বাধ্যতামূলক সরেজমিন পরিদর্শনের বিকল্প নয়।')),
+    array('q'=>array('bn'=>'পেমেন্ট ফেরতযোগ্য কি?'),'a'=>array('bn'=>'নির্ধারিত সময়ের আগে বাতিল করলে পুনঃনির্ধারণ করা যায়। বিস্তারিত ফেরত নীতিতে দেওয়া আছে।')),
+    array('q'=>array('bn'=>'সময় পরিবর্তন করা যাবে কি?'),'a'=>array('bn'=>'হ্যাঁ, মিটিংয়ের নির্ধারিত সময়ের যথেষ্ট আগে ড্যাশবোর্ড থেকে সময় পরিবর্তন করা যায়।')),
+    array('q'=>array('bn'=>'Zoom ব্যবহার না জানলে কী করব?'),'a'=>array('bn'=>'চিন্তার কিছু নেই — WhatsApp-এ কল করেও পরামর্শ নেওয়া যায়। Zoom লিংকে শুধু ট্যাপ করলেই মিটিং শুরু হয়।')),
+);
+$ns_faq = isset($ns_content['faq']) ? $ns_content['faq'] : $ns_def_faq;
+$ns_faq_html = '';
+foreach ($ns_faq as $x) {
+    $ns_faq_html .= '<details><summary>' . ns_esc(ns_bi($x['q'])) . '</summary><p>' . ns_esc(ns_bi($x['a'])) . '</p></details>';
+}
+
+$ns_reviews = isset($ns_content['reviews']) && is_array($ns_content['reviews']) ? $ns_content['reviews'] : array();
+$ns_reviews_cta_html = '<div style="grid-column:1/-1;text-align:center;margin-top:' . (count($ns_reviews) ? '10px' : '4px') . ';display:flex;gap:10px;justify-content:center;flex-wrap:wrap">'
+    . '<button class="btn btn-line" style="width:auto;padding:12px 24px" onclick="openFeedbackForm()">আপনার মতামত জানান</button>'
+    . '<button class="btn btn-ghost" style="width:auto;padding:12px 18px" onclick="shareFeedbackLink()">🔗 লিংক শেয়ার করুন</button>'
+    . '</div>';
+if (!count($ns_reviews)) {
+    $ns_reviews_grid_html = '<div style="grid-column:1/-1;text-align:center;padding:10px"><p style="color:var(--grey);font-size:14px">এখনো কোনো মতামত প্রকাশ করা হয়নি।</p></div>' . $ns_reviews_cta_html;
+} else {
+    $ns_reviews_grid_html = '';
+    foreach ($ns_reviews as $r) {
+        $st = max(1, min(5, (int)(isset($r['stars']) ? $r['stars'] : 5)));
+        $name = ns_bi(isset($r['name']) ? $r['name'] : '');
+        if (!empty($r['photo'])) {
+            $avatarHtml = '<img src="' . ns_esc($r['photo']) . '" class="review-av review-av-photo" alt="' . ns_esc($name !== '' ? $name . ' এর ছবি' : '') . '">';
+        } else {
+            $avatarHtml = '<span class="review-av">' . ns_esc(ns_bi(isset($r['avatar']) ? $r['avatar'] : '')) . '</span>';
+        }
+        $ns_reviews_grid_html .= '<div class="review">'
+            . '<div class="review-top"><span class="stars">' . str_repeat('★', $st) . str_repeat('☆', 5 - $st) . '</span><span class="review-quote-mark">"</span></div>'
+            . '<p class="review-text">' . ns_esc(ns_bi(isset($r['quote']) ? $r['quote'] : '')) . '</p>'
+            . '<div class="review-who">' . $avatarHtml . '<div><b>' . ns_esc($name) . '</b><span>' . ns_esc(ns_bi(isset($r['title']) ? $r['title'] : '')) . '</span></div></div>'
+            . '</div>';
+    }
+    $ns_reviews_grid_html .= $ns_reviews_cta_html;
+}
+// Also feeds the Review/AggregateRating schema below.
+$ns_review_count = count($ns_reviews);
+$ns_avg_rating = 0;
+if ($ns_review_count) {
+    $sum = 0;
+    foreach ($ns_reviews as $r) { $sum += max(1, min(5, (int)(isset($r['stars']) ? $r['stars'] : 5))); }
+    $ns_avg_rating = round($sum / $ns_review_count, 1);
+}
+
+$ns_default_prices = array('quick'=>800,'detail'=>1500,'project'=>3500,'site_dhk'=>5000,'site_out'=>8000);
+$ns_prices = array_merge($ns_default_prices, (isset($ns_content['prices']) && is_array($ns_content['prices'])) ? $ns_content['prices'] : array());
+$ns_pkg_dur_overrides = isset($ns_content['pkg_dur']) && is_array($ns_content['pkg_dur']) ? $ns_content['pkg_dur'] : array();
+$ns_pkg_feat_overrides = isset($ns_content['pkg_feat']) && is_array($ns_content['pkg_feat']) ? $ns_content['pkg_feat'] : array();
+$ns_pkgs = array(
+    array('id'=>'quick','name'=>array('bn'=>'দ্রুত পরামর্শ'),'dur'=>array('bn'=>'২০ মিনিট'),
+        'feat'=>array(array('bn'=>'একটি নির্দিষ্ট প্রশ্ন'),array('bn'=>'ছোটখাটো পরিবর্তন'),array('bn'=>'দ্রুত second opinion'))),
+    array('id'=>'detail','name'=>array('bn'=>'বিস্তারিত পরামর্শ'),'dur'=>array('bn'=>'৪৫ মিনিট'),'pop'=>true,
+        'feat'=>array(array('bn'=>'ফ্লোর প্ল্যান পর্যালোচনা'),array('bn'=>'সংস্কার'),array('bn'=>'কাঠামোগত উদ্বেগ'),array('bn'=>'ইলেকট্রিক্যাল/প্লাম্বিং পরিকল্পনা'),array('bn'=>'একাধিক প্রশ্ন'))),
+    array('id'=>'project','name'=>array('bn'=>'প্রকল্প পরামর্শ'),'dur'=>array('bn'=>'৬০–৯০ মিনিট'),
+        'feat'=>array(array('bn'=>'নতুন ভবন'),array('bn'=>'জটিল renovation'),array('bn'=>'স্থাপত্য+স্ট্রাকচার+MEP সমন্বয়'),array('bn'=>'multidisciplinary পরামর্শ'))),
+    array('id'=>'site_dhk','name'=>array('bn'=>'সাইট ভিজিট পরামর্শ'),'dur'=>array('bn'=>'ঢাকার মধ্যে'),
+        'feat'=>array(array('bn'=>'সরেজমিন পরিদর্শন'),array('bn'=>'সরাসরি পরিমাপ ও পর্যবেক্ষণ'),array('bn'=>'বিস্তারিত সুপারিশ'))),
+    array('id'=>'site_out','name'=>array('bn'=>'সাইট ভিজিট পরামর্শ'),'dur'=>array('bn'=>'ঢাকার বাইরে'),
+        'feat'=>array(array('bn'=>'সরেজমিন পরিদর্শন'),array('bn'=>'ভ্রমণ খরচসহ'),array('bn'=>'বিস্তারিত সুপারিশ'))),
+);
+$ns_pkg_cards_html = '';
+foreach ($ns_pkgs as $pk) {
+    $dur = isset($ns_pkg_dur_overrides[$pk['id']]) ? $ns_pkg_dur_overrides[$pk['id']] : $pk['dur'];
+    $feat = isset($ns_pkg_feat_overrides[$pk['id']]) ? $ns_pkg_feat_overrides[$pk['id']] : $pk['feat'];
+    $price = isset($ns_prices[$pk['id']]) ? $ns_prices[$pk['id']] : 0;
+    $featHtml = '';
+    foreach ($feat as $f) { $featHtml .= '<li>' . ns_esc(ns_bi($f)) . '</li>'; }
+    $ns_pkg_cards_html .= '<div class="pkg' . (!empty($pk['pop']) ? ' pop' : '') . '">'
+        . (!empty($pk['pop']) ? '<span class="badge">সবচেয়ে জনপ্রিয়</span>' : '')
+        . '<button class="item-share" onclick="sharePackageLink(\'' . $pk['id'] . '\')" aria-label="🔗 লিংক শেয়ার করুন">🔗</button>'
+        . '<div class="dur">' . ns_esc(ns_bi($dur)) . '</div>'
+        . '<h3>' . ns_esc(ns_bi($pk['name'])) . '</h3>'
+        . '<div class="price">' . ns_taka($price) . '<small> / সেশন</small></div>'
+        . '<ul>' . $featHtml . '</ul>'
+        . '<button class="btn btn-ink" onclick="startBooking(null,\'' . $pk['id'] . '\')">সময় নির্বাচন করুন</button>'
+        . '</div>';
+}
+
+$ns_ptypes = array(
+    array('bn'=>'বাড়ি'), array('bn'=>'অ্যাপার্টমেন্ট'), array('bn'=>'দোকান'), array('bn'=>'অফিস'),
+    array('bn'=>'রেস্টুরেন্ট'), array('bn'=>'প্রতিষ্ঠান'), array('bn'=>'ধর্মীয় ভবন'),
+    array('bn'=>'শিল্প ভবন'), array('bn'=>'অন্যান্য'),
+);
+$ns_project_chips_html = '';
+foreach ($ns_ptypes as $pt) { $ns_project_chips_html .= '<span class="chip">' . ns_esc(ns_bi($pt)) . '</span>'; }
+
+// ---- JSON-LD: ProfessionalService (+ optional AggregateRating/Review) and FAQPage ----
+$ns_schema_service = array(
+    '@context' => 'https://schema.org',
+    '@type' => 'ProfessionalService',
+    'name' => 'নকশা সেবা',
+    'alternateName' => 'Noksha Seba',
+    'description' => 'স্থাপত্য, ইন্টেরিয়র, স্ট্রাকচারাল, ইলেকট্রিক্যাল ও প্লাম্বিং বিষয়ে অনলাইন প্রকৌশল ও স্থাপত্য পরামর্শ সেবা।',
+    'url' => 'https://nokshaseba.com/',
+    'image' => 'https://nokshaseba.com/assets/logo.jpg',
+    'areaServed' => array('@type' => 'Country', 'name' => 'Bangladesh'),
+);
+if (!empty($ns_contact['call'])) $ns_schema_service['telephone'] = $ns_contact['call'];
+if (!empty($ns_contact['email'])) $ns_schema_service['email'] = $ns_contact['email'];
+if ($ns_review_count > 0) {
+    $ns_schema_service['aggregateRating'] = array(
+        '@type' => 'AggregateRating',
+        'ratingValue' => $ns_avg_rating,
+        'reviewCount' => $ns_review_count,
+    );
+    $ns_schema_reviews = array();
+    foreach ($ns_reviews as $r) {
+        $st = max(1, min(5, (int)(isset($r['stars']) ? $r['stars'] : 5)));
+        $ns_schema_reviews[] = array(
+            '@type' => 'Review',
+            'author' => array('@type' => 'Person', 'name' => ns_bi(isset($r['name']) ? $r['name'] : '')),
+            'reviewRating' => array('@type' => 'Rating', 'ratingValue' => $st, 'bestRating' => 5, 'worstRating' => 1),
+            'reviewBody' => ns_bi(isset($r['quote']) ? $r['quote'] : ''),
+        );
+    }
+    $ns_schema_service['review'] = $ns_schema_reviews;
+}
+
+$ns_schema_faq_items = array();
+foreach ($ns_faq as $x) {
+    $ns_schema_faq_items[] = array(
+        '@type' => 'Question',
+        'name' => ns_bi($x['q']),
+        'acceptedAnswer' => array('@type' => 'Answer', 'text' => ns_bi($x['a'])),
+    );
+}
+$ns_schema_faq = array(
+    '@context' => 'https://schema.org',
+    '@type' => 'FAQPage',
+    'mainEntity' => $ns_schema_faq_items,
+);
+
+$ns_json_flags = JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES;
+?>
 <!DOCTYPE html>
 <html lang="bn">
 <head>
 <meta charset="UTF-8">
-<meta name="google-site-verification" content="TJm-1yj8mpvHxTcQewmtVLRmLV6K0LTKeH1gbC4aCxs" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#16A34A">
 <link rel="icon" id="faviconLink" href="/assets/favicon.jpg">
 <link rel="canonical" href="https://nokshaseba.com/">
 <meta name="robots" content="index, follow">
 <title>নকশা সেবা | স্থাপত্য ও প্রকৌশল অনলাইন পরামর্শ, বাংলাদেশ</title>
-<meta name="description" content="স্থাপত্য, ইন্টেরিয়র, স্ট্রাকচারাল, ইলেকট্রিক্যাল ও প্লাম্বিং বিষয়ে অভিজ্ঞ স্থপতি ও প্রকৌশলীর সরাসরি অনলাইন পরামর্শ — WhatsApp বা Zoom-এ, বাংলাদেশের যেকোনো স্থান থেকে।">
+<meta name="description" content="বাংলাদেশের অভিজ্ঞ স্থপতি ও প্রকৌশলীর কাছ থেকে স্থাপত্য, ইন্টেরিয়র, স্ট্রাকচারাল, ইলেকট্রিক্যাল ও প্লাম্বিং বিষয়ে সরাসরি অনলাইন পরামর্শ নিন — WhatsApp/Zoom-এ।">
 <meta name="keywords" content="স্থাপত্য পরামর্শ, আর্কিটেক্ট বাংলাদেশ, বাড়ির নকশা, স্ট্রাকচারাল ইঞ্জিনিয়ার, ইলেকট্রিক্যাল ডিজাইন, প্লাম্বিং ডিজাইন, ইন্টেরিয়র ডিজাইন বাংলাদেশ, online architect consultation Bangladesh">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="নকশা সেবা">
 <meta property="og:locale" content="bn_BD">
 <meta property="og:title" content="নকশা সেবা | স্থাপত্য ও প্রকৌশল অনলাইন পরামর্শ, বাংলাদেশ">
-<meta property="og:description" content="স্থাপত্য, ইন্টেরিয়র, স্ট্রাকচারাল, ইলেকট্রিক্যাল ও প্লাম্বিং বিষয়ে অভিজ্ঞ স্থপতি ও প্রকৌশলীর সরাসরি অনলাইন পরামর্শ — WhatsApp বা Zoom-এ, বাংলাদেশের যেকোনো স্থান থেকে।">
+<meta property="og:description" content="বাংলাদেশের অভিজ্ঞ স্থপতি ও প্রকৌশলীর কাছ থেকে স্থাপত্য, ইন্টেরিয়র, স্ট্রাকচারাল, ইলেকট্রিক্যাল ও প্লাম্বিং বিষয়ে সরাসরি অনলাইন পরামর্শ নিন — WhatsApp/Zoom-এ।">
 <meta property="og:url" content="https://nokshaseba.com/">
 <meta property="og:image" content="https://nokshaseba.com/assets/logo.jpg">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="নকশা সেবা | স্থাপত্য ও প্রকৌশল অনলাইন পরামর্শ, বাংলাদেশ">
-<meta name="twitter:description" content="স্থাপত্য, ইন্টেরিয়র, স্ট্রাকচারাল, ইলেকট্রিক্যাল ও প্লাম্বিং বিষয়ে অভিজ্ঞ স্থপতি ও প্রকৌশলীর সরাসরি অনলাইন পরামর্শ — WhatsApp বা Zoom-এ, বাংলাদেশের যেকোনো স্থান থেকে।">
+<meta name="twitter:description" content="বাংলাদেশের অভিজ্ঞ স্থপতি ও প্রকৌশলীর কাছ থেকে স্থাপত্য, ইন্টেরিয়র, স্ট্রাকচারাল, ইলেকট্রিক্যাল ও প্লাম্বিং বিষয়ে সরাসরি অনলাইন পরামর্শ নিন — WhatsApp/Zoom-এ।">
 <meta name="twitter:image" content="https://nokshaseba.com/assets/logo.jpg">
+<script type="application/ld+json" id="seoSchema"><?php echo json_encode($ns_schema_service, $ns_json_flags); ?></script>
+<script type="application/ld+json" id="seoSchemaFaq"><?php echo json_encode($ns_schema_faq, $ns_json_flags); ?></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -560,15 +870,15 @@ footer .fine{margin-top:14px;font-size:12px;color:var(--faint)}
   <!-- HERO -->
   <div class="hero">
     <div class="wrap hero-in">
-      <div class="hero-badges" id="heroBadges"></div>
+      <div class="hero-badges" id="heroBadges"><?php echo $ns_hero_badges_html; ?></div>
       <h1><span data-i18n="heroTitle">আপনার নির্মাণ স্বপ্নের</span><br><span class="accent" id="heroAccent">সঠিক পরিকল্পনা</span></h1>
       <p class="sub" id="heroSub">স্থাপত্য, ইন্টেরিয়র, স্ট্রাকচার, ইলেকট্রিক্যাল ও প্লাম্বিং বিষয়ে অভিজ্ঞ স্থপতি ও প্রকৌশলীর পরামর্শ নিন — বাংলাদেশের যেকোনো স্থান থেকে, হাতের মুঠোয়।</p>
       <div class="actions">
         <button class="btn btn-ink" data-i18n="bookBtn" onclick="startBooking()">পরামর্শ বুক করুন</button>
-        <a class="btn btn-outline-invert" id="heroWa" data-i18n="waBtn">WhatsApp-এ কথা বলুন</a>
+        <a class="btn btn-outline-invert" id="heroWa" data-i18n="waBtn" href="<?php echo ns_esc($ns_wa_href); ?>">WhatsApp-এ কথা বলুন</a>
       </div>
-      <div class="hero-call"><a id="heroCallLink" href="tel:">☎ WhatsApp নেই? সরাসরি কল করুন</a></div>
-      <div class="assure" id="assureRow"></div>
+      <div class="hero-call"><a id="heroCallLink" href="<?php echo ns_esc($ns_tel_href); ?>">☎ WhatsApp নেই? সরাসরি কল করুন</a></div>
+      <div class="assure" id="assureRow"><?php echo $ns_assure_html; ?></div>
       <div class="hero-dots" id="heroDots">
         <button data-i="0" onclick="jumpHero(0)" aria-label="স্লাইড ১"></button>
         <button data-i="1" onclick="jumpHero(1)" aria-label="স্লাইড ২"></button>
@@ -587,7 +897,7 @@ footer .fine{margin-top:14px;font-size:12px;color:var(--faint)}
   <div class="section wrap" id="services" style="border-top:none">
     <div class="dim left"><span class="tick"></span><span data-i18n="eyebrowServices">সেবাসমূহ</span></div>
     <h2 data-i18n="svcHeading">পাঁচটি প্রকৌশল সেবা, এক প্ল্যাটফর্মে</h2>
-    <div class="svc-grid" id="svcGrid"></div>
+    <div class="svc-grid" id="svcGrid"><?php echo $ns_svc_grid_html; ?></div>
     <div class="helpcard">
       <div><b data-i18n="helpTitle">কোন সেবা প্রয়োজন বুঝতে পারছেন না?</b><div style="color:var(--grey);font-size:13.5px" data-i18n="helpSub">সমস্যাটি বেছে নিন — আমরা উপযুক্ত সেবা জানিয়ে দেব।</div></div>
       <button class="btn btn-line btn-sm inline" data-i18n="helpBtn" onclick="go('problem')">সমস্যাটি বেছে নিন</button>
@@ -624,7 +934,7 @@ footer .fine{margin-top:14px;font-size:12px;color:var(--faint)}
     <div class="dim left"><span class="tick"></span><span data-i18n="eyebrowFees">পরামর্শ ফি</span></div>
     <h2 data-i18n="pkgHeading">পরামর্শ প্যাকেজ</h2>
     <p class="lead" data-i18n="pkgLead">স্বচ্ছ, নির্ধারিত ফি — কোনো লুকানো খরচ নেই।</p>
-    <div class="pkgs" id="pkgCards"></div>
+    <div class="pkgs" id="pkgCards"><?php echo $ns_pkg_cards_html; ?></div>
   </div>
 
   <!-- PROJECTS -->
@@ -632,7 +942,7 @@ footer .fine{margin-top:14px;font-size:12px;color:var(--faint)}
     <div class="dim left"><span class="tick"></span><span data-i18n="projectsEyebrow">প্রকল্পসমূহ</span></div>
     <h2 data-i18n="projectsHeading">যেসব ধরনের প্রকল্পে আমরা পরামর্শ দিই</h2>
     <p class="lead" id="projectsLeadText" data-i18n="projectsLead">এখনো এখানে সম্পন্ন প্রকল্পের গ্যালারি যোগ হয়নি — নিচে আমরা যেসব ধরনের প্রকল্পে নিয়মিত পরামর্শ দিই তার তালিকা।</p>
-    <div class="chips" id="projectChips" style="margin-top:18px"></div>
+    <div class="chips" id="projectChips" style="margin-top:18px"><?php echo $ns_project_chips_html; ?></div>
     <div id="galleryWrap" class="hidden">
       <div class="gallery-filters" id="galleryFilters"></div>
       <div class="gallery-grid" id="galleryGrid"></div>
@@ -643,7 +953,7 @@ footer .fine{margin-top:14px;font-size:12px;color:var(--faint)}
   <div class="section wrap">
     <div class="dim left"><span class="tick"></span><span data-i18n="eyebrowWhy">কেন নকশা সেবা</span></div>
     <h2 data-i18n="trustHeading">বিশ্বাসযোগ্য, পেশাদার, সহজ</h2>
-    <div class="trust" id="trustGrid"></div>
+    <div class="trust" id="trustGrid"><?php echo $ns_trust_html; ?></div>
   </div>
 
   <!-- ABOUT + CONSULTANTS -->
@@ -652,7 +962,7 @@ footer .fine{margin-top:14px;font-size:12px;color:var(--faint)}
     <h2 data-i18n="aboutHeading">পরিচিতি হোন আমাদের সাথে</h2>
     <p class="lead" data-i18n="aboutBody" style="max-width:52em">নকশা সেবা বাংলাদেশের অভিজ্ঞ স্থপতি ও প্রকৌশলীদের একটি অনলাইন পরামর্শ প্ল্যাটফর্ম। আমরা BNBC (বাংলাদেশ ন্যাশনাল বিল্ডিং কোড) অনুসরণ করে স্থাপত্য, ইন্টেরিয়র, স্ট্রাকচারাল, ইলেকট্রিক্যাল ও প্লাম্বিং বিষয়ে সরাসরি WhatsApp বা Zoom-এ পরামর্শ দিই — যাতে বাংলাদেশের যেকোনো প্রান্ত থেকেই মানুষ নির্ভরযোগ্য প্রকৌশল মতামত পেতে পারেন।</p>
     <h3 style="font-size:16.5px;font-family:var(--sans);font-weight:700;margin-top:26px" data-i18n="teamHeading">যাঁদের পরামর্শ পাবেন</h3>
-    <div class="people" id="teamGrid" style="margin-top:14px"></div>
+    <div class="people" id="teamGrid" style="margin-top:14px"><?php echo $ns_team_html; ?></div>
   </div>
 
   <!-- RESEARCH -->
@@ -666,14 +976,14 @@ footer .fine{margin-top:14px;font-size:12px;color:var(--faint)}
   <div class="section wrap" id="faq">
     <div class="dim left"><span class="tick"></span><span data-i18n="navFaq">প্রশ্নোত্তর</span></div>
     <h2 data-i18n="faqHeading">সাধারণ জিজ্ঞাসা</h2>
-    <div class="faq" id="faqList"></div>
+    <div class="faq" id="faqList"><?php echo $ns_faq_html; ?></div>
   </div>
 
   <!-- REVIEWS -->
-  <div class="section wrap hidden" id="reviewsSection">
+  <div class="section wrap" id="reviewsSection">
     <div class="dim left"><span class="tick"></span><span data-i18n="reviewsEyebrow">গ্রাহক মতামত</span></div>
     <h2 data-i18n="reviewsHeading">যাঁরা আমাদের সেবা নিয়েছেন</h2>
-    <div class="reviews-grid" id="reviewsGrid"></div>
+    <div class="reviews-grid" id="reviewsGrid"><?php echo $ns_reviews_grid_html; ?></div>
   </div>
 
   <!-- FINAL CTA -->
@@ -683,8 +993,8 @@ footer .fine{margin-top:14px;font-size:12px;color:var(--faint)}
       <p data-i18n="ctaDesc">ছবি বা ড্রয়িং পাঠান। একজন পেশাদারের সঙ্গে কথা বলুন।</p>
       <div class="actions">
         <button class="btn btn-ink" style="background:var(--paper);color:var(--ink)" data-i18n="bookBtn" onclick="startBooking()">পরামর্শ বুক করুন</button>
-        <a class="btn btn-line" id="ctaWa" data-i18n="waBtn2">WhatsApp-এ যোগাযোগ করুন</a>
-        <a class="btn btn-line" id="ctaCallLink" href="tel:" data-i18n="callBtn2">☎ সরাসরি কল করুন</a>
+        <a class="btn btn-line" id="ctaWa" data-i18n="waBtn2" href="<?php echo ns_esc($ns_wa_href); ?>">WhatsApp-এ যোগাযোগ করুন</a>
+        <a class="btn btn-line" id="ctaCallLink" href="<?php echo ns_esc($ns_tel_href); ?>" data-i18n="callBtn2">☎ সরাসরি কল করুন</a>
       </div>
     </div>
   </div>
@@ -703,7 +1013,7 @@ footer .fine{margin-top:14px;font-size:12px;color:var(--faint)}
       </div>
       <div>
         <div data-i18n="footerContactLabel">যোগাযোগ</div>
-        <div class="fine" id="footerContact"></div>
+        <div class="fine" id="footerContact"><?php echo $ns_footer_contact_html; ?></div>
         <div class="fine" data-i18n="footerCopyright">© ২০২৬ নকশা সেবা।</div>
       </div>
     </div>
@@ -773,7 +1083,7 @@ footer .fine{margin-top:14px;font-size:12px;color:var(--faint)}
 
 <!-- ================= BOTTOM NAV / FAB ================= -->
 <nav class="botnav" id="botnav"></nav>
-<a class="fab" id="fabWa" aria-label="WhatsApp"><svg viewBox="0 0 24 24"><path d="M17.5 14.4c-.3-.1-1.7-.8-2-.9-.3-.1-.5-.1-.7.2-.2.3-.7.9-.9 1.1-.2.2-.3.2-.6.1-1.6-.8-2.6-1.4-3.7-3.2-.3-.5.3-.5.8-1.5.1-.2 0-.4 0-.5 0-.1-.7-1.6-.9-2.2-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.4s1 2.8 1.2 3c.1.2 2 3.1 4.9 4.3 2.9 1.2 2.9.8 3.4.8.5 0 1.7-.7 1.9-1.3.2-.7.2-1.2.2-1.3-.1-.2-.3-.2-.6-.4zM12 2a10 10 0 0 0-8.6 15l-1.3 4.8 4.9-1.3A10 10 0 1 0 12 2z"/></svg></a>
+<a class="fab" id="fabWa" aria-label="WhatsApp" href="<?php echo ns_esc($ns_wa_href); ?>"><svg viewBox="0 0 24 24"><path d="M17.5 14.4c-.3-.1-1.7-.8-2-.9-.3-.1-.5-.1-.7.2-.2.3-.7.9-.9 1.1-.2.2-.3.2-.6.1-1.6-.8-2.6-1.4-3.7-3.2-.3-.5.3-.5.8-1.5.1-.2 0-.4 0-.5 0-.1-.7-1.6-.9-2.2-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.4s1 2.8 1.2 3c.1.2 2 3.1 4.9 4.3 2.9 1.2 2.9.8 3.4.8.5 0 1.7-.7 1.9-1.3.2-.7.2-1.2.2-1.3-.1-.2-.3-.2-.6-.4zM12 2a10 10 0 0 0-8.6 15l-1.3 4.8 4.9-1.3A10 10 0 1 0 12 2z"/></svg></a>
 
 <!-- ================= MODAL ================= -->
 <div class="modal" id="modal"><div class="sheet" id="sheet" role="dialog" aria-modal="true"></div></div>
@@ -1409,7 +1719,7 @@ function renderReviews(){
   grid.innerHTML=arr.map(r=>{
     const st=Math.max(1,Math.min(5,+r.stars||5));
     const avatarHtml=r.photo
-      ?`<img src="${esc(r.photo)}" class="review-av review-av-photo" alt="">`
+      ?`<img src="${esc(r.photo)}" class="review-av review-av-photo" alt="${esc(bi(r.name))} ${LANG==='bn'?'এর ছবি':'photo'}">`
       :`<span class="review-av">${esc(bi(r.avatar))}</span>`;
     return `<div class="review">
       <div class="review-top"><span class="stars">${'★'.repeat(st)}${'☆'.repeat(5-st)}</span><span class="review-quote-mark">"</span></div>
@@ -2290,7 +2600,7 @@ function imageField(label,val,field,minW,minH){
   if(val){
     return `<div class="field"><label>${label}</label>
       <div style="display:flex;align-items:center;gap:12px;background:var(--field);border-radius:10px;padding:10px">
-        <img src="${esc(val)}" style="max-width:80px;height:44px;border-radius:8px;object-fit:contain;background:#fff;flex:none">
+        <img src="${esc(val)}" alt="${esc(label)}" style="max-width:80px;height:44px;border-radius:8px;object-fit:contain;background:#fff;flex:none">
         <span style="flex:1;font-size:12.5px;color:var(--grey)">ছবি সেট করা আছে</span>
         <button class="btn btn-ghost" style="color:var(--clay);width:auto;padding:8px" onclick="clearSiteImage('${field}')">সরান</button>
       </div>
@@ -2645,7 +2955,7 @@ function reviewPhotoField(i,val){
   if(val){
     return `<div class="field"><label>গ্রাহকের ছবি</label>
       <div style="display:flex;align-items:center;gap:12px;background:var(--field);border-radius:10px;padding:10px">
-        <img src="${esc(val)}" style="width:48px;height:48px;border-radius:50%;object-fit:cover;flex:none">
+        <img src="${esc(val)}" alt="গ্রাহকের ছবি" style="width:48px;height:48px;border-radius:50%;object-fit:cover;flex:none">
         <span style="flex:1;font-size:12.5px;color:var(--grey)">ছবি সেট করা আছে</span>
         <button class="btn btn-ghost" style="color:var(--clay);width:auto;padding:8px" onclick="clearReviewPhoto(${i})">সরান</button>
       </div>
@@ -2700,7 +3010,7 @@ function admGallery(){
         </tr></thead>
         <tbody>
         ${arr.length?arr.map((x,i)=>{const thumb=x.cover||(x.images&&x.images[0])||'';return `<tr style="border-bottom:1px solid var(--line)">
-          <td style="padding:8px 10px">${thumb?`<img src="${esc(thumb)}" style="width:44px;height:44px;border-radius:8px;object-fit:cover">`:`<div style="width:44px;height:44px;border-radius:8px;background:var(--field)"></div>`}</td>
+          <td style="padding:8px 10px">${thumb?`<img src="${esc(thumb)}" alt="${esc(bi(x.title))}" style="width:44px;height:44px;border-radius:8px;object-fit:cover">`:`<div style="width:44px;height:44px;border-radius:8px;background:var(--field)"></div>`}</td>
           <td style="padding:8px 10px;font-weight:600">${esc(bi(x.title))||'—'}</td>
           <td style="padding:8px 10px;color:var(--grey)">${x.type?esc(bi(x.type)):'—'}</td>
           <td style="padding:8px 10px;color:var(--grey)">${toBn((x.images||[]).length)}</td>
@@ -2737,7 +3047,7 @@ function admGalleryEdit(i,arrParam){
       ${biField('বিবরণ',x.desc,lang=>`setGalleryField(${i},'desc','${lang}',this.value)`,true)}
       <div style="margin-top:14px"><label style="display:block;font-size:14px;font-weight:600;margin-bottom:8px">অতিরিক্ত ছবি (${toBn(imgs.length)}/${toBn(GALLERY_MAX_IMAGES)}) <span class="opt">— প্রকল্পে ট্যাপ করলে সবগুলো ছবি দেখা যাবে</span></label>
         ${imgs.length?`<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px">
-          ${imgs.map((im,gi)=>`<div class="gimg-cell" data-proj="${i}" data-img="${gi}" style="position:relative"><img src="${esc(im)}" draggable="false" style="width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:8px">
+          ${imgs.map((im,gi)=>`<div class="gimg-cell" data-proj="${i}" data-img="${gi}" style="position:relative"><img src="${esc(im)}" alt="${esc(bi(x.title))} ${toBn(gi+1)}" draggable="false" style="width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:8px">
             <button class="gdrag-handle" style="position:absolute;top:-6px;left:-6px;width:24px;height:24px;border-radius:50%;background:var(--green-dark);color:#fff;font-size:13px;line-height:1;cursor:grab;touch-action:none" aria-label="টেনে সাজান">⠿</button>
             <button style="position:absolute;top:-6px;right:-6px;width:22px;height:22px;border-radius:50%;background:var(--clay);color:#fff;font-size:12px;line-height:1" onclick="removeGalleryImage(${i},${gi})">✕</button>
             <div style="position:absolute;bottom:4px;left:4px;right:4px;display:flex;justify-content:space-between;gap:4px">
@@ -2760,7 +3070,7 @@ function galleryCoverField(i,val,hasImages){
   if(val){
     return `<div class="field"><label>কভার ছবি</label>
       <div style="display:flex;align-items:center;gap:12px;background:var(--field);border-radius:10px;padding:10px">
-        <img src="${esc(val)}" style="width:56px;height:56px;border-radius:8px;object-fit:cover;flex:none">
+        <img src="${esc(val)}" alt="কভার ছবি" style="width:56px;height:56px;border-radius:8px;object-fit:cover;flex:none">
         <span style="flex:1;font-size:12.5px;color:var(--grey)">গ্যালারিতে থাম্বনেইল হিসেবে দেখাবে</span>
         <button class="btn btn-ghost" style="color:var(--clay);width:auto;padding:8px" onclick="clearGalleryCover(${i})">সরান</button>
       </div>
