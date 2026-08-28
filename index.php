@@ -311,6 +311,7 @@ $ns_json_flags = JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES;
 <html lang="bn">
 <head>
 <meta charset="UTF-8">
+<meta name="google-site-verification" content="TJm-1yj8mpvHxTcQewmtVLRmLV6K0LTKeH1gbC4aCxs" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#16A34A">
 <link rel="icon" id="faviconLink" href="/assets/favicon.jpg">
@@ -3665,7 +3666,7 @@ async function boot(){
   if(h==='feedback')openFeedbackForm();
   else if(h.indexOf('service/')===0)jump('services');
   else if(h.indexOf('package/')===0)jump('pkgs');
-  pullFromServer('only=gallery',15000).then(()=>{
+  pullFromServer('only=gallery',60000).then(()=>{
     renderGallery();
     if(current==='admin')renderAdmin();
   });
