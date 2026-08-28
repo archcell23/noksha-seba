@@ -3666,7 +3666,14 @@ async function boot(){
   if(h==='feedback')openFeedbackForm();
   else if(h.indexOf('service/')===0)jump('services');
   else if(h.indexOf('package/')===0)jump('pkgs');
-  pullFromServer('only=gallery',60000).then(()=>{
+  // The gallery payload is now ~26MB after the archcellbd.com import, which
+  // can genuinely take longer than 60s to download on a slow mobile
+  // connection -- and since this fetch fails silently (falls back to
+  // whatever's cached, no error shown), a too-short timeout looks
+  // indistinguishable from "the gallery just never updated". This is a
+  // background, non-blocking fetch, so there's no UX cost to giving it
+  // much more room.
+  pullFromServer('only=gallery',180000).then(()=>{
     renderGallery();
     if(current==='admin')renderAdmin();
   });
