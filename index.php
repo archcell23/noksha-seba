@@ -692,6 +692,42 @@ footer .fine{margin-top:14px;font-size:12px;color:var(--faint)}
 .fab.fab-hide{opacity:0;transform:scale(.6);pointer-events:none}
 .fab svg{width:28px;height:28px;fill:#fff}
 
+/* ---------- floating AI chat ---------- */
+.chatfab{position:fixed;right:16px;bottom:76px;z-index:44;width:54px;height:54px;border-radius:50%;
+  background:var(--green-dark);color:#fff;display:grid;place-items:center;box-shadow:0 10px 24px -8px rgba(21,128,61,.55);
+  transition:opacity .2s,transform .2s}
+.chatfab.chatfab-hide{opacity:0;transform:scale(.6);pointer-events:none}
+.chatfab svg{width:25px;height:25px;fill:none;stroke:#fff;stroke-width:1.8}
+.chatpanel{position:fixed;inset:0;z-index:65;background:rgba(20,22,25,.5);display:none;align-items:flex-end;justify-content:center}
+.chatpanel.on{display:flex}
+.chat-sheet{background:var(--paper);width:100%;max-width:400px;border-radius:20px 20px 0 0;
+  max-height:82vh;height:min(600px,82vh);display:flex;flex-direction:column;animation:up .28s ease;overflow:hidden}
+.chat-head{display:flex;align-items:center;gap:10px;padding:16px 18px;border-bottom:1px solid var(--line);flex:none}
+.chat-head .chat-av{width:34px;height:34px;border-radius:50%;background:var(--green-tint);color:var(--green-dark);
+  display:grid;place-items:center;font-weight:700;font-size:14px;flex:none}
+.chat-head .chat-titles{flex:1;min-width:0}
+.chat-head .chat-titles b{display:block;font-size:14.5px}
+.chat-head .chat-titles span{display:block;font-size:11.5px;color:var(--grey)}
+.chat-head button{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;color:var(--grey);font-size:16px;flex:none}
+.chat-msgs{flex:1;overflow-y:auto;padding:14px 16px;display:flex;flex-direction:column;gap:10px}
+.msg{max-width:84%;padding:10px 13px;border-radius:14px;font-size:14px;line-height:1.55;white-space:pre-wrap}
+.msg.bot{align-self:flex-start;background:var(--field);border-bottom-left-radius:4px}
+.msg.user{align-self:flex-end;background:var(--green-dark);color:#fff;border-bottom-right-radius:4px}
+.msg.typing{align-self:flex-start;background:var(--field);border-bottom-left-radius:4px;display:flex;gap:4px;padding:13px 15px}
+.msg.typing span{width:6px;height:6px;border-radius:50%;background:var(--faint);animation:blink 1.2s infinite}
+.msg.typing span:nth-child(2){animation-delay:.2s}.msg.typing span:nth-child(3){animation-delay:.4s}
+@keyframes blink{0%,80%,100%{opacity:.3}40%{opacity:1}}
+.chat-inputbar{display:flex;gap:8px;padding:12px 14px calc(12px + env(safe-area-inset-bottom));border-top:1px solid var(--line);flex:none}
+.chat-inputbar input{flex:1;background:var(--field);border:1.5px solid transparent;border-radius:22px;padding:11px 16px;font-size:14.5px}
+.chat-inputbar input:focus{outline:none;border-color:var(--green)}
+.chat-inputbar button{width:42px;height:42px;border-radius:50%;background:var(--green-dark);color:#fff;display:grid;place-items:center;flex:none;transition:opacity .15s;flex:none}
+.chat-inputbar button:disabled{opacity:.5}
+.chat-inputbar button svg{width:18px;height:18px;fill:#fff}
+@media(min-width:760px){
+  .chatpanel{justify-content:flex-end;padding-right:24px;padding-bottom:24px}
+  .chat-sheet{border-radius:18px;box-shadow:var(--shadow);max-width:360px;height:520px}
+}
+
 /* ---------- booking flow ---------- */
 .flow{padding:18px 0 24px}
 .dimbar{display:flex;align-items:center;margin:6px 0 22px;padding:0 4px}
@@ -1131,6 +1167,23 @@ footer .fine{margin-top:14px;font-size:12px;color:var(--faint)}
 <!-- ================= BOTTOM NAV / FAB ================= -->
 <nav class="botnav" id="botnav"></nav>
 <a class="fab" id="fabWa" aria-label="WhatsApp" href="<?php echo ns_esc($ns_wa_href); ?>"><svg viewBox="0 0 24 24"><path d="M17.5 14.4c-.3-.1-1.7-.8-2-.9-.3-.1-.5-.1-.7.2-.2.3-.7.9-.9 1.1-.2.2-.3.2-.6.1-1.6-.8-2.6-1.4-3.7-3.2-.3-.5.3-.5.8-1.5.1-.2 0-.4 0-.5 0-.1-.7-1.6-.9-2.2-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.4s1 2.8 1.2 3c.1.2 2 3.1 4.9 4.3 2.9 1.2 2.9.8 3.4.8.5 0 1.7-.7 1.9-1.3.2-.7.2-1.2.2-1.3-.1-.2-.3-.2-.6-.4zM12 2a10 10 0 0 0-8.6 15l-1.3 4.8 4.9-1.3A10 10 0 1 0 12 2z"/></svg></a>
+<button class="chatfab" id="chatFab" aria-label="চ্যাট সহকারী" onclick="openChat()"><svg viewBox="0 0 24 24"><path d="M21 11.5a8.5 8.5 0 0 1-8.5 8.5 8.4 8.4 0 0 1-3.8-.9L3 20l1-5.6A8.5 8.5 0 1 1 21 11.5z"/></svg></button>
+
+<!-- ================= AI CHAT PANEL ================= -->
+<div class="chatpanel" id="chatpanel">
+  <div class="chat-sheet" role="dialog" aria-modal="true">
+    <div class="chat-head">
+      <span class="chat-av">নস</span>
+      <div class="chat-titles"><b data-i18n="chatTitle">নকশা সেবা সহকারী</b><span data-i18n="chatSubtitle">সাধারণত সাথে সাথে উত্তর দেয়</span></div>
+      <button onclick="closeChat()" aria-label="বন্ধ করুন">✕</button>
+    </div>
+    <div class="chat-msgs" id="chatMsgs"></div>
+    <div class="chat-inputbar">
+      <input type="text" id="chatInput" data-i18n-ph="chatPlaceholder" placeholder="একটি বার্তা লিখুন..." autocomplete="off" onkeydown="if(event.key==='Enter'){event.preventDefault();sendChatMessage()}">
+      <button id="chatSendBtn" onclick="sendChatMessage()" aria-label="পাঠান"><svg viewBox="0 0 24 24"><path d="M3 11l18-8-8 18-2-8-8-2z"/></svg></button>
+    </div>
+  </div>
+</div>
 
 <!-- ================= MODAL ================= -->
 <div class="modal" id="modal"><div class="sheet" id="sheet" role="dialog" aria-modal="true"></div></div>
@@ -1258,6 +1311,13 @@ const I18N={
   fbModalDesc:{bn:"আপনি যদি আমাদের সেবা নিয়ে থাকেন, আপনার অভিজ্ঞতা শেয়ার করুন। প্রকাশের আগে আমরা যাচাই করে দেখব।",en:"If you've used our service, share your experience. We'll review it before it's published."},
   fbNameLabel:{bn:"আপনার নাম",en:"Your name"},
   fbTitleLabel:{bn:"পদবি / প্রতিষ্ঠান (ঐচ্ছিক)",en:"Title / organization (optional)"},
+  chatFabLabel:{bn:"চ্যাট সহকারী",en:"Chat assistant"},
+  chatTitle:{bn:"নকশা সেবা সহকারী",en:"Noksha Seba Assistant"},
+  chatSubtitle:{bn:"সাধারণত সাথে সাথে উত্তর দেয়",en:"Usually replies instantly"},
+  chatGreeting:{bn:"আসসালামু আলাইকুম! আমি নকশা সেবার AI সহকারী। সেবা, প্যাকেজ, মূল্য বা বুকিং নিয়ে যেকোনো প্রশ্ন করতে পারেন।",en:"Hello! I'm Noksha Seba's AI assistant. Ask me anything about our services, packages, pricing, or booking."},
+  chatPlaceholder:{bn:"একটি বার্তা লিখুন...",en:"Type a message..."},
+  chatErr:{bn:"দুঃখিত, এখন উত্তর দিতে সমস্যা হচ্ছে। WhatsApp বা ফোনে যোগাযোগ করুন।",en:"Sorry, I'm having trouble replying right now. Please reach us on WhatsApp or phone."},
+  chatRateLimited:{bn:"আজকের জন্য চ্যাট সীমা শেষ হয়ে গেছে। WhatsApp বা ফোনে যোগাযোগ করুন।",en:"Today's chat limit has been reached. Please reach us on WhatsApp or phone."},
   fbStarsLabel:{bn:"রেটিং",en:"Rating"},
   fbQuoteLabel:{bn:"আপনার মতামত",en:"Your feedback"},
   fbSubmitBtn:{bn:"পাঠিয়ে দিন",en:"Submit"},
@@ -1422,6 +1482,7 @@ function applyLang(){
   document.documentElement.lang=LANG;
   $$('.langctl button').forEach(b=>b.classList.toggle('on',b.dataset.lang===LANG));
   $$('[data-i18n]').forEach(el=>{const k=el.dataset.i18n;if(I18N[k])el.textContent=t(k)});
+  $$('[data-i18n-ph]').forEach(el=>{const k=el.dataset.i18nPh;if(I18N[k])el.placeholder=t(k)});
   renderSiteContent();renderPkgCards();
   if(current==='booking')renderFlow();
   if(current==='dashboard')renderDash();
@@ -2047,6 +2108,7 @@ window.addEventListener('popstate',e=>{
     const top=_overlayStack[_overlayStack.length-1];
     if(top==='lightbox')closeLightbox(true);
     else if(top==='modal')closeModal(true);
+    else if(top==='chat')closeChat(true);
     return;
   }
   const view=(e.state&&e.state.view)||(location.hash||"").replace("#/","")||'home';
@@ -3511,6 +3573,69 @@ function closeModal(fromBack){
   if(!fromBack&&idx!==-1)history.back();
 }
 $("#modal").addEventListener("click",e=>{if(e.target.id==="modal")closeModal()});
+
+/* ---------- AI chat widget ---------- */
+let _chatHistory=[];   // [{role:'user'|'model',text}], last 8 kept for context
+let _chatSending=false;
+function openChat(){
+  $("#chatpanel").classList.add("on");
+  const wasOpen=_overlayStack.includes('chat');
+  if(!wasOpen){_overlayStack.push('chat');history.pushState({overlay:'chat'},"",location.href)}
+  if(!_chatHistory.length)appendChatMsg('bot',t('chatGreeting'));
+  setTimeout(()=>$("#chatInput").focus(),150);
+}
+function closeChat(fromBack){
+  if(!$("#chatpanel").classList.contains("on"))return;
+  $("#chatpanel").classList.remove("on");
+  const idx=_overlayStack.lastIndexOf('chat');
+  if(idx!==-1)_overlayStack.splice(idx,1);
+  if(!fromBack&&idx!==-1)history.back();
+}
+$("#chatpanel").addEventListener("click",e=>{if(e.target.id==="chatpanel")closeChat()});
+function appendChatMsg(role,text){
+  const wrap=$("#chatMsgs");
+  const div=document.createElement('div');
+  div.className='msg '+(role==='user'?'user':'bot');
+  div.textContent=text;
+  wrap.appendChild(div);
+  wrap.scrollTop=wrap.scrollHeight;
+  return div;
+}
+async function sendChatMessage(){
+  if(_chatSending)return;
+  const input=$("#chatInput");
+  const msg=input.value.trim();
+  if(!msg)return;
+  input.value='';
+  appendChatMsg('user',msg);
+  _chatSending=true;
+  $("#chatSendBtn").disabled=true;
+  const wrap=$("#chatMsgs");
+  const typing=document.createElement('div');
+  typing.className='msg typing';
+  typing.innerHTML='<span></span><span></span><span></span>';
+  wrap.appendChild(typing);
+  wrap.scrollTop=wrap.scrollHeight;
+  try{
+    const res=await fetch('api/chat.php',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({message:msg,history:_chatHistory.slice(-8)})});
+    typing.remove();
+    if(res.status===429){appendChatMsg('bot',t('chatRateLimited'));return}
+    if(!res.ok)throw new Error('failed');
+    const data=await res.json();
+    if(!data.reply)throw new Error('empty');
+    appendChatMsg('bot',data.reply);
+    _chatHistory.push({role:'user',text:msg});
+    _chatHistory.push({role:'model',text:data.reply});
+    if(_chatHistory.length>16)_chatHistory=_chatHistory.slice(-16);
+  }catch(e){
+    typing.remove();
+    appendChatMsg('bot',t('chatErr'));
+  }finally{
+    _chatSending=false;
+    $("#chatSendBtn").disabled=false;
+  }
+}
 
 /* ---------- fullscreen photo lightbox ---------- */
 let _lb={photos:[],idx:0,title:'',type:'',desc:''};
