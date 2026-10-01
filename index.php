@@ -73,7 +73,7 @@ function ns_fmtPhone($v) {
     return ns_toBn($v);
 }
 
-$ns_def_contact = array('wa'=>'8801711034941','call'=>'+8801711034941','email'=>'arch_cell@yahoo.com','ref'=>'archcellbd.com','payNumber'=>'01711034941');
+$ns_def_contact = array('wa'=>'8801711034941','call'=>'+8801711034941','email'=>'arch_cell@yahoo.com','ref'=>'archcell360.com','payNumber'=>'01711034941');
 $ns_contact = isset($ns_content['contact']) ? $ns_content['contact'] : $ns_def_contact;
 function ns_waHref($contact, $msg) {
     $digits = preg_replace('/\D/', '', isset($contact['wa']) ? $contact['wa'] : '');
@@ -1495,7 +1495,7 @@ function setLang(l){if(l===LANG)return;LANG=l;store.set('ns_lang',l);applyLang()
 const DEFAULT_PRICES={quick:800,detail:1500,project:3500,site_dhk:5000,site_out:8000};
 
 /* ---------- editable site content (admin-managed, localStorage-backed) ---------- */
-const DEF_CONTACT={wa:"8801711034941",call:"+8801711034941",email:"arch_cell@yahoo.com",ref:"archcellbd.com",payNumber:"01711034941"};
+const DEF_CONTACT={wa:"8801711034941",call:"+8801711034941",email:"arch_cell@yahoo.com",ref:"archcell360.com",payNumber:"01711034941"};
 const DEF_HERO={
   badges:[
     {bn:"🏠 স্থাপত্য পরামর্শ",en:"🏠 Architecture consultation"},
@@ -3859,7 +3859,7 @@ async function boot(){
   if(h==='feedback')openFeedbackForm();
   else if(h.indexOf('service/')===0)jump('services');
   else if(h.indexOf('package/')===0)jump('pkgs');
-  // The gallery payload is now ~26MB after the archcellbd.com import, which
+  // The gallery payload is now ~26MB after the arch_CELL gallery import, which
   // can genuinely take longer than 60s to download on a slow mobile
   // connection -- and since this fetch fails silently (falls back to
   // whatever's cached, no error shown), a too-short timeout looks
